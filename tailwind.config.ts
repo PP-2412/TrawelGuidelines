@@ -9,12 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Primary Palette (for itineraries, proposals, vouchers, WhatsApp statics)
         primary: {
           blue: '#12103d',
-        },
-        accent: {
           gold: '#d19457',
         },
+        // Supporting Palette (for Instagram posts, stories, reels)
         supporting: {
           darkest: '#230c33',
           'purple-dark': '#43124a',
