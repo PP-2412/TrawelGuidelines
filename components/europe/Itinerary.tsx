@@ -23,8 +23,8 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#12103d] to-[#43124a] px-8 py-6 flex items-center justify-between">
+        {/* Header - PRIMARY PALETTE ONLY */}
+        <div className="bg-[#12103d] px-8 py-6 flex items-center justify-between">
           <div>
             <h2 className="font-display text-2xl text-white">Your Europe Itinerary</h2>
             <p className="font-sans text-sm text-white/70 mt-1">
@@ -43,14 +43,14 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
           {/* Itinerary Section */}
           <div className="p-8 border-b border-gray-200">
             <h3 className="font-display text-xl text-[#12103d] mb-6 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-[#43124a]" />
+              <MapPin className="w-5 h-5 text-[#d19457]" />
               Your Travel Itinerary
             </h3>
 
             {/* Itinerary Table */}
             <div className="bg-[#f5f5f5] rounded-2xl overflow-hidden">
-              {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-gradient-to-r from-[#12103d] to-[#43124a]">
+              {/* Table Header - PRIMARY PALETTE */}
+              <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-[#12103d]">
                 <div className="col-span-6 font-sans text-xs font-semibold text-white uppercase tracking-wider">City</div>
                 <div className="col-span-3 font-sans text-xs font-semibold text-white uppercase tracking-wider text-center">Nights</div>
                 <div className="col-span-3 font-sans text-xs font-semibold text-white uppercase tracking-wider text-center">Days</div>
@@ -72,14 +72,14 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
                       <span className="w-6 h-6 bg-[#12103d] text-white rounded-full text-xs flex items-center justify-center font-bold">
                         {index + 1}
                       </span>
-                      <span className="text-xs font-sans font-medium text-[#44618b]">{city.countryCode}</span>
+                      <span className="text-xs font-sans font-medium text-gray-600">{city.countryCode}</span>
                       <span className="font-display text-lg text-[#12103d]">{city.city}</span>
                     </div>
                     <div className="col-span-3 text-center">
                       <span className="font-sans text-lg font-semibold text-[#12103d]">{city.nights}</span>
                     </div>
                     <div className="col-span-3 text-center">
-                      <span className="font-sans text-sm text-[#44618b]">
+                      <span className="font-sans text-sm text-gray-600">
                         Day {startDay}{endDay !== startDay ? ` - ${endDay}` : ''}
                       </span>
                     </div>
@@ -87,8 +87,8 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
                 )
               })}
 
-              {/* Total Row */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gradient-to-r from-[#12103d]/10 to-[#43124a]/10 border-t-2 border-[#12103d]">
+              {/* Total Row - PRIMARY PALETTE */}
+              <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-[#12103d]/10 border-t-2 border-[#12103d]">
                 <div className="col-span-6 font-display text-lg text-[#12103d]">Total Trip</div>
                 <div className="col-span-3 text-center">
                   <span className="font-sans text-lg font-bold text-[#12103d]">{totalNights} Nights</span>
@@ -105,7 +105,7 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
             <h3 className="font-display text-xl text-[#12103d] mb-6 flex items-center gap-2">
               <span className="text-xl">💰</span>
               Trip Budget Breakdown
-              <span className="font-sans text-xs font-normal text-[#44618b] ml-2">(Per Person)</span>
+              <span className="font-sans text-xs font-normal text-gray-600 ml-2">(Per Person)</span>
             </h3>
 
             <div className="bg-[#f5f5f5] rounded-2xl overflow-hidden border border-gray-200">
@@ -121,12 +121,12 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
                     <span className="text-xl">{item.emoji}</span>
                     <span className="font-sans text-sm text-[#12103d]">{item.label}</span>
                   </div>
-                  <span className="font-sans text-sm font-semibold text-[#44618b]">TBD</span>
+                  <span className="font-sans text-sm font-semibold text-gray-600">TBD</span>
                 </div>
               ))}
 
-              {/* Total Cost */}
-              <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-[#12103d] to-[#43124a]">
+              {/* Total Cost - PRIMARY PALETTE */}
+              <div className="flex items-center justify-between px-6 py-5 bg-[#12103d]">
                 <div className="flex items-center gap-3">
                   <Lock className="w-5 h-5 text-white" />
                   <span className="font-display text-lg text-white">Total Trip Cost</span>
@@ -136,12 +136,12 @@ export default function Itinerary({ selectedCities, onClose }: Props) {
             </div>
 
             {/* Note */}
-            <p className="font-sans text-xs text-[#44618b] mt-4 text-center">
+            <p className="font-sans text-xs text-gray-600 mt-4 text-center">
               * Final pricing will be provided after consultation with our travel experts
             </p>
           </div>
 
-          {/* CTA */}
+          {/* CTA - PRIMARY PALETTE */}
           <div className="p-8 pt-0">
             <button className="w-full bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-sm font-semibold tracking-wider uppercase py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
               Request Detailed Quote
