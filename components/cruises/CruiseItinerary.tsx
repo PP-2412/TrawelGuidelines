@@ -88,8 +88,8 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#12103d] to-[#43124a] px-8 py-6 flex items-center justify-between">
+        {/* Header - PRIMARY PALETTE ONLY */}
+        <div className="bg-[#12103d] px-8 py-6 flex items-center justify-between">
           <div>
             <h2 className="font-display text-2xl text-white">{selectedCruise.name}</h2>
             <p className="font-sans text-sm text-white/70 mt-1">
@@ -122,17 +122,17 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
                   <div className="flex items-center gap-0.5">
                     {renderStars(selectedCruise.rating)}
                   </div>
-                  <span className="font-sans text-xs text-[#44618b]">({selectedCruise.rating} rating)</span>
+                  <span className="font-sans text-xs text-gray-600">({selectedCruise.rating} rating)</span>
                 </div>
                 <p className="font-sans text-sm text-[#d19457] font-medium mb-3">{selectedCruise.tagline}</p>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex items-center gap-2">
-                    <Anchor className="w-4 h-4 text-[#43124a]" />
-                    <span className="font-sans text-xs text-[#44618b]">Departs: {selectedCruise.departurePort}</span>
+                    <Anchor className="w-4 h-4 text-[#d19457]" />
+                    <span className="font-sans text-xs text-gray-600">Departs: {selectedCruise.departurePort}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#43124a]" />
-                    <span className="font-sans text-xs text-[#44618b]">{selectedCruise.nights} Nights</span>
+                    <Calendar className="w-4 h-4 text-[#d19457]" />
+                    <span className="font-sans text-xs text-gray-600">{selectedCruise.nights} Nights</span>
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -149,14 +149,14 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
           {/* Itinerary Section */}
           <div className="p-8 border-b border-gray-200">
             <h3 className="font-display text-xl text-[#12103d] mb-6 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-[#43124a]" />
+              <MapPin className="w-5 h-5 text-[#d19457]" />
               Cruise Itinerary
             </h3>
 
             {/* Itinerary Table */}
             <div className="bg-[#f5f5f5] rounded-2xl overflow-hidden">
-              {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-gradient-to-r from-[#12103d] to-[#43124a]">
+              {/* Table Header - PRIMARY PALETTE */}
+              <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-[#12103d]">
                 <div className="col-span-1 font-sans text-xs font-semibold text-white uppercase tracking-wider">Day</div>
                 <div className="col-span-3 font-sans text-xs font-semibold text-white uppercase tracking-wider">Port</div>
                 <div className="col-span-2 font-sans text-xs font-semibold text-white uppercase tracking-wider text-center">Arrival</div>
@@ -178,18 +178,18 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
                     </span>
                   </div>
                   <div className="col-span-3">
-                    <span className={`font-display text-base ${day.port === 'At Sea' ? 'text-[#43124a] italic' : 'text-[#12103d]'}`}>
+                    <span className={`font-display text-base ${day.port === 'At Sea' ? 'text-[#d19457] italic' : 'text-[#12103d]'}`}>
                       {day.port === 'At Sea' ? '🌊 ' : ''}{day.port}
                     </span>
                   </div>
                   <div className="col-span-2 text-center">
-                    <span className="font-sans text-sm text-[#44618b]">{day.arrival}</span>
+                    <span className="font-sans text-sm text-gray-600">{day.arrival}</span>
                   </div>
                   <div className="col-span-2 text-center">
-                    <span className="font-sans text-sm text-[#44618b]">{day.departure}</span>
+                    <span className="font-sans text-sm text-gray-600">{day.departure}</span>
                   </div>
                   <div className="col-span-4">
-                    <span className="font-sans text-xs text-[#44618b]">{day.description}</span>
+                    <span className="font-sans text-xs text-gray-600">{day.description}</span>
                   </div>
                 </div>
               ))}
@@ -201,7 +201,7 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
             <h3 className="font-display text-xl text-[#12103d] mb-6 flex items-center gap-2">
               <span className="text-xl">💰</span>
               Cruise Budget Breakdown
-              <span className="font-sans text-xs font-normal text-[#44618b] ml-2">(Per Person)</span>
+              <span className="font-sans text-xs font-normal text-gray-600 ml-2">(Per Person)</span>
             </h3>
 
             <div className="bg-[#f5f5f5] rounded-2xl overflow-hidden border border-gray-200">
@@ -217,12 +217,12 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
                     <span className="text-xl">{item.emoji}</span>
                     <span className="font-sans text-sm text-[#12103d]">{item.label}</span>
                   </div>
-                  <span className="font-sans text-sm font-semibold text-[#44618b]">TBD</span>
+                  <span className="font-sans text-sm font-semibold text-gray-600">TBD</span>
                 </div>
               ))}
 
-              {/* Total Cost */}
-              <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-[#12103d] to-[#43124a]">
+              {/* Total Cost - PRIMARY PALETTE */}
+              <div className="flex items-center justify-between px-6 py-5 bg-[#12103d]">
                 <div className="flex items-center gap-3">
                   <Lock className="w-5 h-5 text-white" />
                   <span className="font-display text-lg text-white">Total Cruise Cost</span>
@@ -235,12 +235,12 @@ export default function CruiseItinerary({ selectedCruise, onClose }: Props) {
             </div>
 
             {/* Note */}
-            <p className="font-sans text-xs text-[#44618b] mt-4 text-center">
+            <p className="font-sans text-xs text-gray-600 mt-4 text-center">
               * Final pricing will be provided after consultation with our cruise specialists
             </p>
           </div>
 
-          {/* CTA */}
+          {/* CTA - PRIMARY PALETTE */}
           <div className="p-8 pt-0">
             <button className="w-full bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-sm font-semibold tracking-wider uppercase py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
               Request Detailed Quote
