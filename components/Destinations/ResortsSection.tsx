@@ -1,17 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, MapPin, Check, Building2, Wifi, UtensilsCrossed, Car, Dumbbell, Waves, Sparkles } from 'lucide-react'
 import { Resort, BudgetRange, budgetRanges, filterResortsByBudget } from './destinationsData'
 
 interface ResortsSectionProps {
   resorts: Resort[]
   countryName: string
+  initialResortId?: string | null
 }
 
-export default function ResortsSection({ resorts, countryName }: ResortsSectionProps) {
+export default function ResortsSection({ resorts, countryName, initialResortId }: ResortsSectionProps) {
   const [selectedBudget, setSelectedBudget] = useState<BudgetRange>('all')
   const [selectedResort, setSelectedResort] = useState<Resort | null>(null)
+
+  // Auto-select resort from URL param
+  useEffect(() => {
+    if (initialResortId) {
+      const resort = resorts.find(r => r.id === initialResortId)
+      if (resort) {
+        setSelectedResort(resort)
+        setSelectedBudget(resort.budgetRange)
+      }
+    }
+  }, [initialResortId, resorts])
 
   const filteredResorts = filterResortsByBudget(resorts, selectedBudget)
 
