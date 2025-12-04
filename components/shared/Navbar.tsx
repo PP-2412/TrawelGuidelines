@@ -4,13 +4,13 @@ import { useState, useRef } from 'react'
 import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const destinations = [
-  { name: 'Europe', href: '#europe', icon: Mountain },
+  { name: 'Europe', href: '/europe', icon: Mountain },
   { name: 'Cruises', href: '/cruises', icon: Anchor },
-  { name: 'Thailand', href: '#thailand', icon: Palmtree },
-  { name: 'Maldives', href: '#maldives', icon: Waves },
-  { name: 'Indonesia', href: '#indonesia', icon: TreePalm },
-  { name: 'Vietnam', href: '#vietnam', icon: Flower2 },
-  { name: 'Japan', href: '#japan', icon: Cherry },
+  { name: 'Thailand', href: '/thailand', icon: Palmtree },
+  { name: 'Maldives', href: '/maldives', icon: Waves },
+  { name: 'Indonesia', href: '/indonesia', icon: TreePalm },
+  { name: 'Vietnam', href: '/vietnam', icon: Flower2 },
+  { name: 'Japan', href: '/japan', icon: Cherry },
 ]
 
 export default function Navbar() {
