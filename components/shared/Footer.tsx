@@ -1,13 +1,13 @@
 import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry } from 'lucide-react'
 
 const destinations = [
-  { name: 'Europe', href: '#europe', icon: Mountain },
+  { name: 'Europe', href: '/europe', icon: Mountain },
   { name: 'Cruises', href: '/cruises', icon: Anchor },
-  { name: 'Thailand', href: '#thailand', icon: Palmtree },
-  { name: 'Maldives', href: '#maldives', icon: Waves },
-  { name: 'Indonesia', href: '#indonesia', icon: TreePalm },
-  { name: 'Vietnam', href: '#vietnam', icon: Flower2 },
-  { name: 'Japan', href: '#japan', icon: Cherry },
+  { name: 'Thailand', href: '/thailand', icon: Palmtree },
+  { name: 'Maldives', href: '/maldives', icon: Waves },
+  { name: 'Indonesia', href: '/indonesia', icon: TreePalm },
+  { name: 'Vietnam', href: '/vietnam', icon: Flower2 },
+  { name: 'Japan', href: '/japan', icon: Cherry },
 ]
 
 export default function Footer() {
@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <a href="#" className="flex items-center gap-3 mb-6">
+            <a href="/" className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
                 <span className="text-white font-display text-2xl font-bold">T</span>
               </div>
