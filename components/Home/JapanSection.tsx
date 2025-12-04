@@ -1,7 +1,7 @@
 'use client'
 
 import { Cherry } from 'lucide-react'
-import DestinationCarousel, { DestinationItem } from '@/components/Destinations/destinationsData'
+import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
 import { japanData } from '@/components/Destinations/destinationsData'
 
 // Create mixed items from tours and resorts
