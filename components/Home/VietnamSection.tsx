@@ -2,17 +2,54 @@
 
 import { Flower2 } from 'lucide-react'
 import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
+import { vietnamData } from './Destinations/destinationsData'
 
-const packages: DestinationItem[] = [
-  { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
-  { id: 'highlights', title: 'Vietnam Highlights', subtitle: 'Hanoi • Ha Long Bay • Hoi An', duration: '10 Nights', price: 1699, image: 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=800&q=80' },
-  { id: 'halong', title: 'Ha Long Bay Cruise', subtitle: 'Luxury Junk Boat Experience', duration: '4 Nights', price: 899, image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80' },
-  { id: 'saigon', title: 'Saigon & Mekong', subtitle: 'Ho Chi Minh • Mekong Delta', duration: '5 Nights', price: 1099, image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&q=80' },
-  { id: 'north-south', title: 'North to South', subtitle: 'Complete Vietnam Journey', duration: '14 Nights', price: 2299, image: 'https://images.unsplash.com/photo-1555921015-5532091f6026?w=800&q=80' },
-  { id: 'hoi-an', title: 'Hoi An & Da Nang', subtitle: 'Ancient Town & Beach', duration: '6 Nights', price: 1199, image: 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=800&q=80' },
-  { id: 'sapa', title: 'Sapa Trekking', subtitle: 'Mountain Villages & Rice Terraces', duration: '5 Nights', price: 999, image: 'https://images.unsplash.com/photo-1570366583862-f91883984fde?w=800&q=80' },
-  { id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true },
-]
+// Create mixed items from tours and resorts
+const createMixedItems = (): DestinationItem[] => {
+  const items: DestinationItem[] = [
+    { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
+  ]
+
+  // Add 3 tours
+  vietnamData.tours.slice(0, 3).forEach(tour => {
+    items.push({
+      id: `tour-${tour.id}`,
+      title: tour.name,
+      subtitle: tour.description.slice(0, 50) + '...',
+      duration: tour.duration,
+      price: tour.price,
+      image: tour.image,
+      itemType: 'tour',
+      itemId: tour.id,
+      tag: tour.category.charAt(0).toUpperCase() + tour.category.slice(1),
+      tagColor: 'bg-[#d19457] text-white',
+      priceLabel: '/person',
+    })
+  })
+
+  // Add 3 resorts
+  vietnamData.resorts.slice(0, 3).forEach(resort => {
+    items.push({
+      id: `resort-${resort.id}`,
+      title: resort.name,
+      subtitle: resort.location,
+      duration: resort.tag || 'Available Now',
+      price: resort.pricePerNight,
+      image: resort.image,
+      itemType: 'resort',
+      itemId: resort.id,
+      tag: resort.budgetRange === '100+' ? 'Luxury' : resort.budgetRange === '50-100' ? 'Premium' : resort.budgetRange === '25-50' ? 'Mid-Range' : 'Budget',
+      tagColor: resort.budgetRange === '100+' ? 'bg-[#12103d] text-white' : resort.budgetRange === '50-100' ? 'bg-[#d19457] text-white' : resort.budgetRange === '25-50' ? 'bg-[#8550a2] text-white' : 'bg-[#44618b] text-white',
+      priceLabel: '/night',
+    })
+  })
+
+  items.push({ id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true })
+
+  return items
+}
+
+const packages = createMixedItems()
 
 export default function VietnamSection() {
   return (
@@ -31,11 +68,11 @@ export default function VietnamSection() {
             </h2>
             <p className="font-sans text-[#44618b] max-w-lg">Ha Long Bay wonders, ancient towns, and incredible street food</p>
           </div>
-          <a href="#vietnam" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+          <a href="/vietnam" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="#vietnam" />
+        <DestinationCarousel items={packages} sectionHref="/vietnam" countrySlug="vietnam" />
       </div>
     </section>
   )
