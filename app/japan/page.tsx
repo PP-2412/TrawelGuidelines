@@ -1,5 +1,5 @@
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import Navbar from '@/components/shared/Navbar'
+import Footer from '@/components/shared/Footer'
 import CountryHero from '@/components/Destinations/CountryHero'
 import ToursSection from '@/components/Destinations/ToursSection'
 import ResortsSection from '@/components/Destinations/ResortsSection'
