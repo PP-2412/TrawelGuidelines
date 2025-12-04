@@ -5,7 +5,7 @@ import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, 
 
 const destinations = [
   { name: 'Europe', href: '#europe', icon: Mountain },
-  { name: 'Cruises', href: '#cruises', icon: Anchor },
+  { name: 'Cruises', href: '/cruises', icon: Anchor },
   { name: 'Thailand', href: '#thailand', icon: Palmtree },
   { name: 'Maldives', href: '#maldives', icon: Waves },
   { name: 'Indonesia', href: '#indonesia', icon: TreePalm },
