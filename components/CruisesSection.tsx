@@ -4,11 +4,11 @@ import { useRef, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Anchor, Star, ArrowRight, Ship } from 'lucide-react'
 
 const cruises = [
-  { id: 'disney', name: 'Disney Cruise Line', tagline: 'Singapore - Asia Pacific', rating: 5, price: 899, nights: 7, tag: 'Family Favourite', tagColor: 'bg-[#12103d] text-white', image: 'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=800&q=80' },
-  { id: 'royal', name: 'Royal Caribbean', tagline: 'Caribbean Adventures', rating: 5, price: 699, nights: 7, tag: 'Most Popular', tagColor: 'bg-[#d19457] text-white', image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80' },
-  { id: 'norwegian', name: 'Norwegian Cruise', tagline: 'Alaska & Europe', rating: 4.5, price: 599, nights: 5, tag: 'Best Value', tagColor: 'bg-[#44618b] text-white', image: 'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80' },
-  { id: 'celebrity', name: 'Celebrity Cruises', tagline: 'Mediterranean Luxury', rating: 5, price: 899, nights: 10, tag: 'Premium', tagColor: 'bg-[#8550a2] text-white', image: 'https://images.unsplash.com/photo-1580541631950-7282082b53ce?w=800&q=80' },
-  { id: 'cordelia', name: 'Cordelia Cruises', tagline: "India's Premium Line", rating: 4.5, price: 299, nights: 3, tag: 'Indian', tagColor: 'bg-[#c77e36] text-white', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80' },
+  { id: 'disney-cruise', name: 'Disney Cruise Line', tagline: 'Singapore - Asia Pacific', rating: 5, price: 899, nights: 7, tag: 'Family Favourite', tagColor: 'bg-[#12103d] text-white', image: 'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=800&q=80' },
+  { id: 'royal-caribbean', name: 'Royal Caribbean', tagline: 'Caribbean Adventures', rating: 5, price: 699, nights: 7, tag: 'Most Popular', tagColor: 'bg-[#d19457] text-white', image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80' },
+  { id: 'norwegian-cruise', name: 'Norwegian Cruise', tagline: 'Alaska & Europe', rating: 4.5, price: 599, nights: 5, tag: 'Best Value', tagColor: 'bg-[#44618b] text-white', image: 'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80' },
+  { id: 'celebrity-cruises', name: 'Celebrity Cruises', tagline: 'Mediterranean Luxury', rating: 5, price: 899, nights: 10, tag: 'Premium', tagColor: 'bg-[#8550a2] text-white', image: 'https://images.unsplash.com/photo-1580541631950-7282082b53ce?w=800&q=80' },
+  { id: 'cordelia-cruises', name: 'Cordelia Cruises', tagline: "India's Premium Line", rating: 4.5, price: 299, nights: 3, tag: 'Indian', tagColor: 'bg-[#c77e36] text-white', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80' },
 ]
 
 export default function CruisesSection() {
@@ -65,7 +65,7 @@ export default function CruisesSection() {
               Experience the ultimate luxury on the high seas with our handpicked cruise partners
             </p>
           </div>
-          <a href="#cruises" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#d19457] hover:text-white transition-colors mt-4 md:mt-0">
+          <a href="/cruises" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#d19457] hover:text-white transition-colors mt-4 md:mt-0">
             View All Cruises <ArrowRight className="w-4 h-4" />
           </a>
         </div>
@@ -86,7 +86,7 @@ export default function CruisesSection() {
 
           <div ref={scrollRef} className="carousel-container flex gap-6 overflow-x-auto pb-4">
             {cruises.map((cruise) => (
-              <a key={cruise.id} href="#cruises" className="flex-shrink-0 w-[340px] group">
+              <a key={cruise.id} href={`/cruises?cruise=${cruise.id}`} className="flex-shrink-0 w-[340px] group">
                 <div className="h-[400px] rounded-3xl overflow-hidden bg-white shadow-lg destination-card">
                   <div className="relative h-52 overflow-hidden">
                     <div className="destination-image absolute inset-0 bg-cover bg-center transition-transform duration-700" style={{ backgroundImage: `url(${cruise.image})` }} />
@@ -115,7 +115,7 @@ export default function CruisesSection() {
             ))}
 
             {/* View More */}
-            <a href="#cruises" className="flex-shrink-0 w-[340px] group">
+            <a href="/cruises" className="flex-shrink-0 w-[340px] group">
               <div className="h-[400px] rounded-3xl bg-white/10 backdrop-blur-sm border-2 border-dashed border-white/20 p-8 flex flex-col items-center justify-center hover:border-[#d19457] transition-colors">
                 <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-6 group-hover:bg-[#d19457]/20 transition-colors">
                   <Ship className="w-8 h-8 text-white group-hover:text-[#d19457] transition-colors" />
