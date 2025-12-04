@@ -28,7 +28,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20 gap-4">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group flex-shrink-0">
+          <a href="/" className="flex items-center gap-3 group flex-shrink-0">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#12103d] to-[#43124a] flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
               <span className="text-white font-display text-xl font-bold">T</span>
             </div>
