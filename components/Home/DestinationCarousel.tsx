@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, MapPin, Calendar, ArrowRight, Sparkles } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MapPin, Calendar, ArrowRight, Sparkles, Building2, Compass } from 'lucide-react'
 
 export type DestinationItem = {
   id: string
@@ -12,14 +12,21 @@ export type DestinationItem = {
   image: string
   isCustom?: boolean
   isViewMore?: boolean
+  // New fields for linking
+  itemType?: 'tour' | 'resort'
+  itemId?: string
+  tag?: string
+  tagColor?: string
+  priceLabel?: string // e.g., "/person" or "/night"
 }
 
 type Props = {
   items: DestinationItem[]
   sectionHref: string
+  countrySlug?: string // e.g., "thailand", "maldives"
 }
 
-export default function DestinationCarousel({ items, sectionHref }: Props) {
+export default function DestinationCarousel({ items, sectionHref, countrySlug }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -48,6 +55,16 @@ export default function DestinationCarousel({ items, sectionHref }: Props) {
     }
   }
 
+  // Generate href for each item
+  const getItemHref = (item: DestinationItem) => {
+    if (item.isCustom || item.isViewMore) return sectionHref
+    if (countrySlug && item.itemType && item.itemId) {
+      const section = item.itemType === 'tour' ? 'tours' : 'resorts'
+      return `/${countrySlug}?${item.itemType}=${item.itemId}#${section}`
+    }
+    return sectionHref
+  }
+
   return (
     <div className="relative">
       {/* Navigation */}
@@ -72,7 +89,7 @@ export default function DestinationCarousel({ items, sectionHref }: Props) {
       {/* Carousel */}
       <div ref={scrollRef} className="carousel-container flex gap-6 overflow-x-auto pb-4">
         {items.map((item) => (
-          <a key={item.id} href={sectionHref} className="flex-shrink-0 w-[340px] group">
+          <a key={item.id} href={getItemHref(item)} className="flex-shrink-0 w-[340px] group">
             {item.isCustom ? (
               <div className="h-[420px] rounded-3xl bg-gradient-to-br from-[#12103d] to-[#43124a] p-8 flex flex-col justify-between overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-[#d19457] opacity-10 rounded-full blur-3xl" />
@@ -96,7 +113,7 @@ export default function DestinationCarousel({ items, sectionHref }: Props) {
                   <ArrowRight className="w-8 h-8 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
                 </div>
                 <h3 className="font-display text-2xl text-[#12103d] mb-2">View More</h3>
-                <p className="font-sans text-sm text-[#44618b] text-center">Explore all packages</p>
+                <p className="font-sans text-sm text-[#44618b] text-center">Explore all tours & resorts</p>
               </div>
             ) : (
               <div className="h-[420px] rounded-3xl overflow-hidden bg-white shadow-lg border border-[#12103d]/5 destination-card">
@@ -106,9 +123,28 @@ export default function DestinationCarousel({ items, sectionHref }: Props) {
                     style={{ backgroundImage: `url(${item.image})` }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#12103d]/60 via-transparent to-transparent" />
+                  {/* Tag badge */}
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    {item.tag && (
+                      <span className={`px-3 py-1 text-xs font-sans font-semibold rounded-full ${item.tagColor || 'bg-[#d19457] text-white'}`}>
+                        {item.tag}
+                      </span>
+                    )}
+                    {item.itemType && (
+                      <span className={`px-3 py-1 text-xs font-sans font-semibold rounded-full flex items-center gap-1 ${
+                        item.itemType === 'tour' ? 'bg-[#12103d] text-white' : 'bg-[#8550a2] text-white'
+                      }`}>
+                        {item.itemType === 'tour' ? <Compass className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
+                        {item.itemType === 'tour' ? 'Tour' : 'Resort'}
+                      </span>
+                    )}
+                  </div>
                   <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2">
                     <span className="font-sans text-xs text-[#44618b]">From</span>
-                    <span className="font-display text-xl font-bold text-[#12103d] ml-1">${item.price}</span>
+                    <span className="font-display text-xl font-bold text-[#12103d] ml-1">
+                      {item.priceLabel === '/night' ? `₹${item.price >= 1000 ? (item.price/1000).toFixed(0) + 'K' : item.price}` : `$${item.price}`}
+                    </span>
+                    <span className="font-sans text-xs text-[#44618b]">{item.priceLabel || '/person'}</span>
                   </div>
                 </div>
                 <div className="p-6">
