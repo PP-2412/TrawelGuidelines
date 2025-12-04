@@ -2,17 +2,54 @@
 
 import { TreePalm } from 'lucide-react'
 import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
+import { indonesiaData } from './Destinations/destinationsData'
 
-const packages: DestinationItem[] = [
-  { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
-  { id: 'bali-escape', title: 'Bali Escape', subtitle: 'Ubud • Seminyak • Nusa Dua', duration: '7 Nights', price: 1599, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80' },
-  { id: 'bali-adventure', title: 'Bali Adventure', subtitle: 'Ubud • Canggu • Uluwatu', duration: '8 Nights', price: 1799, image: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80' },
-  { id: 'komodo', title: 'Komodo Expedition', subtitle: 'Labuan Bajo • Komodo Island', duration: '5 Nights', price: 1999, image: 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=80' },
-  { id: 'java', title: 'Java Cultural Tour', subtitle: 'Jakarta • Yogyakarta • Borobudur', duration: '6 Nights', price: 1399, image: 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=800&q=80' },
-  { id: 'gili', title: 'Gili Islands Getaway', subtitle: 'Bali • Gili Trawangan • Lombok', duration: '8 Nights', price: 1699, image: 'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?w=800&q=80' },
-  { id: 'luxury-bali', title: 'Luxury Bali Villa', subtitle: 'Private Villa Experience', duration: '6 Nights', price: 2499, image: 'https://images.unsplash.com/photo-1559628233-100c798642d4?w=800&q=80' },
-  { id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true },
-]
+// Create mixed items from tours and resorts
+const createMixedItems = (): DestinationItem[] => {
+  const items: DestinationItem[] = [
+    { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
+  ]
+
+  // Add 3 tours
+  indonesiaData.tours.slice(0, 3).forEach(tour => {
+    items.push({
+      id: `tour-${tour.id}`,
+      title: tour.name,
+      subtitle: tour.description.slice(0, 50) + '...',
+      duration: tour.duration,
+      price: tour.price,
+      image: tour.image,
+      itemType: 'tour',
+      itemId: tour.id,
+      tag: tour.category.charAt(0).toUpperCase() + tour.category.slice(1),
+      tagColor: 'bg-[#d19457] text-white',
+      priceLabel: '/person',
+    })
+  })
+
+  // Add 3 resorts
+  indonesiaData.resorts.slice(0, 3).forEach(resort => {
+    items.push({
+      id: `resort-${resort.id}`,
+      title: resort.name,
+      subtitle: resort.location,
+      duration: resort.tag || 'Available Now',
+      price: resort.pricePerNight,
+      image: resort.image,
+      itemType: 'resort',
+      itemId: resort.id,
+      tag: resort.budgetRange === '100+' ? 'Luxury' : resort.budgetRange === '50-100' ? 'Premium' : resort.budgetRange === '25-50' ? 'Mid-Range' : 'Budget',
+      tagColor: resort.budgetRange === '100+' ? 'bg-[#12103d] text-white' : resort.budgetRange === '50-100' ? 'bg-[#d19457] text-white' : resort.budgetRange === '25-50' ? 'bg-[#8550a2] text-white' : 'bg-[#44618b] text-white',
+      priceLabel: '/night',
+    })
+  })
+
+  items.push({ id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true })
+
+  return items
+}
+
+const packages = createMixedItems()
 
 export default function IndonesiaSection() {
   return (
@@ -31,11 +68,11 @@ export default function IndonesiaSection() {
             </h2>
             <p className="font-sans text-[#44618b] max-w-lg">From Bali&apos;s rice terraces to Komodo dragons, discover island paradise</p>
           </div>
-          <a href="#indonesia" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+          <a href="/indonesia" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="#indonesia" />
+        <DestinationCarousel items={packages} sectionHref="/indonesia" countrySlug="indonesia" />
       </div>
     </section>
   )
