@@ -1,8 +1,8 @@
 'use client'
 
 import { Palmtree } from 'lucide-react'
-import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
-import { thailandData } from './Destinations/destinationsData'
+import DestinationCarousel, { DestinationItem } from '@/components/Destinations/destinationsData'
+import { thailandData } from '@/components/Destinations/destinationsData'
 
 // Create mixed items from tours and resorts
 const createMixedItems = (): DestinationItem[] => {
