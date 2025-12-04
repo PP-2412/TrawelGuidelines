@@ -2,17 +2,54 @@
 
 import { Waves } from 'lucide-react'
 import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
+import { maldivesData } from './Destinations/destinationsData'
 
-const packages: DestinationItem[] = [
-  { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
-  { id: 'water-villa', title: 'Luxury Water Villa', subtitle: 'Overwater Bungalow Experience', duration: '5 Nights', price: 3499, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80' },
-  { id: 'honeymoon', title: 'Honeymoon Paradise', subtitle: 'Private Beach & Spa', duration: '6 Nights', price: 4299, image: 'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80' },
-  { id: 'diving', title: 'Diving Adventure', subtitle: 'Underwater Discovery', duration: '7 Nights', price: 3199, image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80' },
-  { id: 'all-inclusive', title: 'All-Inclusive Bliss', subtitle: 'Premium Resort Stay', duration: '5 Nights', price: 3899, image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=800&q=80' },
-  { id: 'family', title: 'Family Beach Villa', subtitle: 'Kid-Friendly Resort', duration: '6 Nights', price: 3599, image: 'https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80' },
-  { id: 'budget', title: 'Budget Paradise', subtitle: 'Local Island Stay', duration: '5 Nights', price: 1499, image: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80' },
-  { id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true },
-]
+// Create mixed items from tours and resorts
+const createMixedItems = (): DestinationItem[] => {
+  const items: DestinationItem[] = [
+    { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
+  ]
+
+  // Add 3 tours
+  maldivesData.tours.slice(0, 3).forEach(tour => {
+    items.push({
+      id: `tour-${tour.id}`,
+      title: tour.name,
+      subtitle: tour.description.slice(0, 50) + '...',
+      duration: tour.duration,
+      price: tour.price,
+      image: tour.image,
+      itemType: 'tour',
+      itemId: tour.id,
+      tag: tour.category.charAt(0).toUpperCase() + tour.category.slice(1),
+      tagColor: 'bg-[#d19457] text-white',
+      priceLabel: '/person',
+    })
+  })
+
+  // Add 3 resorts
+  maldivesData.resorts.slice(0, 3).forEach(resort => {
+    items.push({
+      id: `resort-${resort.id}`,
+      title: resort.name,
+      subtitle: resort.location,
+      duration: resort.tag || 'Available Now',
+      price: resort.pricePerNight,
+      image: resort.image,
+      itemType: 'resort',
+      itemId: resort.id,
+      tag: resort.budgetRange === '100+' ? 'Luxury' : resort.budgetRange === '50-100' ? 'Premium' : resort.budgetRange === '25-50' ? 'Mid-Range' : 'Budget',
+      tagColor: resort.budgetRange === '100+' ? 'bg-[#12103d] text-white' : resort.budgetRange === '50-100' ? 'bg-[#d19457] text-white' : resort.budgetRange === '25-50' ? 'bg-[#8550a2] text-white' : 'bg-[#44618b] text-white',
+      priceLabel: '/night',
+    })
+  })
+
+  items.push({ id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true })
+
+  return items
+}
+
+const packages = createMixedItems()
 
 export default function MaldivesSection() {
   return (
@@ -31,11 +68,11 @@ export default function MaldivesSection() {
             </h2>
             <p className="font-sans text-[#44618b] max-w-lg">Crystal clear waters, overwater villas, and the ultimate tropical escape</p>
           </div>
-          <a href="#maldives" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+          <a href="/maldives" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="#maldives" />
+        <DestinationCarousel items={packages} sectionHref="/maldives" countrySlug="maldives" />
       </div>
     </section>
   )
