@@ -31,7 +31,9 @@ export default function ThailandSection() {
             </h2>
             <p className="font-sans text-[#44618b] max-w-lg">Ancient temples, pristine beaches, and warm hospitality await</p>
           </div>
-          <p className="font-sans text-sm text-[#44618b] mt-4 md:mt-0"><span className="text-[#12103d] font-semibold">8</span> packages available</p>
+          <a href="#thailand" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+            View All →
+          </a>
         </div>
         <DestinationCarousel items={packages} sectionHref="#thailand" />
       </div>
