@@ -1,8 +1,8 @@
 'use client'
 
 import { Flower2 } from 'lucide-react'
-import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
-import { vietnamData } from './Destinations/destinationsData'
+import DestinationCarousel, { DestinationItem } from '@/components/Destinations/destinationsData'
+import { vietnamData } from '@/components/Destinations/destinationsData'
 
 // Create mixed items from tours and resorts
 const createMixedItems = (): DestinationItem[] => {
