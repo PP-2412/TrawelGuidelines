@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, Clock, MapPin, Check, Users, Heart, Gem, Compass, Sparkles, Leaf } from 'lucide-react'
 import { Tour, TourCategory, tourCategories, filterToursByCategory } from './destinationsData'
 
@@ -16,11 +16,23 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
 interface ToursSectionProps {
   tours: Tour[]
   countryName: string
+  initialTourId?: string | null
 }
 
-export default function ToursSection({ tours, countryName }: ToursSectionProps) {
+export default function ToursSection({ tours, countryName, initialTourId }: ToursSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<TourCategory>('all')
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null)
+
+  // Auto-select tour from URL param
+  useEffect(() => {
+    if (initialTourId) {
+      const tour = tours.find(t => t.id === initialTourId)
+      if (tour) {
+        setSelectedTour(tour)
+        setSelectedCategory(tour.category)
+      }
+    }
+  }, [initialTourId, tours])
 
   const filteredTours = filterToursByCategory(tours, selectedCategory)
 
