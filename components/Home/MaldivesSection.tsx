@@ -1,7 +1,7 @@
 'use client'
 
 import { Waves } from 'lucide-react'
-import DestinationCarousel, { DestinationItem } from '@/components/Destinations/destinationsData'
+import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
 import { maldivesData } from '@/components/Destinations/destinationsData'
 
 // Create mixed items from tours and resorts
