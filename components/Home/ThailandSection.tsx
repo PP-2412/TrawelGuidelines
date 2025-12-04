@@ -2,17 +2,54 @@
 
 import { Palmtree } from 'lucide-react'
 import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
+import { thailandData } from './Destinations/destinationsData'
 
-const packages: DestinationItem[] = [
-  { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
-  { id: 'paradise', title: 'Thailand Paradise', subtitle: 'Bangkok • Phuket • Krabi', duration: '8 Nights', price: 1299, image: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80' },
-  { id: 'island', title: 'Island Hopping', subtitle: 'Phuket • Phi Phi • Koh Samui', duration: '10 Nights', price: 1599, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80' },
-  { id: 'cultural', title: 'Cultural North', subtitle: 'Bangkok • Chiang Mai • Chiang Rai', duration: '7 Nights', price: 1199, image: 'https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=80' },
-  { id: 'beaches', title: 'Bangkok & Beaches', subtitle: 'Bangkok • Pattaya • Hua Hin', duration: '6 Nights', price: 999, image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80' },
-  { id: 'luxury', title: 'Luxury Retreat', subtitle: 'Bangkok • Koh Samui Villa', duration: '7 Nights', price: 2299, image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80' },
-  { id: 'adventure', title: 'Adventure Thailand', subtitle: 'Krabi • Khao Sok • Phuket', duration: '9 Nights', price: 1499, image: 'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=800&q=80' },
-  { id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true },
-]
+// Create mixed items from tours and resorts
+const createMixedItems = (): DestinationItem[] => {
+  const items: DestinationItem[] = [
+    { id: 'create', title: 'Create Your Own', subtitle: '', duration: '', price: 0, image: '', isCustom: true },
+  ]
+
+  // Add 3 tours
+  thailandData.tours.slice(0, 3).forEach(tour => {
+    items.push({
+      id: `tour-${tour.id}`,
+      title: tour.name,
+      subtitle: tour.description.slice(0, 50) + '...',
+      duration: tour.duration,
+      price: tour.price,
+      image: tour.image,
+      itemType: 'tour',
+      itemId: tour.id,
+      tag: tour.category.charAt(0).toUpperCase() + tour.category.slice(1),
+      tagColor: 'bg-[#d19457] text-white',
+      priceLabel: '/person',
+    })
+  })
+
+  // Add 3 resorts
+  thailandData.resorts.slice(0, 3).forEach(resort => {
+    items.push({
+      id: `resort-${resort.id}`,
+      title: resort.name,
+      subtitle: resort.location,
+      duration: resort.tag || 'Available Now',
+      price: resort.pricePerNight,
+      image: resort.image,
+      itemType: 'resort',
+      itemId: resort.id,
+      tag: resort.budgetRange === '100+' ? 'Luxury' : resort.budgetRange === '50-100' ? 'Premium' : resort.budgetRange === '25-50' ? 'Mid-Range' : 'Budget',
+      tagColor: resort.budgetRange === '100+' ? 'bg-[#12103d] text-white' : resort.budgetRange === '50-100' ? 'bg-[#d19457] text-white' : resort.budgetRange === '25-50' ? 'bg-[#8550a2] text-white' : 'bg-[#44618b] text-white',
+      priceLabel: '/night',
+    })
+  })
+
+  items.push({ id: 'view-more', title: 'View More', subtitle: '', duration: '', price: 0, image: '', isViewMore: true })
+
+  return items
+}
+
+const packages = createMixedItems()
 
 export default function ThailandSection() {
   return (
@@ -31,11 +68,11 @@ export default function ThailandSection() {
             </h2>
             <p className="font-sans text-[#44618b] max-w-lg">Ancient temples, pristine beaches, and warm hospitality await</p>
           </div>
-          <a href="#thailand" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+          <a href="/thailand" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="#thailand" />
+        <DestinationCarousel items={packages} sectionHref="/thailand" countrySlug="thailand" />
       </div>
     </section>
   )
