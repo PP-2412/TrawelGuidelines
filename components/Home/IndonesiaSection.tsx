@@ -1,8 +1,8 @@
 'use client'
 
 import { TreePalm } from 'lucide-react'
-import DestinationCarousel, { DestinationItem } from './DestinationCarousel'
-import { indonesiaData } from './Destinations/destinationsData'
+import DestinationCarousel, { DestinationItem } from '@/components/Destinations/destinationsData'
+import { indonesiaData } from '@/components/Destinations/destinationsData'
 
 // Create mixed items from tours and resorts
 const createMixedItems = (): DestinationItem[] => {
