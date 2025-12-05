@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
 import CountryHero from '@/components/Destinations/CountryHero'
+import CreateYourOwn from '@/components/Destinations/CreateYourOwn'
 import ToursSection from '@/components/Destinations/ToursSection'
 import ResortsSection from '@/components/Destinations/ResortsSection'
 import { maldivesData } from '@/components/Destinations/destinationsData'
@@ -17,6 +18,7 @@ function MaldivesContent() {
   return (
     <>
       <CountryHero country={maldivesData} />
+      <CreateYourOwn countryName={maldivesData.name} />
       <ToursSection 
         tours={maldivesData.tours} 
         countryName={maldivesData.name} 
