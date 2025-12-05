@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const destinations = [
@@ -16,11 +17,17 @@ const destinations = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: direction === 'left' ? -150 : 150, behavior: 'smooth' })
     }
+  }
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
   }
 
   return (
@@ -53,10 +60,18 @@ export default function Navbar() {
                 <a
                   key={dest.name}
                   href={dest.href}
-                  className="nav-link font-sans text-xs font-medium tracking-[2px] uppercase text-[#12103d] hover:text-[#d19457] transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap"
+                  className={`nav-link font-sans text-xs font-medium tracking-[2px] uppercase transition-all flex items-center gap-2 flex-shrink-0 whitespace-nowrap relative py-2 ${
+                    isActive(dest.href)
+                      ? 'text-[#d19457]'
+                      : 'text-[#12103d] hover:text-[#d19457]'
+                  }`}
                 >
-                  <dest.icon className="w-4 h-4" />
+                  <dest.icon className={`w-4 h-4 ${isActive(dest.href) ? 'text-[#d19457]' : ''}`} />
                   {dest.name}
+                  {/* Active indicator bar */}
+                  {isActive(dest.href) && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#d19457] rounded-full" />
+                  )}
                 </a>
               ))}
             </div>
@@ -91,11 +106,17 @@ export default function Navbar() {
                 <a
                   key={dest.name}
                   href={dest.href}
-                  className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-[#f5f5f5] transition-colors"
+                  className={`flex items-center gap-3 py-3 px-4 rounded-lg transition-colors ${
+                    isActive(dest.href)
+                      ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                      : 'hover:bg-[#f5f5f5]'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
-                  <dest.icon className="w-5 h-5 text-[#43124a]" />
-                  <span className="font-sans text-sm font-medium text-[#12103d]">{dest.name}</span>
+                  <dest.icon className={`w-5 h-5 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                  <span className={`font-sans text-sm font-medium ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                    {dest.name}
+                  </span>
                 </a>
               ))}
               <div className="pt-4 border-t border-[#12103d]/10">
