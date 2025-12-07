@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
 import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, ArrowRight, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Coins, Settings2, Map, Check } from 'lucide-react'
@@ -31,14 +32,29 @@ const budgetOptions = [
   { id: 'luxury' as const, name: 'Luxury', range: '$5,000+' },
 ]
 
-export default function EuropePage() {
-  const [activeTab, setActiveTab] = useState<TabType>('tours')
+function EuropeContent() {
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    if (tabParam === 'customise' || tabParam === 'customize') return 'customise'
+    return 'tours'
+  })
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCities, setSelectedCities] = useState<SelectedCity[]>([])
   const [tripType, setTripType] = useState<TripType>(null)
   const [budget, setBudget] = useState<BudgetType>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
+
+  // Update tab when URL parameter changes
+  useEffect(() => {
+    if (tabParam === 'customise' || tabParam === 'customize') {
+      setActiveTab('customise')
+    } else if (tabParam === 'tours') {
+      setActiveTab('tours')
+    }
+  }, [tabParam])
 
   // Filter cities based on search
   const filteredCities = useMemo(() => {
@@ -122,9 +138,7 @@ export default function EuropePage() {
   }
 
   return (
-    <main>
-      <Navbar />
-      
+    <>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <div
@@ -720,7 +734,21 @@ export default function EuropePage() {
           </div>
         </section>
       )}
+    </>
+  )
+}
 
+export default function EuropePage() {
+  return (
+    <main>
+      <Navbar />
+      <Suspense fallback={
+        <div className="pt-28 pb-20 min-h-screen flex items-center justify-center">
+          <p className="font-sans text-[#44618b]">Loading Europe experiences...</p>
+        </div>
+      }>
+        <EuropeContent />
+      </Suspense>
       <Footer />
     </main>
   )
