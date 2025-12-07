@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Star, Clock, Check, Users, Heart, Gem, Compass, Sparkles, Leaf, X } from 'lucide-react'
+import { Star, Clock, Check, Users, Heart, Gem, Compass, Sparkles, Leaf, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Tour, TourCategory, tourCategories, filterToursByCategory } from './destinationsData'
 
 const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -22,6 +22,12 @@ interface ToursSectionProps {
 export default function ToursSection({ tours, countryName, initialTourId }: ToursSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<TourCategory>('all')
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  // Reset image index when tour changes
+  useEffect(() => {
+    setCurrentImageIndex(0)
+  }, [selectedTour])
 
   // Auto-select tour from URL param
   useEffect(() => {
@@ -34,14 +40,26 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
     }
   }, [initialTourId, tours])
 
-  // Close modal on escape key
+  // Close modal on escape key, navigate images with arrow keys
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSelectedTour(null)
+      if (selectedTour && selectedTour.images) {
+        if (e.key === 'ArrowLeft') {
+          setCurrentImageIndex(prev => 
+            prev === 0 ? selectedTour.images.length - 1 : prev - 1
+          )
+        }
+        if (e.key === 'ArrowRight') {
+          setCurrentImageIndex(prev => 
+            prev === selectedTour.images.length - 1 ? 0 : prev + 1
+          )
+        }
+      }
     }
-    window.addEventListener('keydown', handleEscape)
-    return () => window.removeEventListener('keydown', handleEscape)
-  }, [])
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedTour])
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -178,13 +196,69 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
             style={{ animation: 'modalIn 0.3s ease-out' }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header with Image */}
+            {/* Modal Header with Image Carousel */}
             <div className="relative h-64 md:h-80">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${selectedTour.image})` }}
-              />
+              {/* Image Carousel */}
+              <div className="relative w-full h-full overflow-hidden">
+                {(selectedTour.images || [selectedTour.image]).map((img, idx) => (
+                  <div
+                    key={idx}
+                    className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ${
+                      idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{ backgroundImage: `url(${img})` }}
+                  />
+                ))}
+              </div>
               <div className="absolute inset-0 bg-gradient-to-t from-[#12103d] via-[#12103d]/40 to-transparent" />
+              
+              {/* Navigation Arrows */}
+              {selectedTour.images && selectedTour.images.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentImageIndex(prev => 
+                        prev === 0 ? selectedTour.images.length - 1 : prev - 1
+                      )
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentImageIndex(prev => 
+                        prev === selectedTour.images.length - 1 ? 0 : prev + 1
+                      )
+                    }}
+                    className="absolute right-16 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
+                  >
+                    <ChevronRight className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                  </button>
+                </>
+              )}
+
+              {/* Image Indicators */}
+              {selectedTour.images && selectedTour.images.length > 1 && (
+                <div className="absolute bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                  {selectedTour.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setCurrentImageIndex(idx)
+                      }}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        idx === currentImageIndex 
+                          ? 'bg-white w-6' 
+                          : 'bg-white/50 hover:bg-white/80'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
               
               {/* Close Button */}
               <button
@@ -198,6 +272,13 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
               <span className="absolute top-4 left-4 px-4 py-1.5 text-xs font-sans font-semibold rounded-full bg-[#d19457] text-white capitalize">
                 {selectedTour.category}
               </span>
+
+              {/* Image Counter */}
+              {selectedTour.images && selectedTour.images.length > 1 && (
+                <span className="absolute top-4 left-28 px-3 py-1.5 text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
+                  {currentImageIndex + 1} / {selectedTour.images.length}
+                </span>
+              )}
 
               {/* Title Overlay */}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
