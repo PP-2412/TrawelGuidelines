@@ -34,11 +34,15 @@ export default function EuropeSection() {
               From historic cities to stunning coastlines, discover the charm of the Old Continent
             </p>
           </div>
-          <a href="#europe" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
+          <a href="/europe?tab=tours" className="font-sans text-sm font-medium text-[#d19457] hover:text-[#12103d] transition-colors mt-4 md:mt-0 inline-flex items-center gap-1">
             View All →
           </a>
         </div>
-        <DestinationCarousel items={europePackages} sectionHref="#europe" />
+        <DestinationCarousel 
+          items={europePackages} 
+          sectionHref="/europe?tab=tours" 
+          customHref="/europe?tab=customise"
+        />
       </div>
     </section>
   )
