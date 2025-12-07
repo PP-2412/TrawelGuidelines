@@ -24,9 +24,10 @@ type Props = {
   items: DestinationItem[]
   sectionHref: string
   countrySlug?: string // e.g., "thailand", "maldives"
+  customHref?: string // separate href for "Create Your Own" cards
 }
 
-export default function DestinationCarousel({ items, sectionHref, countrySlug }: Props) {
+export default function DestinationCarousel({ items, sectionHref, countrySlug, customHref }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -57,7 +58,9 @@ export default function DestinationCarousel({ items, sectionHref, countrySlug }:
 
   // Generate href for each item
   const getItemHref = (item: DestinationItem) => {
-    if (item.isCustom || item.isViewMore) return sectionHref
+    // Use customHref for "Create Your Own" cards if provided
+    if (item.isCustom) return customHref || sectionHref
+    if (item.isViewMore) return sectionHref
     if (countrySlug && item.itemType && item.itemId) {
       const section = item.itemType === 'tour' ? 'tours' : 'resorts'
       return `/${countrySlug}?${item.itemType}=${item.itemId}#${section}`
