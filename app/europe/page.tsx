@@ -4,10 +4,10 @@ import { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, ArrowRight, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react'
-import { europeCities, europeTours, europeCruises, EuropeCity, EuropeTour, EuropeCruise, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
 
-type TabType = 'customise' | 'tours' | 'cruises'
+type TabType = 'customise' | 'tours'
 type TripType = 'adventure' | 'romantic' | 'family' | 'friends' | 'cultural' | 'luxury' | null
 type BudgetType = 'budget' | 'comfort' | 'premium' | 'luxury' | null
 
@@ -38,7 +38,6 @@ function EuropeContent() {
   
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     if (tabParam === 'customise' || tabParam === 'customize') return 'customise'
-    if (tabParam === 'cruises') return 'cruises'
     return 'tours'
   })
   const [searchQuery, setSearchQuery] = useState('')
@@ -49,7 +48,6 @@ function EuropeContent() {
   
   // Modal states
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
-  const [selectedCruise, setSelectedCruise] = useState<EuropeCruise | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // Update tab when URL parameter changes
@@ -58,45 +56,41 @@ function EuropeContent() {
       setActiveTab('customise')
     } else if (tabParam === 'tours') {
       setActiveTab('tours')
-    } else if (tabParam === 'cruises') {
-      setActiveTab('cruises')
     }
   }, [tabParam])
 
   // Reset image index when modal changes
   useEffect(() => {
     setCurrentImageIndex(0)
-  }, [selectedTour, selectedCruise])
+  }, [selectedTour])
 
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setSelectedTour(null)
-        setSelectedCruise(null)
       }
       
-      const currentItem = selectedTour || selectedCruise
-      if (currentItem && currentItem.images) {
+      if (selectedTour && selectedTour.images) {
         if (e.key === 'ArrowLeft') {
           setCurrentImageIndex(prev => 
-            prev === 0 ? currentItem.images.length - 1 : prev - 1
+            prev === 0 ? selectedTour.images.length - 1 : prev - 1
           )
         }
         if (e.key === 'ArrowRight') {
           setCurrentImageIndex(prev => 
-            prev === currentItem.images.length - 1 ? 0 : prev + 1
+            prev === selectedTour.images.length - 1 ? 0 : prev + 1
           )
         }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedTour, selectedCruise])
+  }, [selectedTour])
 
   // Prevent body scroll when modal is open
   useEffect(() => {
-    if (selectedTour || selectedCruise) {
+    if (selectedTour) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
@@ -104,7 +98,7 @@ function EuropeContent() {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [selectedTour, selectedCruise])
+  }, [selectedTour])
 
   // Filter cities based on search
   const filteredCities = useMemo(() => {
@@ -223,7 +217,7 @@ function EuropeContent() {
           </p>
           
           <p className="font-sans text-lg text-white/80 max-w-2xl mx-auto">
-            Build your dream European adventure or choose from our expertly curated tours and cruises
+            Build your dream European adventure or choose from our expertly curated tours
           </p>
         </div>
       </section>
@@ -231,39 +225,28 @@ function EuropeContent() {
       {/* Tabs Section */}
       <section className="py-8 bg-white sticky top-20 z-40 border-b border-[#12103d]/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex justify-center gap-4">
             <button
               onClick={() => setActiveTab('tours')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+              className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
                 activeTab === 'tours'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
                   : 'bg-[#f5f5f5] text-[#44618b] hover:bg-[#12103d]/10'
               }`}
             >
               <Map className="w-5 h-5" />
-              Tours
-            </button>
-            <button
-              onClick={() => setActiveTab('cruises')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
-                activeTab === 'cruises'
-                  ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
-                  : 'bg-[#f5f5f5] text-[#44618b] hover:bg-[#12103d]/10'
-              }`}
-            >
-              <Ship className="w-5 h-5" />
-              Cruises
+              Pre-Made Tours
             </button>
             <button
               onClick={() => setActiveTab('customise')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+              className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
                 activeTab === 'customise'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
                   : 'bg-[#f5f5f5] text-[#44618b] hover:bg-[#12103d]/10'
               }`}
             >
               <Settings2 className="w-5 h-5" />
-              Custom Trip
+              Customise Itinerary
             </button>
           </div>
         </div>
@@ -278,10 +261,10 @@ function EuropeContent() {
                 Expertly Crafted
               </span>
               <h2 className="font-display text-4xl md:text-5xl text-[#12103d] mb-4">
-                Europe <span className="font-accent text-[#d19457]">Tours</span>
+                Curated <span className="font-accent text-[#d19457]">Tours</span>
               </h2>
               <p className="font-sans text-[#44618b] max-w-xl mx-auto">
-                Perfectly planned itineraries for unforgettable European adventures
+                Expertly designed itineraries for unforgettable European adventures
               </p>
             </div>
 
@@ -327,80 +310,6 @@ function EuropeContent() {
                       <div>
                         <span className="font-sans text-xs text-[#44618b]">From </span>
                         <span className="font-display text-xl font-bold text-[#12103d]">${tour.price}</span>
-                      </div>
-                      <span className="text-[#d19457] font-sans text-sm font-medium">View Details →</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Cruises Tab */}
-      {activeTab === 'cruises' && (
-        <section className="py-16 bg-gradient-to-b from-[#f5f5f5] to-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-12">
-              <span className="inline-block font-sans text-xs font-medium tracking-[4px] uppercase text-[#d19457] mb-4">
-                Sail in Style
-              </span>
-              <h2 className="font-display text-4xl md:text-5xl text-[#12103d] mb-4">
-                Europe <span className="font-accent text-[#d19457]">Cruises</span>
-              </h2>
-              <p className="font-sans text-[#44618b] max-w-xl mx-auto">
-                Discover Europe&apos;s most stunning coastlines from the comfort of world-class ships
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {europeCruises.map((cruise) => (
-                <div
-                  key={cruise.id}
-                  onClick={() => setSelectedCruise(cruise)}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-[#d19457]/50 hover:shadow-xl cursor-pointer transition-all duration-300"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-110"
-                      style={{ backgroundImage: `url(${cruise.image})` }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#12103d]/60 via-transparent to-transparent" />
-                    {cruise.tag && (
-                      <span className={`absolute top-3 left-3 px-3 py-1 text-xs font-sans font-semibold rounded-full ${cruise.tagColor}`}>
-                        {cruise.tag}
-                      </span>
-                    )}
-                    <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white">
-                      <Ship className="w-4 h-4" />
-                      <span className="font-sans text-xs">{cruise.shipName}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-5">
-                    <div className="flex items-center gap-1 mb-2">
-                      {renderStars(cruise.rating)}
-                      <span className="font-sans text-xs text-[#44618b] ml-1">({cruise.rating})</span>
-                    </div>
-                    <h3 className="font-display text-lg text-[#12103d] mb-1">{cruise.name}</h3>
-                    <p className="font-sans text-sm text-[#d19457] mb-2">{cruise.tagline}</p>
-                    
-                    <div className="flex items-center gap-4 text-[#44618b] text-sm mb-4">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {cruise.duration}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Anchor className="w-4 h-4" />
-                        {cruise.route.length} Ports
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-[#12103d]/5">
-                      <div>
-                        <span className="font-sans text-xs text-[#44618b]">From </span>
-                        <span className="font-display text-xl font-bold text-[#12103d]">${cruise.price}</span>
                       </div>
                       <span className="text-[#d19457] font-sans text-sm font-medium">View Details →</span>
                     </div>
@@ -841,199 +750,6 @@ function EuropeContent() {
                     Book Now
                   </a>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <style jsx>{`
-            @keyframes modalIn {
-              from { opacity: 0; transform: scale(0.95) translateY(10px); }
-              to { opacity: 1; transform: scale(1) translateY(0); }
-            }
-          `}</style>
-        </div>
-      )}
-
-      {/* Cruise Modal Popup */}
-      {selectedCruise && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setSelectedCruise(null)}
-        >
-          <div 
-            className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-            style={{ animation: 'modalIn 0.3s ease-out' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative h-64 md:h-80">
-              <div className="relative w-full h-full overflow-hidden">
-                {selectedCruise.images.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ${
-                      idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    style={{ backgroundImage: `url(${img})` }}
-                  />
-                ))}
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12103d] via-[#12103d]/40 to-transparent" />
-              
-              {selectedCruise.images.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); prevImage(selectedCruise.images) }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); nextImage(selectedCruise.images) }}
-                    className="absolute right-16 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
-                  >
-                    <ChevronRight className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
-                  </button>
-                </>
-              )}
-
-              {selectedCruise.images.length > 1 && (
-                <div className="absolute bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                  {selectedCruise.images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx) }}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        idx === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-              
-              <button
-                onClick={() => setSelectedCruise(null)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10"
-              >
-                <X className="w-5 h-5 text-[#12103d]" />
-              </button>
-
-              {selectedCruise.tag && (
-                <span className={`absolute top-4 left-4 px-4 py-1.5 text-xs font-sans font-semibold rounded-full ${selectedCruise.tagColor}`}>
-                  {selectedCruise.tag}
-                </span>
-              )}
-
-              {selectedCruise.images.length > 1 && (
-                <span className="absolute top-4 left-32 px-3 py-1.5 text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
-                  {currentImageIndex + 1} / {selectedCruise.images.length}
-                </span>
-              )}
-
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex items-center gap-0.5">{renderStars(selectedCruise.rating)}</div>
-                  <span className="font-sans text-sm text-white/80">({selectedCruise.rating})</span>
-                </div>
-                <h2 className="font-display text-3xl md:text-4xl text-white">{selectedCruise.name}</h2>
-                <div className="flex items-center gap-3 mt-2">
-                  <Ship className="w-5 h-5 text-[#d19457]" />
-                  <span className="font-sans text-lg text-white/90">{selectedCruise.shipName}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 md:p-8 overflow-y-auto max-h-[calc(90vh-20rem)]">
-              <p className="font-sans text-[#44618b] text-lg mb-6">{selectedCruise.description}</p>
-
-              <div className="flex items-center gap-6 mb-8">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-[#43124a]" />
-                  </div>
-                  <div>
-                    <p className="font-sans text-xs text-[#44618b]">Duration</p>
-                    <p className="font-sans text-sm font-semibold text-[#12103d]">{selectedCruise.duration}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Anchor className="w-5 h-5 text-[#43124a]" />
-                  </div>
-                  <div>
-                    <p className="font-sans text-xs text-[#44618b]">Ports</p>
-                    <p className="font-sans text-sm font-semibold text-[#12103d]">{selectedCruise.route.length} Destinations</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">Cruise Route</h4>
-                <div className="flex flex-wrap items-center gap-2">
-                  {selectedCruise.route.map((port, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-[#f5f5f5] rounded-full">
-                        <MapPin className="w-4 h-4 text-[#d19457]" />
-                        <span className="font-sans text-sm text-[#12103d]">{port}</span>
-                      </div>
-                      {idx < selectedCruise.route.length - 1 && (
-                        <ArrowRight className="w-4 h-4 text-[#44618b]" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">Cruise Highlights</h4>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {selectedCruise.highlights.map((highlight, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-[#f5f5f5] rounded-xl">
-                      <Check className="w-5 h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-sm text-[#44618b]">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">What&apos;s Included</h4>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {selectedCruise.included.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-[#d19457]/10 rounded-xl">
-                      <Check className="w-5 h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-sm text-[#12103d]">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">Cabin Options</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedCruise.cabinTypes.map((cabin, idx) => (
-                    <span key={idx} className="px-4 py-2 bg-[#12103d]/5 rounded-full font-sans text-sm text-[#12103d]">
-                      {cabin}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[#12103d]/10">
-                <div>
-                  <span className="font-sans text-sm text-[#44618b]">Starting from</span>
-                  <div>
-                    <span className="font-display text-4xl font-bold text-[#d19457]">${selectedCruise.price}</span>
-                    <span className="font-sans text-sm text-[#44618b]">/person</span>
-                  </div>
-                  <p className="font-sans text-xs text-[#44618b]">* Interior cabin, double occupancy</p>
-                </div>
-                <a
-                  href="#contact"
-                  onClick={() => setSelectedCruise(null)}
-                  className="w-full sm:w-auto bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-sm font-semibold tracking-wider uppercase px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center"
-                >
-                  Book This Cruise
-                </a>
               </div>
             </div>
           </div>
