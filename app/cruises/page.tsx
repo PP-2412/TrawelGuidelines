@@ -31,7 +31,7 @@ function CruisesContent() {
     }
   }, [searchParams])
 
-  const filteredCruises = selectedCategory === 'all' 
+  const filteredCruises: Cruise[] = selectedCategory === 'all' 
     ? cruises 
     : cruises.filter((c: Cruise) => c.region === selectedCategory)
 
