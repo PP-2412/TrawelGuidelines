@@ -22,7 +22,7 @@ function CruisesContent() {
   useEffect(() => {
     const cruiseId = searchParams.get('cruise')
     if (cruiseId) {
-      const cruise = cruises.find(c => c.id === cruiseId)
+      const cruise = cruises.find((c: Cruise) => c.id === cruiseId)
       if (cruise) {
         setSelectedCruise(cruise)
         setSelectedCategory(cruise.region)
@@ -33,7 +33,7 @@ function CruisesContent() {
 
   const filteredCruises = selectedCategory === 'all' 
     ? cruises 
-    : cruises.filter(c => c.region === selectedCategory)
+    : cruises.filter((c: Cruise) => c.region === selectedCategory)
 
   const handleCruiseSelect = (cruise: Cruise) => {
     setSelectedCruise(cruise)
