@@ -9,34 +9,39 @@ import CategoryFilter from '@/components/Cruises/CategoryFilter'
 import CruiseCard from '@/components/Cruises/CruiseCard'
 import CruiseDetails from '@/components/Cruises/CruiseDetails'
 import BookingModal from '@/components/Cruises/BookingModal'
-import { allCruises, CruiseCategory, Cruise } from '@/components/Cruises/cruisesData'
+import CruiseModal from '@/components/Cruises/CruiseModal'
+import { cruises, CruiseCategory, categories, Cruise } from '@/components/Cruises/cruisesData'
 
 function CruisesContent() {
   const searchParams = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<CruiseCategory>('all')
   const [selectedCruise, setSelectedCruise] = useState<Cruise | null>(null)
   const [showBookingModal, setShowBookingModal] = useState(false)
+  const [showCruiseModal, setShowCruiseModal] = useState(false)
 
   useEffect(() => {
     const cruiseId = searchParams.get('cruise')
     if (cruiseId) {
-      const cruise = allCruises.find(c => c.id === cruiseId)
+      const cruise = cruises.find(c => c.id === cruiseId)
       if (cruise) {
         setSelectedCruise(cruise)
-        setSelectedCategory(cruise.category)
+        setSelectedCategory(cruise.region)
+        setShowCruiseModal(true)
       }
     }
   }, [searchParams])
 
   const filteredCruises = selectedCategory === 'all' 
-    ? allCruises 
-    : allCruises.filter(c => c.category === selectedCategory)
+    ? cruises 
+    : cruises.filter(c => c.region === selectedCategory)
 
   const handleCruiseSelect = (cruise: Cruise) => {
     setSelectedCruise(cruise)
+    setShowCruiseModal(true)
   }
 
   const handleBookClick = () => {
+    setShowCruiseModal(false)
     setShowBookingModal(true)
   }
 
@@ -76,6 +81,15 @@ function CruisesContent() {
           </div>
         </div>
       </section>
+
+      {/* Cruise Modal Popup */}
+      {showCruiseModal && selectedCruise && (
+        <CruiseModal 
+          cruise={selectedCruise}
+          onClose={() => setShowCruiseModal(false)}
+          onBookClick={handleBookClick}
+        />
+      )}
 
       {/* Booking Modal */}
       {showBookingModal && selectedCruise && (
