@@ -47,11 +47,9 @@ function EuropeContent() {
   const [budget, setBudget] = useState<BudgetType>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   
-  // Modal states
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  // Update tab when URL parameter changes
   useEffect(() => {
     if (tabParam === 'customise' || tabParam === 'customize') {
       setActiveTab('customise')
@@ -60,20 +58,16 @@ function EuropeContent() {
     }
   }, [tabParam])
 
-  // Handle tab change and update URL
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab)
-    // Update URL without full page reload
     const newUrl = `/europe?tab=${tab}`
     router.push(newUrl, { scroll: false })
   }
 
-  // Reset image index when modal changes
   useEffect(() => {
     setCurrentImageIndex(0)
   }, [selectedTour])
 
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -97,7 +91,6 @@ function EuropeContent() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedTour])
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (selectedTour) {
       document.body.style.overflow = 'hidden'
@@ -109,7 +102,6 @@ function EuropeContent() {
     }
   }, [selectedTour])
 
-  // Filter cities based on search
   const filteredCities = useMemo(() => {
     if (!searchQuery.trim()) return []
     const query = searchQuery.toLowerCase()
@@ -122,23 +114,19 @@ function EuropeContent() {
       .slice(0, 6)
   }, [searchQuery, selectedCities])
 
-  // Calculate total nights
   const totalNights = useMemo(() => {
     return selectedCities.reduce((sum, sc) => sum + sc.nights, 0)
   }, [selectedCities])
 
-  // Add city to itinerary
   const addCity = (city: EuropeCity) => {
     setSelectedCities(prev => [...prev, { city, nights: city.suggestedNights }])
     setSearchQuery('')
   }
 
-  // Remove city from itinerary
   const removeCity = (cityId: string) => {
     setSelectedCities(prev => prev.filter(sc => sc.city.id !== cityId))
   }
 
-  // Update nights for a city
   const updateNights = (cityId: string, delta: number) => {
     setSelectedCities(prev => prev.map(sc => {
       if (sc.city.id === cityId) {
@@ -149,7 +137,6 @@ function EuropeContent() {
     }))
   }
 
-  // Customise from tour
   const customiseFromTour = (tour: EuropeTour) => {
     const cities: SelectedCity[] = tour.cities
       .map(tc => {
@@ -169,7 +156,6 @@ function EuropeContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Submit custom itinerary
   const handleSubmit = () => {
     setIsSubmitting(true)
     setTimeout(() => {
@@ -181,16 +167,14 @@ function EuropeContent() {
 
   const isFormComplete = selectedCities.length > 0 && tripType && budget
 
-  // Render stars
   const renderStars = (rating: number) => {
     const stars = []
     for (let i = 0; i < Math.floor(rating); i++) {
-      stars.push(<Star key={i} className="w-4 h-4 fill-[#d19457] text-[#d19457]" />)
+      stars.push(<Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#d19457] text-[#d19457]" />)
     }
     return stars
   }
 
-  // Image carousel navigation
   const nextImage = (images: string[]) => {
     setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)
   }
@@ -202,60 +186,60 @@ function EuropeContent() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] sm:h-[50vh] min-h-[300px] sm:min-h-[400px] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#12103d]/60 via-[#12103d]/40 to-[#12103d]/80" />
         
-        <div className="absolute top-20 left-10 w-64 h-64 bg-[#d19457] opacity-10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-[#8550a2] opacity-10 rounded-full blur-[120px]" />
+        <div className="absolute top-20 left-10 w-48 sm:w-64 h-48 sm:h-64 bg-[#d19457] opacity-10 rounded-full blur-[80px] sm:blur-[100px] hidden sm:block" />
+        <div className="absolute bottom-10 right-10 w-64 sm:w-80 h-64 sm:h-80 bg-[#8550a2] opacity-10 rounded-full blur-[100px] sm:blur-[120px] hidden sm:block" />
 
-        <div className="relative z-10 text-center px-6 pt-20">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-6">
-            <Mountain className="w-8 h-8 text-[#d19457]" />
+        <div className="relative z-10 text-center px-4 sm:px-6 pt-16 sm:pt-20">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-sm mb-4 sm:mb-6">
+            <Mountain className="w-6 h-6 sm:w-8 sm:h-8 text-[#d19457]" />
           </div>
           
-          <h1 className="font-display text-5xl md:text-7xl text-white mb-4">
+          <h1 className="font-display text-3xl sm:text-5xl md:text-7xl text-white mb-3 sm:mb-4">
             Explore <span className="font-accent text-[#d19457]">Europe</span>
           </h1>
           
-          <p className="font-sans text-xs tracking-[4px] uppercase text-[#d19457] mb-4">
+          <p className="font-sans text-[10px] sm:text-xs tracking-[3px] sm:tracking-[4px] uppercase text-[#d19457] mb-3 sm:mb-4">
             From Historic Cities to Stunning Coastlines
           </p>
           
-          <p className="font-sans text-lg text-white/80 max-w-2xl mx-auto">
+          <p className="font-sans text-sm sm:text-lg text-white/80 max-w-xs sm:max-w-2xl mx-auto">
             Build your dream European adventure or choose from our expertly curated tours
           </p>
         </div>
       </section>
 
       {/* Tabs Section */}
-      <section className="py-8 bg-white sticky top-20 z-40 border-b border-[#12103d]/10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex justify-center gap-4">
+      <section className="py-4 sm:py-8 bg-white sticky top-16 sm:top-20 z-40 border-b border-[#12103d]/10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="flex justify-center gap-2 sm:gap-4">
             <button
               onClick={() => handleTabChange('tours')}
-              className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+              className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 rounded-full font-sans text-[10px] sm:text-sm font-semibold tracking-wider uppercase transition-all duration-300 touch-target ${
                 activeTab === 'tours'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
                   : 'bg-[#f5f5f5] text-[#44618b] hover:bg-[#12103d]/10'
               }`}
             >
-              <Map className="w-5 h-5" />
-              Pre-Made Tours
+              <Map className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden xs:inline">Pre-Made</span> Tours
             </button>
             <button
               onClick={() => handleTabChange('customise')}
-              className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+              className={`flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 rounded-full font-sans text-[10px] sm:text-sm font-semibold tracking-wider uppercase transition-all duration-300 touch-target ${
                 activeTab === 'customise'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
                   : 'bg-[#f5f5f5] text-[#44618b] hover:bg-[#12103d]/10'
               }`}
             >
-              <Settings2 className="w-5 h-5" />
-              Customise Itinerary
+              <Settings2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              Customise
             </button>
           </div>
         </div>
@@ -263,64 +247,64 @@ function EuropeContent() {
 
       {/* Tours Tab */}
       {activeTab === 'tours' && (
-        <section className="py-16 bg-gradient-to-b from-[#f5f5f5] to-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-12">
-              <span className="inline-block font-sans text-xs font-medium tracking-[4px] uppercase text-[#d19457] mb-4">
+        <section className="py-10 sm:py-16 bg-gradient-to-b from-[#f5f5f5] to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div className="text-center mb-8 sm:mb-12">
+              <span className="inline-block font-sans text-[10px] sm:text-xs font-medium tracking-[3px] sm:tracking-[4px] uppercase text-[#d19457] mb-3 sm:mb-4">
                 Expertly Crafted
               </span>
-              <h2 className="font-display text-4xl md:text-5xl text-[#12103d] mb-4">
+              <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-[#12103d] mb-3 sm:mb-4">
                 Curated <span className="font-accent text-[#d19457]">Tours</span>
               </h2>
-              <p className="font-sans text-[#44618b] max-w-xl mx-auto">
+              <p className="font-sans text-sm sm:text-base text-[#44618b] max-w-xl mx-auto">
                 Expertly designed itineraries for unforgettable European adventures
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {europeTours.map((tour) => (
                 <div
                   key={tour.id}
                   onClick={() => setSelectedTour(tour)}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-[#d19457]/50 hover:shadow-xl cursor-pointer transition-all duration-300"
+                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-[#d19457]/50 hover:shadow-xl cursor-pointer transition-all duration-300 active:scale-[0.98]"
                 >
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-40 sm:h-48 overflow-hidden">
                     <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 hover:scale-110"
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500"
                       style={{ backgroundImage: `url(${tour.image})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#12103d]/60 via-transparent to-transparent" />
                     {tour.tag && (
-                      <span className={`absolute top-3 left-3 px-3 py-1 text-xs font-sans font-semibold rounded-full ${tour.tagColor}`}>
+                      <span className={`absolute top-2 sm:top-3 left-2 sm:left-3 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-sans font-semibold rounded-full ${tour.tagColor}`}>
                         {tour.tag}
                       </span>
                     )}
                   </div>
 
-                  <div className="p-5">
-                    <div className="flex items-center gap-1 mb-2">
+                  <div className="p-4 sm:p-5">
+                    <div className="flex items-center gap-1 mb-1.5 sm:mb-2">
                       {renderStars(tour.rating)}
-                      <span className="font-sans text-xs text-[#44618b] ml-1">({tour.rating})</span>
+                      <span className="font-sans text-[10px] sm:text-xs text-[#44618b] ml-1">({tour.rating})</span>
                     </div>
-                    <h3 className="font-display text-lg text-[#12103d] mb-1">{tour.name}</h3>
-                    <p className="font-sans text-sm text-[#d19457] mb-2">{tour.tagline}</p>
+                    <h3 className="font-display text-base sm:text-lg text-[#12103d] mb-1 line-clamp-1">{tour.name}</h3>
+                    <p className="font-sans text-xs sm:text-sm text-[#d19457] mb-1.5 sm:mb-2 line-clamp-1">{tour.tagline}</p>
                     
-                    <div className="flex items-center gap-4 text-[#44618b] text-sm mb-4">
+                    <div className="flex items-center gap-3 sm:gap-4 text-[#44618b] text-xs sm:text-sm mb-3 sm:mb-4">
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         {tour.duration}
                       </span>
-                      <span className="px-2 py-0.5 bg-[#f5f5f5] rounded-full text-xs capitalize">
+                      <span className="px-2 py-0.5 bg-[#f5f5f5] rounded-full text-[10px] sm:text-xs capitalize">
                         {getTripTypeLabel(tour.tripType)}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-[#12103d]/5">
+                    <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-[#12103d]/5">
                       <div>
-                        <span className="font-sans text-xs text-[#44618b]">From </span>
-                        <span className="font-display text-xl font-bold text-[#12103d]">${tour.price}</span>
+                        <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">From </span>
+                        <span className="font-display text-lg sm:text-xl font-bold text-[#12103d]">${tour.price}</span>
                       </div>
-                      <span className="text-[#d19457] font-sans text-sm font-medium">View Details →</span>
+                      <span className="text-[#d19457] font-sans text-xs sm:text-sm font-medium">View Details →</span>
                     </div>
                   </div>
                 </div>
@@ -332,28 +316,28 @@ function EuropeContent() {
 
       {/* Customise Itinerary Tab */}
       {activeTab === 'customise' && (
-        <section className="py-16 bg-gradient-to-b from-[#f5f5f5] to-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-12">
-              <h2 className="font-display text-4xl md:text-5xl text-[#12103d] mb-4">
+        <section className="py-10 sm:py-16 bg-gradient-to-b from-[#f5f5f5] to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-[#12103d] mb-3 sm:mb-4">
                 Build Your <span className="font-accent text-[#d19457]">Dream Trip</span>
               </h2>
-              <p className="font-sans text-[#44618b] max-w-xl mx-auto">
+              <p className="font-sans text-sm sm:text-base text-[#44618b] max-w-xl mx-auto">
                 Search cities, adjust your stay, and we&apos;ll create the perfect itinerary
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-8">
+            <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                 {/* Search Cities */}
-                <div className="bg-white rounded-2xl shadow-lg border border-[#12103d]/10 p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-[#d19457] flex items-center justify-center">
-                      <Search className="w-5 h-5 text-white" />
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#d19457] flex items-center justify-center">
+                      <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-display text-xl text-[#12103d]">Search & Add Cities</h3>
-                      <p className="font-sans text-xs text-[#44618b]">Find your destinations</p>
+                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Search & Add Cities</h3>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Find your destinations</p>
                     </div>
                   </div>
 
@@ -362,31 +346,31 @@ function EuropeContent() {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search cities (e.g., Paris, Rome, Barcelona...)"
-                      className="w-full px-5 py-4 pl-12 border border-[#12103d]/10 rounded-xl font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457]"
+                      placeholder="Search cities (e.g., Paris, Rome...)"
+                      className="w-full px-4 sm:px-5 py-3 sm:py-4 pl-10 sm:pl-12 border border-[#12103d]/10 rounded-lg sm:rounded-xl font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457]"
                     />
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#44618b]" />
+                    <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#44618b]" />
                   </div>
 
                   {filteredCities.length > 0 && (
-                    <div className="mt-4 border border-[#12103d]/10 rounded-xl overflow-hidden">
+                    <div className="mt-4 border border-[#12103d]/10 rounded-lg sm:rounded-xl overflow-hidden">
                       {filteredCities.map((city) => (
                         <button
                           key={city.id}
                           onClick={() => addCity(city)}
-                          className="w-full flex items-center gap-4 p-4 hover:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0"
+                          className="w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
                         >
                           <div
-                            className="w-16 h-16 rounded-xl bg-cover bg-center flex-shrink-0"
+                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-cover bg-center flex-shrink-0"
                             style={{ backgroundImage: `url(${city.image})` }}
                           />
                           <div className="flex-1 text-left">
-                            <h4 className="font-display text-lg text-[#12103d]">{city.name}</h4>
-                            <p className="font-sans text-xs text-[#44618b]">{city.country}</p>
+                            <h4 className="font-display text-base sm:text-lg text-[#12103d]">{city.name}</h4>
+                            <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{city.country}</p>
                           </div>
                           <div className="flex items-center gap-2 text-[#d19457]">
-                            <Plus className="w-5 h-5" />
-                            <span className="font-sans text-sm font-medium">Add</span>
+                            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span className="font-sans text-xs sm:text-sm font-medium hidden sm:inline">Add</span>
                           </div>
                         </button>
                       ))}
@@ -394,9 +378,9 @@ function EuropeContent() {
                   )}
 
                   {searchQuery === '' && selectedCities.length === 0 && (
-                    <div className="mt-6">
-                      <p className="font-sans text-xs text-[#44618b] uppercase tracking-wider mb-3">Popular destinations</p>
-                      <div className="flex flex-wrap gap-2">
+                    <div className="mt-4 sm:mt-6">
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2 sm:mb-3">Popular destinations</p>
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice'].map((cityId) => {
                           const city = getCityById(cityId)
                           if (!city) return null
@@ -404,10 +388,10 @@ function EuropeContent() {
                             <button
                               key={city.id}
                               onClick={() => addCity(city)}
-                              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#f5f5f5] hover:bg-[#12103d]/10 transition-colors"
+                              className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#f5f5f5] hover:bg-[#12103d]/10 active:bg-[#12103d]/10 transition-colors touch-target"
                             >
-                              <span className="font-sans text-sm text-[#12103d]">{city.name}</span>
-                              <Plus className="w-4 h-4 text-[#d19457]" />
+                              <span className="font-sans text-xs sm:text-sm text-[#12103d]">{city.name}</span>
+                              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d19457]" />
                             </button>
                           )
                         })}
@@ -417,63 +401,63 @@ function EuropeContent() {
                 </div>
 
                 {selectedCities.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-lg border border-[#12103d]/10 p-6">
-                    <div className="flex items-center justify-between mb-6">
+                  <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-[#8550a2] flex items-center justify-center">
-                          <Calendar className="w-5 h-5 text-white" />
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#8550a2] flex items-center justify-center">
+                          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         </div>
                         <div>
-                          <h3 className="font-display text-xl text-[#12103d]">Your Itinerary</h3>
-                          <p className="font-sans text-xs text-[#44618b]">Adjust nights per city</p>
+                          <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Your Itinerary</h3>
+                          <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Adjust nights per city</p>
                         </div>
                       </div>
-                      <div className="bg-[#12103d] px-4 py-2 rounded-full">
-                        <span className="font-sans text-sm font-semibold text-white">{totalNights} Nights Total</span>
+                      <div className="bg-[#12103d] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+                        <span className="font-sans text-xs sm:text-sm font-semibold text-white">{totalNights} Nights</span>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {selectedCities.map((sc, index) => (
-                        <div key={sc.city.id} className="flex items-center gap-4 p-4 bg-[#f5f5f5] rounded-xl">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#12103d] text-white font-sans text-sm font-bold">
+                        <div key={sc.city.id} className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
+                          <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#12103d] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
                             {index + 1}
                           </div>
                           <div
-                            className="w-16 h-16 rounded-xl bg-cover bg-center flex-shrink-0"
+                            className="w-10 h-10 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-cover bg-center flex-shrink-0 hidden xs:block"
                             style={{ backgroundImage: `url(${sc.city.image})` }}
                           />
-                          <div className="flex-1">
-                            <h4 className="font-display text-lg text-[#12103d]">{sc.city.name}</h4>
-                            <p className="font-sans text-xs text-[#44618b]">{sc.city.country}</p>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-display text-sm sm:text-lg text-[#12103d] truncate">{sc.city.name}</h4>
+                            <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{sc.city.country}</p>
                           </div>
                           
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1.5 sm:gap-3">
                             <button
                               onClick={() => updateNights(sc.city.id, -1)}
                               disabled={sc.nights <= sc.city.minNights}
-                              className="w-8 h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
                             >
-                              <Minus className="w-4 h-4 text-[#12103d]" />
+                              <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
                             </button>
-                            <div className="text-center min-w-[60px]">
-                              <span className="font-display text-2xl text-[#d19457]">{sc.nights}</span>
-                              <span className="font-sans text-xs text-[#44618b] block">nights</span>
+                            <div className="text-center min-w-[40px] sm:min-w-[60px]">
+                              <span className="font-display text-lg sm:text-2xl text-[#d19457]">{sc.nights}</span>
+                              <span className="font-sans text-[10px] sm:text-xs text-[#44618b] block">nights</span>
                             </div>
                             <button
                               onClick={() => updateNights(sc.city.id, 1)}
                               disabled={sc.nights >= sc.city.maxNights}
-                              className="w-8 h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
                             >
-                              <Plus className="w-4 h-4 text-[#12103d]" />
+                              <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
                             </button>
                           </div>
 
                           <button
                             onClick={() => removeCity(sc.city.id)}
-                            className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-200 transition-colors"
+                            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-200 transition-colors touch-target flex-shrink-0"
                           >
-                            <X className="w-4 h-4 text-red-500" />
+                            <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
                           </button>
                         </div>
                       ))}
@@ -482,33 +466,35 @@ function EuropeContent() {
                 )}
               </div>
 
-              <div className="space-y-6">
-                <div className="bg-white rounded-2xl shadow-lg border border-[#12103d]/10 p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-[#43124a] flex items-center justify-center">
-                      <Sparkles className="w-5 h-5 text-white" />
+              {/* Sidebar */}
+              <div className="space-y-4 sm:space-y-6">
+                {/* Trip Style */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#43124a] flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-display text-xl text-[#12103d]">Trip Style</h3>
-                      <p className="font-sans text-xs text-[#44618b]">What&apos;s your vibe?</p>
+                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Trip Style</h3>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">What&apos;s your vibe?</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
                     {travelTypes.map((type) => {
                       const Icon = type.icon
                       return (
                         <button
                           key={type.id}
                           onClick={() => setTripType(type.id)}
-                          className={`flex items-center gap-2 p-3 rounded-xl border-2 transition-all duration-300 ${
+                          className={`flex items-center gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
                             tripType === type.id
                               ? 'border-[#d19457] bg-[#d19457]/10'
                               : 'border-[#12103d]/10 hover:border-[#d19457]/50'
                           }`}
                         >
-                          <Icon className={`w-5 h-5 ${tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
-                          <span className={`font-sans text-sm ${tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
+                          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
+                          <span className={`font-sans text-xs sm:text-sm ${tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
                             {type.name}
                           </span>
                         </button>
@@ -517,32 +503,33 @@ function EuropeContent() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-lg border border-[#12103d]/10 p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-[#44618b] flex items-center justify-center">
-                      <Wallet className="w-5 h-5 text-white" />
+                {/* Budget */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#44618b] flex items-center justify-center">
+                      <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-display text-xl text-[#12103d]">Budget Range</h3>
-                      <p className="font-sans text-xs text-[#44618b]">Per person estimate</p>
+                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Budget Range</h3>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Per person estimate</p>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     {budgetOptions.map((option) => (
                       <button
                         key={option.id}
                         onClick={() => setBudget(option.id)}
-                        className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-300 ${
+                        className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
                           budget === option.id
                             ? 'border-[#d19457] bg-[#d19457]/10'
                             : 'border-[#12103d]/10 hover:border-[#d19457]/50'
                         }`}
                       >
-                        <span className={`font-sans text-sm ${budget === option.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
+                        <span className={`font-sans text-xs sm:text-sm ${budget === option.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
                           {option.name}
                         </span>
-                        <span className={`font-sans text-xs ${budget === option.id ? 'text-[#d19457]' : 'text-[#44618b]'}`}>
+                        <span className={`font-sans text-[10px] sm:text-xs ${budget === option.id ? 'text-[#d19457]' : 'text-[#44618b]'}`}>
                           {option.range}
                         </span>
                       </button>
@@ -550,10 +537,11 @@ function EuropeContent() {
                   </div>
                 </div>
 
+                {/* Submit */}
                 <button
                   onClick={handleSubmit}
                   disabled={!isFormComplete || isSubmitting}
-                  className={`w-full flex items-center justify-center gap-3 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+                  className={`w-full flex items-center justify-center gap-2 sm:gap-3 py-3.5 sm:py-4 rounded-full font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-300 touch-target ${
                     isFormComplete
                       ? 'bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white shadow-lg hover:shadow-xl hover:scale-[1.02]'
                       : 'bg-[#f5f5f5] text-[#44618b] cursor-not-allowed'
@@ -561,19 +549,19 @@ function EuropeContent() {
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       Processing...
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5" />
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                       Get Custom Quote
                     </>
                   )}
                 </button>
 
                 {!isFormComplete && (
-                  <p className="font-sans text-xs text-center text-[#44618b]">
+                  <p className="font-sans text-[10px] sm:text-xs text-center text-[#44618b]">
                     Add cities, select trip style and budget to continue
                   </p>
                 )}
@@ -583,18 +571,17 @@ function EuropeContent() {
         </section>
       )}
 
-      {/* Tour Modal Popup */}
+      {/* Tour Modal */}
       {selectedTour && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="modal-overlay"
           onClick={() => setSelectedTour(null)}
         >
           <div 
-            className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-            style={{ animation: 'modalIn 0.3s ease-out' }}
+            className="modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-64 md:h-80">
+            <div className="relative h-48 sm:h-64 md:h-80">
               <div className="relative w-full h-full overflow-hidden">
                 {selectedTour.images.map((img, idx) => (
                   <div
@@ -612,27 +599,27 @@ function EuropeContent() {
                 <>
                   <button
                     onClick={(e) => { e.stopPropagation(); prevImage(selectedTour.images) }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
                   >
-                    <ChevronLeft className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); nextImage(selectedTour.images) }}
-                    className="absolute right-16 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group"
+                    className="absolute right-12 sm:right-16 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
                   >
-                    <ChevronRight className="w-5 h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
                   </button>
                 </>
               )}
 
               {selectedTour.images.length > 1 && (
-                <div className="absolute bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                <div className="absolute bottom-20 sm:bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-10">
                   {selectedTour.images.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx) }}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        idx === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'
+                      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
+                        idx === currentImageIndex ? 'bg-white w-4 sm:w-6' : 'bg-white/50 hover:bg-white/80'
                       }`}
                     />
                   ))}
@@ -641,120 +628,120 @@ function EuropeContent() {
               
               <button
                 onClick={() => setSelectedTour(null)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10"
+                className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 touch-target"
               >
-                <X className="w-5 h-5 text-[#12103d]" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
               </button>
 
               {selectedTour.tag && (
-                <span className={`absolute top-4 left-4 px-4 py-1.5 text-xs font-sans font-semibold rounded-full ${selectedTour.tagColor}`}>
+                <span className={`absolute top-3 sm:top-4 left-3 sm:left-4 px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-semibold rounded-full ${selectedTour.tagColor}`}>
                   {selectedTour.tag}
                 </span>
               )}
 
               {selectedTour.images.length > 1 && (
-                <span className="absolute top-4 left-32 px-3 py-1.5 text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
+                <span className="absolute top-3 sm:top-4 left-24 sm:left-32 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
                   {currentImageIndex + 1} / {selectedTour.images.length}
                 </span>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
                   <div className="flex items-center gap-0.5">{renderStars(selectedTour.rating)}</div>
-                  <span className="font-sans text-sm text-white/80">({selectedTour.rating})</span>
+                  <span className="font-sans text-xs sm:text-sm text-white/80">({selectedTour.rating})</span>
                 </div>
-                <h2 className="font-display text-3xl md:text-4xl text-white">{selectedTour.name}</h2>
-                <p className="font-sans text-lg text-[#d19457]">{selectedTour.tagline}</p>
+                <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white line-clamp-2">{selectedTour.name}</h2>
+                <p className="font-sans text-sm sm:text-lg text-[#d19457]">{selectedTour.tagline}</p>
               </div>
             </div>
 
-            <div className="p-6 md:p-8 overflow-y-auto max-h-[calc(90vh-20rem)]">
-              <p className="font-sans text-[#44618b] text-lg mb-6">{selectedTour.description}</p>
+            <div className="p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[50vh] sm:max-h-[calc(90vh-20rem)]">
+              <p className="font-sans text-sm sm:text-base md:text-lg text-[#44618b] mb-4 sm:mb-6">{selectedTour.description}</p>
 
-              <div className="flex items-center gap-6 mb-8">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-[#43124a]" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
                   </div>
                   <div>
-                    <p className="font-sans text-xs text-[#44618b]">Duration</p>
-                    <p className="font-sans text-sm font-semibold text-[#12103d]">{selectedTour.duration}</p>
+                    <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Duration</p>
+                    <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{selectedTour.duration}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Compass className="w-5 h-5 text-[#43124a]" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
+                    <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
                   </div>
                   <div>
-                    <p className="font-sans text-xs text-[#44618b]">Type</p>
-                    <p className="font-sans text-sm font-semibold text-[#12103d]">{getTripTypeLabel(selectedTour.tripType)}</p>
+                    <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Type</p>
+                    <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{getTripTypeLabel(selectedTour.tripType)}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">Cities Visited</h4>
-                <div className="flex flex-wrap gap-3">
+              <div className="mb-6 sm:mb-8">
+                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Cities Visited</h4>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {selectedTour.cities.map((tc, idx) => {
                     const city = getCityById(tc.cityId)
                     if (!city) return null
                     return (
-                      <div key={tc.cityId} className="flex items-center gap-2 px-4 py-2 bg-[#f5f5f5] rounded-full">
-                        <span className="w-6 h-6 rounded-full bg-[#12103d] text-white flex items-center justify-center font-sans text-xs font-bold">
+                      <div key={tc.cityId} className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#f5f5f5] rounded-full">
+                        <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#12103d] text-white flex items-center justify-center font-sans text-[10px] sm:text-xs font-bold">
                           {idx + 1}
                         </span>
-                        <span className="font-sans text-sm text-[#12103d]">{city.name}</span>
-                        <span className="font-sans text-xs text-[#44618b]">{tc.nights}N</span>
+                        <span className="font-sans text-xs sm:text-sm text-[#12103d]">{city.name}</span>
+                        <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">{tc.nights}N</span>
                       </div>
                     )
                   })}
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">Tour Highlights</h4>
-                <div className="grid md:grid-cols-2 gap-3">
+              <div className="mb-6 sm:mb-8">
+                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Tour Highlights</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {selectedTour.highlights.map((highlight, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-[#f5f5f5] rounded-xl">
-                      <Check className="w-5 h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-sm text-[#44618b]">{highlight}</span>
+                    <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
+                      <span className="font-sans text-xs sm:text-sm text-[#44618b]">{highlight}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h4 className="font-display text-xl text-[#12103d] mb-4">What&apos;s Included</h4>
-                <div className="grid md:grid-cols-2 gap-3">
+              <div className="mb-6 sm:mb-8">
+                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">What&apos;s Included</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {selectedTour.included.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-[#d19457]/10 rounded-xl">
-                      <Check className="w-5 h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-sm text-[#12103d]">{item}</span>
+                    <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#d19457]/10 rounded-lg sm:rounded-xl">
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
+                      <span className="font-sans text-xs sm:text-sm text-[#12103d]">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[#12103d]/10">
-                <div>
-                  <span className="font-sans text-sm text-[#44618b]">Starting from</span>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 sm:pt-6 border-t border-[#12103d]/10">
+                <div className="text-center sm:text-left">
+                  <span className="font-sans text-xs sm:text-sm text-[#44618b]">Starting from</span>
                   <div>
-                    <span className="font-display text-4xl font-bold text-[#d19457]">${selectedTour.price}</span>
-                    <span className="font-sans text-sm text-[#44618b]">/person</span>
+                    <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[#d19457]">${selectedTour.price}</span>
+                    <span className="font-sans text-xs sm:text-sm text-[#44618b]">/person</span>
                   </div>
                 </div>
-                <div className="flex gap-3 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                   <button
                     onClick={() => customiseFromTour(selectedTour)}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#12103d] text-white font-sans text-sm font-semibold tracking-wider uppercase px-6 py-4 rounded-full hover:bg-[#43124a] transition-all"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#12103d] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#43124a] transition-all touch-target"
                   >
-                    <Settings2 className="w-5 h-5" />
+                    <Settings2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     Customise
                   </button>
                   <a
                     href="#contact"
                     onClick={() => setSelectedTour(null)}
-                    className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-sm font-semibold tracking-wider uppercase px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center"
+                    className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-6 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
                   >
                     Book Now
                   </a>
@@ -762,13 +749,6 @@ function EuropeContent() {
               </div>
             </div>
           </div>
-
-          <style jsx>{`
-            @keyframes modalIn {
-              from { opacity: 0; transform: scale(0.95) translateY(10px); }
-              to { opacity: 1; transform: scale(1) translateY(0); }
-            }
-          `}</style>
         </div>
       )}
     </>
@@ -777,7 +757,7 @@ function EuropeContent() {
 
 export default function EuropePage() {
   return (
-    <main>
+    <main className="overflow-x-hidden">
       <Navbar />
       <Suspense fallback={
         <div className="pt-28 pb-20 min-h-screen flex items-center justify-center">
