@@ -72,7 +72,12 @@ export default function JapanSection() {
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="/japan" countrySlug="japan" />
+        <DestinationCarousel 
+          items={packages} 
+          sectionHref="/japan" 
+          countrySlug="japan" 
+          customHref="/japan#create-your-own"
+        />
       </div>
     </section>
   )
