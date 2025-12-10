@@ -72,7 +72,12 @@ export default function VietnamSection() {
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="/vietnam" countrySlug="vietnam" />
+        <DestinationCarousel 
+          items={packages} 
+          sectionHref="/vietnam" 
+          countrySlug="vietnam" 
+          customHref="/vietnam#create-your-own"
+        />
       </div>
     </section>
   )
