@@ -13,7 +13,7 @@ const favouriteTrips = [
     tag: 'Most Popular',
     tagColor: 'bg-[#d19457] text-white',
     image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80',
-    href: '#europe',
+    href: '/europe?tab=tours',
   },
   {
     id: 'thai-paradise',
@@ -25,7 +25,7 @@ const favouriteTrips = [
     tag: 'Best Seller',
     tagColor: 'bg-[#43124a] text-white',
     image: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80',
-    href: '#thailand',
+    href: '/thailand#tours',
   },
   {
     id: 'maldives-luxury',
@@ -37,7 +37,7 @@ const favouriteTrips = [
     tag: 'Honeymoon Special',
     tagColor: 'bg-[#8550a2] text-white',
     image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80',
-    href: '#maldives',
+    href: '/maldives#resorts',
   },
   {
     id: 'mediterranean-cruise',
@@ -49,7 +49,7 @@ const favouriteTrips = [
     tag: 'New',
     tagColor: 'bg-[#12103d] text-white',
     image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80',
-    href: '#cruises',
+    href: '/cruises?cruise=celebrity-cruises',
   },
   {
     id: 'bali-escape',
@@ -61,7 +61,7 @@ const favouriteTrips = [
     tag: 'Trending',
     tagColor: 'bg-[#44618b] text-white',
     image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80',
-    href: '#indonesia',
+    href: '/indonesia#tours',
   },
 ]
 
