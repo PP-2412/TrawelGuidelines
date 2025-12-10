@@ -7,10 +7,9 @@ import Footer from '@/components/shared/Footer'
 import CruiseHeader from '@/components/Cruises/CruiseHeader'
 import CategoryFilter from '@/components/Cruises/CategoryFilter'
 import CruiseCard from '@/components/Cruises/CruiseCard'
-import CruiseDetails from '@/components/Cruises/CruiseDetails'
 import BookingModal from '@/components/Cruises/BookingModal'
 import CruiseModal from '@/components/Cruises/CruiseModal'
-import { cruises, CruiseCategory, categories, Cruise } from '@/components/Cruises/cruisesData'
+import { cruises, CruiseCategory, Cruise } from '@/components/Cruises/cruisesData'
 
 function CruisesContent() {
   const searchParams = useSearchParams()
@@ -55,29 +54,16 @@ function CruisesContent() {
             onCategoryChange={setSelectedCategory}
           />
 
-          {/* Main Content */}
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Cruise List */}
-            <div className="lg:col-span-2">
-              <div className="grid md:grid-cols-2 gap-6">
-                {filteredCruises.map((cruise) => (
-                  <CruiseCard
-                    key={cruise.id}
-                    cruise={cruise}
-                    isSelected={selectedCruise?.id === cruise.id}
-                    onSelect={handleCruiseSelect}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Cruise Details Sidebar */}
-            <div className="lg:col-span-1">
-              <CruiseDetails 
-                cruise={selectedCruise}
-                onBookClick={handleBookClick}
+          {/* Cruise Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCruises.map((cruise) => (
+              <CruiseCard
+                key={cruise.id}
+                cruise={cruise}
+                isSelected={selectedCruise?.id === cruise.id}
+                onSelect={handleCruiseSelect}
               />
-            </div>
+            ))}
           </div>
         </div>
       </section>
