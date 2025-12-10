@@ -72,7 +72,12 @@ export default function MaldivesSection() {
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="/maldives" countrySlug="maldives" />
+        <DestinationCarousel 
+          items={packages} 
+          sectionHref="/maldives" 
+          countrySlug="maldives" 
+          customHref="/maldives#create-your-own"
+        />
       </div>
     </section>
   )
