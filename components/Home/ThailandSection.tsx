@@ -72,7 +72,12 @@ export default function ThailandSection() {
             View All →
           </a>
         </div>
-        <DestinationCarousel items={packages} sectionHref="/thailand" countrySlug="thailand" />
+        <DestinationCarousel 
+          items={packages} 
+          sectionHref="/thailand" 
+          countrySlug="thailand" 
+          customHref="/thailand#create-your-own"
+        />
       </div>
     </section>
   )
