@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Star, Clock, Check, Users, Heart, Gem, Compass, Sparkles, Leaf, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Tour, TourCategory, tourCategories, filterToursByCategory } from './destinationsData'
 
@@ -23,19 +23,24 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
   const [selectedCategory, setSelectedCategory] = useState<TourCategory>('all')
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
 
   // Reset image index when tour changes
   useEffect(() => {
     setCurrentImageIndex(0)
   }, [selectedTour])
 
-  // Auto-select tour from URL param
+  // Auto-select tour from URL param and scroll to section
   useEffect(() => {
     if (initialTourId) {
       const tour = tours.find(t => t.id === initialTourId)
       if (tour) {
         setSelectedTour(tour)
         setSelectedCategory(tour.category)
+        // Scroll to section after a brief delay to ensure DOM is ready
+        setTimeout(() => {
+          sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
       }
     }
   }, [initialTourId, tours])
@@ -99,7 +104,7 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
   }
 
   return (
-    <section id="tours" className="py-20 bg-gradient-to-b from-[#f5f5f5] to-white">
+    <section id="tours" ref={sectionRef} className="py-20 bg-gradient-to-b from-[#f5f5f5] to-white scroll-mt-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -138,7 +143,11 @@ export default function ToursSection({ tours, countryName, initialTourId }: Tour
             <div
               key={tour.id}
               onClick={() => setSelectedTour(tour)}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-[#d19457]/50 hover:shadow-xl cursor-pointer transition-all duration-300"
+              className={`bg-white rounded-2xl overflow-hidden shadow-lg border-2 cursor-pointer transition-all duration-300 ${
+                selectedTour?.id === tour.id 
+                  ? 'border-[#d19457] shadow-xl ring-2 ring-[#d19457]/20' 
+                  : 'border-transparent hover:border-[#d19457]/50 hover:shadow-xl'
+              }`}
             >
               <div className="relative h-48 overflow-hidden">
                 <div
