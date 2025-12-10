@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Star, MapPin, Check, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Resort, BudgetRange, budgetRanges, filterResortsByBudget } from './destinationsData'
 
@@ -14,19 +14,24 @@ export default function ResortsSection({ resorts, countryName, initialResortId }
   const [selectedBudget, setSelectedBudget] = useState<BudgetRange>('all')
   const [selectedResort, setSelectedResort] = useState<Resort | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
 
   // Reset image index when resort changes
   useEffect(() => {
     setCurrentImageIndex(0)
   }, [selectedResort])
 
-  // Auto-select resort from URL param
+  // Auto-select resort from URL param and scroll to section
   useEffect(() => {
     if (initialResortId) {
       const resort = resorts.find(r => r.id === initialResortId)
       if (resort) {
         setSelectedResort(resort)
         setSelectedBudget(resort.budgetRange)
+        // Scroll to section after a brief delay to ensure DOM is ready
+        setTimeout(() => {
+          sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
       }
     }
   }, [initialResortId, resorts])
@@ -114,7 +119,7 @@ export default function ResortsSection({ resorts, countryName, initialResortId }
   }
 
   return (
-    <section id="resorts" className="py-20 bg-white">
+    <section id="resorts" ref={sectionRef} className="py-20 bg-white scroll-mt-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -152,7 +157,11 @@ export default function ResortsSection({ resorts, countryName, initialResortId }
             <div
               key={resort.id}
               onClick={() => setSelectedResort(resort)}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-[#d19457]/50 hover:shadow-xl cursor-pointer transition-all duration-300"
+              className={`bg-white rounded-2xl overflow-hidden shadow-lg border-2 cursor-pointer transition-all duration-300 ${
+                selectedResort?.id === resort.id 
+                  ? 'border-[#d19457] shadow-xl ring-2 ring-[#d19457]/20' 
+                  : 'border-transparent hover:border-[#d19457]/50 hover:shadow-xl'
+              }`}
             >
               <div className="relative h-48 overflow-hidden">
                 <div
