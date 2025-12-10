@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
 import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -34,6 +34,7 @@ const budgetOptions = [
 
 function EuropeContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const tabParam = searchParams.get('tab')
   
   const [activeTab, setActiveTab] = useState<TabType>(() => {
@@ -58,6 +59,14 @@ function EuropeContent() {
       setActiveTab('tours')
     }
   }, [tabParam])
+
+  // Handle tab change and update URL
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab)
+    // Update URL without full page reload
+    const newUrl = `/europe?tab=${tab}`
+    router.push(newUrl, { scroll: false })
+  }
 
   // Reset image index when modal changes
   useEffect(() => {
@@ -155,7 +164,7 @@ function EuropeContent() {
     setSelectedCities(cities)
     setTripType(tour.tripType)
     setSelectedTour(null)
-    setActiveTab('customise')
+    handleTabChange('customise')
     
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -227,7 +236,7 @@ function EuropeContent() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex justify-center gap-4">
             <button
-              onClick={() => setActiveTab('tours')}
+              onClick={() => handleTabChange('tours')}
               className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
                 activeTab === 'tours'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
@@ -238,7 +247,7 @@ function EuropeContent() {
               Pre-Made Tours
             </button>
             <button
-              onClick={() => setActiveTab('customise')}
+              onClick={() => handleTabChange('customise')}
               className={`flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
                 activeTab === 'customise'
                   ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg'
