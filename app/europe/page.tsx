@@ -4,12 +4,11 @@ import { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
 
 type TabType = 'customise' | 'tours'
 type TripType = 'adventure' | 'romantic' | 'family' | 'friends' | 'cultural' | 'luxury' | null
-type BudgetType = 'budget' | 'comfort' | 'premium' | 'luxury' | null
 
 interface SelectedCity {
   city: EuropeCity
@@ -25,13 +24,6 @@ const travelTypes = [
   { id: 'luxury' as const, name: 'Luxury', icon: Gem, color: 'from-[#c77e36] to-[#d19457]' },
 ]
 
-const budgetOptions = [
-  { id: 'budget' as const, name: 'Budget', range: '$1,000 - $2,000' },
-  { id: 'comfort' as const, name: 'Comfort', range: '$2,000 - $3,500' },
-  { id: 'premium' as const, name: 'Premium', range: '$3,500 - $5,000' },
-  { id: 'luxury' as const, name: 'Luxury', range: '$5,000+' },
-]
-
 function EuropeContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -44,7 +36,7 @@ function EuropeContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCities, setSelectedCities] = useState<SelectedCity[]>([])
   const [tripType, setTripType] = useState<TripType>(null)
-  const [budget, setBudget] = useState<BudgetType>(null)
+  const [isTripStyleExpanded, setIsTripStyleExpanded] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
@@ -137,6 +129,17 @@ function EuropeContent() {
     }))
   }
 
+  const handleTripTypeSelect = (type: TripType) => {
+    if (tripType === type) {
+      // If clicking the same type, toggle expansion
+      setIsTripStyleExpanded(!isTripStyleExpanded)
+    } else {
+      // If selecting a new type, select it and collapse
+      setTripType(type)
+      setIsTripStyleExpanded(false)
+    }
+  }
+
   const customiseFromTour = (tour: EuropeTour) => {
     const cities: SelectedCity[] = tour.cities
       .map(tc => {
@@ -150,6 +153,7 @@ function EuropeContent() {
     
     setSelectedCities(cities)
     setTripType(tour.tripType)
+    setIsTripStyleExpanded(false)
     setSelectedTour(null)
     handleTabChange('customise')
     
@@ -165,7 +169,7 @@ function EuropeContent() {
     }, 1500)
   }
 
-  const isFormComplete = selectedCities.length > 0 && tripType && budget
+  const isFormComplete = selectedCities.length > 0 && tripType
 
   const renderStars = (rating: number) => {
     const stars = []
@@ -182,6 +186,9 @@ function EuropeContent() {
   const prevImage = (images: string[]) => {
     setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
   }
+
+  // Get the selected trip type details
+  const selectedTripTypeDetails = tripType ? travelTypes.find(t => t.id === tripType) : null
 
   return (
     <>
@@ -468,73 +475,62 @@ function EuropeContent() {
 
               {/* Sidebar */}
               <div className="space-y-4 sm:space-y-6">
-                {/* Trip Style */}
+                {/* Trip Style - Collapsible */}
                 <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                  <div 
+                    className={`flex items-center gap-3 ${tripType && !isTripStyleExpanded ? 'cursor-pointer' : ''} ${tripType ? 'mb-4 sm:mb-6' : 'mb-4 sm:mb-6'}`}
+                    onClick={() => tripType && !isTripStyleExpanded && setIsTripStyleExpanded(true)}
+                  >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#43124a] flex items-center justify-center">
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Trip Style</h3>
                       <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">What&apos;s your vibe?</p>
                     </div>
+                    {tripType && !isTripStyleExpanded && (
+                      <ChevronDown className="w-5 h-5 text-[#44618b]" />
+                    )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                    {travelTypes.map((type) => {
-                      const Icon = type.icon
-                      return (
-                        <button
-                          key={type.id}
-                          onClick={() => setTripType(type.id)}
-                          className={`flex items-center gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
-                            tripType === type.id
-                              ? 'border-[#d19457] bg-[#d19457]/10'
-                              : 'border-[#12103d]/10 hover:border-[#d19457]/50'
-                          }`}
-                        >
-                          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
-                          <span className={`font-sans text-xs sm:text-sm ${tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
-                            {type.name}
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
+                  {/* Collapsed View - Show only selected option */}
+                  {tripType && !isTripStyleExpanded && selectedTripTypeDetails && (
+                    <button
+                      onClick={() => setIsTripStyleExpanded(true)}
+                      className="w-full flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 border-[#d19457] bg-[#d19457]/10 transition-all duration-300 touch-target"
+                    >
+                      <selectedTripTypeDetails.icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#d19457]" />
+                      <span className="font-sans text-sm sm:text-base text-[#12103d] font-semibold flex-1 text-left">
+                        {selectedTripTypeDetails.name}
+                      </span>
+                      <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">Tap to change</span>
+                    </button>
+                  )}
 
-                {/* Budget */}
-                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#44618b] flex items-center justify-center">
-                      <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  {/* Expanded View - Show all options */}
+                  {(isTripStyleExpanded || !tripType) && (
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                      {travelTypes.map((type) => {
+                        const Icon = type.icon
+                        return (
+                          <button
+                            key={type.id}
+                            onClick={() => handleTripTypeSelect(type.id)}
+                            className={`flex items-center gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
+                              tripType === type.id
+                                ? 'border-[#d19457] bg-[#d19457]/10'
+                                : 'border-[#12103d]/10 hover:border-[#d19457]/50'
+                            }`}
+                          >
+                            <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
+                            <span className={`font-sans text-xs sm:text-sm ${tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
+                              {type.name}
+                            </span>
+                          </button>
+                        )
+                      })}
                     </div>
-                    <div>
-                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Budget Range</h3>
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Per person estimate</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 sm:space-y-3">
-                    {budgetOptions.map((option) => (
-                      <button
-                        key={option.id}
-                        onClick={() => setBudget(option.id)}
-                        className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
-                          budget === option.id
-                            ? 'border-[#d19457] bg-[#d19457]/10'
-                            : 'border-[#12103d]/10 hover:border-[#d19457]/50'
-                        }`}
-                      >
-                        <span className={`font-sans text-xs sm:text-sm ${budget === option.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
-                          {option.name}
-                        </span>
-                        <span className={`font-sans text-[10px] sm:text-xs ${budget === option.id ? 'text-[#d19457]' : 'text-[#44618b]'}`}>
-                          {option.range}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
+                  )}
                 </div>
 
                 {/* Submit */}
@@ -562,7 +558,7 @@ function EuropeContent() {
 
                 {!isFormComplete && (
                   <p className="font-sans text-[10px] sm:text-xs text-center text-[#44618b]">
-                    Add cities, select trip style and budget to continue
+                    Add cities and select trip style to continue
                   </p>
                 )}
               </div>
