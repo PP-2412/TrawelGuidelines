@@ -1,11 +1,25 @@
 'use client'
 
-import { useState, useEffect, useMemo, Suspense } from 'react'
+import { useState, useEffect, useMemo, Suspense, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Wallet, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2 } from 'lucide-react'
 import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
+
+// Dynamically import the map component to avoid SSR issues with Leaflet
+const EuropeMap = dynamic(() => import('@/components/Europe/EuropeMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-[#f5f5f5] rounded-xl sm:rounded-2xl flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-[#d19457] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+        <p className="font-sans text-sm text-[#44618b]">Loading map...</p>
+      </div>
+    </div>
+  )
+})
 
 type TabType = 'customise' | 'tours'
 type TripType = 'adventure' | 'romantic' | 'family' | 'friends' | 'cultural' | 'luxury' | null
@@ -38,6 +52,7 @@ function EuropeContent() {
   const [tripType, setTripType] = useState<TripType>(null)
   const [isTripStyleExpanded, setIsTripStyleExpanded] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isMapExpanded, setIsMapExpanded] = useState(false)
   
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -63,7 +78,11 @@ function EuropeContent() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setSelectedTour(null)
+        if (isMapExpanded) {
+          setIsMapExpanded(false)
+        } else {
+          setSelectedTour(null)
+        }
       }
       
       if (selectedTour && selectedTour.images) {
@@ -81,10 +100,10 @@ function EuropeContent() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedTour])
+  }, [selectedTour, isMapExpanded])
 
   useEffect(() => {
-    if (selectedTour) {
+    if (selectedTour || isMapExpanded) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
@@ -92,7 +111,7 @@ function EuropeContent() {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [selectedTour])
+  }, [selectedTour, isMapExpanded])
 
   const filteredCities = useMemo(() => {
     if (!searchQuery.trim()) return []
@@ -110,14 +129,28 @@ function EuropeContent() {
     return selectedCities.reduce((sum, sc) => sum + sc.nights, 0)
   }, [selectedCities])
 
-  const addCity = (city: EuropeCity) => {
-    setSelectedCities(prev => [...prev, { city, nights: city.suggestedNights }])
+  const addCity = useCallback((city: EuropeCity) => {
+    setSelectedCities(prev => {
+      if (prev.some(sc => sc.city.id === city.id)) return prev
+      return [...prev, { city, nights: city.suggestedNights }]
+    })
     setSearchQuery('')
-  }
+  }, [])
 
-  const removeCity = (cityId: string) => {
+  const removeCity = useCallback((cityId: string) => {
     setSelectedCities(prev => prev.filter(sc => sc.city.id !== cityId))
-  }
+  }, [])
+
+  const toggleCity = useCallback((city: EuropeCity) => {
+    setSelectedCities(prev => {
+      const exists = prev.some(sc => sc.city.id === city.id)
+      if (exists) {
+        return prev.filter(sc => sc.city.id !== city.id)
+      } else {
+        return [...prev, { city, nights: city.suggestedNights }]
+      }
+    })
+  }, [])
 
   const updateNights = (cityId: string, delta: number) => {
     setSelectedCities(prev => prev.map(sc => {
@@ -131,10 +164,8 @@ function EuropeContent() {
 
   const handleTripTypeSelect = (type: TripType) => {
     if (tripType === type) {
-      // If clicking the same type, toggle expansion
       setIsTripStyleExpanded(!isTripStyleExpanded)
     } else {
-      // If selecting a new type, select it and collapse
       setTripType(type)
       setIsTripStyleExpanded(false)
     }
@@ -187,7 +218,6 @@ function EuropeContent() {
     setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
   }
 
-  // Get the selected trip type details
   const selectedTripTypeDetails = tripType ? travelTypes.find(t => t.id === tripType) : null
 
   return (
@@ -330,8 +360,56 @@ function EuropeContent() {
                 Build Your <span className="font-accent text-[#d19457]">Dream Trip</span>
               </h2>
               <p className="font-sans text-sm sm:text-base text-[#44618b] max-w-xl mx-auto">
-                Search cities, adjust your stay, and we&apos;ll create the perfect itinerary
+                Click cities on the map or search below to build your perfect itinerary
               </p>
+            </div>
+
+            {/* Interactive Map Section */}
+            <div className="mb-6 sm:mb-8">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#12103d] flex items-center justify-center">
+                      <MapPinned className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Interactive Map</h3>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Click on cities to add them to your trip</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsMapExpanded(true)}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#f5f5f5] hover:bg-[#12103d]/10 transition-colors touch-target"
+                  >
+                    <Maximize2 className="w-4 h-4 text-[#44618b]" />
+                    <span className="font-sans text-xs sm:text-sm text-[#44618b] hidden sm:inline">Expand</span>
+                  </button>
+                </div>
+                
+                <div className="h-[300px] sm:h-[400px] rounded-xl overflow-hidden">
+                  <EuropeMap
+                    cities={europeCities}
+                    selectedCities={selectedCities}
+                    onCityToggle={toggleCity}
+                  />
+                </div>
+
+                {/* Map Legend */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 pt-4 border-t border-[#12103d]/10">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-[#44618b]" />
+                    <span className="font-sans text-xs text-[#44618b]">Available cities</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-[#d19457]" />
+                    <span className="font-sans text-xs text-[#44618b]">Selected cities</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-0.5 bg-[#d19457]" />
+                    <span className="font-sans text-xs text-[#44618b]">Your route</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
@@ -344,7 +422,7 @@ function EuropeContent() {
                     </div>
                     <div>
                       <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Search & Add Cities</h3>
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Find your destinations</p>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Or use the map above</p>
                     </div>
                   </div>
 
@@ -427,7 +505,7 @@ function EuropeContent() {
                     <div className="space-y-3 sm:space-y-4">
                       {selectedCities.map((sc, index) => (
                         <div key={sc.city.id} className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
-                          <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#12103d] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
+                          <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#d19457] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
                             {index + 1}
                           </div>
                           <div
@@ -493,7 +571,6 @@ function EuropeContent() {
                     )}
                   </div>
 
-                  {/* Collapsed View - Show only selected option */}
                   {tripType && !isTripStyleExpanded && selectedTripTypeDetails && (
                     <button
                       onClick={() => setIsTripStyleExpanded(true)}
@@ -507,7 +584,6 @@ function EuropeContent() {
                     </button>
                   )}
 
-                  {/* Expanded View - Show all options */}
                   {(isTripStyleExpanded || !tripType) && (
                     <div className="grid grid-cols-2 gap-2 sm:gap-3">
                       {travelTypes.map((type) => {
@@ -565,6 +641,58 @@ function EuropeContent() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Expanded Map Modal */}
+      {isMapExpanded && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setIsMapExpanded(false)}
+        >
+          <div 
+            className="relative w-full max-w-6xl h-[80vh] bg-white rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
+              <div className="bg-white/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+                <span className="font-sans text-sm font-medium text-[#12103d]">
+                  {selectedCities.length} cities selected • {totalNights} nights
+                </span>
+              </div>
+              <button
+                onClick={() => setIsMapExpanded(false)}
+                className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              >
+                <X className="w-5 h-5 text-[#12103d]" />
+              </button>
+            </div>
+            
+            <EuropeMap
+              cities={europeCities}
+              selectedCities={selectedCities}
+              onCityToggle={toggleCity}
+              expanded
+            />
+
+            {/* Legend in expanded view */}
+            <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-lg">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full bg-[#44618b]" />
+                  <span className="font-sans text-xs text-[#44618b]">Available</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full bg-[#d19457]" />
+                  <span className="font-sans text-xs text-[#44618b]">Selected</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-0.5 bg-[#d19457]" />
+                  <span className="font-sans text-xs text-[#44618b]">Route</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Tour Modal */}
