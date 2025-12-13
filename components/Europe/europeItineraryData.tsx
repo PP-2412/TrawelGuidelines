@@ -183,7 +183,7 @@ export const cityItineraries: CityItinerary[] = [
           { time: 'Morning', title: 'Teatro di Marcello', description: 'See the ancient theater that inspired the Colosseum design.', duration: '45 mins' },
           { time: 'Afternoon', title: 'Testaccio District', description: 'Visit the non-touristy neighborhood known for incredible food markets and restaurants.', duration: '2.5 hours' },
           friendsActivity('Afternoon', 'Street Food Tour', 'Sample supplì, pizza al taglio, and other Roman street food.', '3 hours'),
-          adventureActivity('Afternoon', 'Aventine Hill & Keyhole', description: 'Climb the hill and peek through the famous keyhole with a perfect St. Peter\'s view.', '1.5 hours'),
+          adventureActivity('Afternoon', 'Aventine Hill & Keyhole', 'Climb the hill and peek through the famous keyhole with a perfect St. Peter\'s view.', '1.5 hours'),
           { time: 'Evening', title: 'Final Roman Feast', description: 'Enjoy cacio e pepe, carbonara, and other Roman classics at a local favorite.', duration: '2.5 hours' },
           luxuryActivity('Evening', 'Private Chef Dinner', 'In-villa dinner prepared by a private chef with wine pairing.', '3.5 hours'),
         ]
