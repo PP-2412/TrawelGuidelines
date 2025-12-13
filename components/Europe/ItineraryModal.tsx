@@ -257,10 +257,10 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
           </div>
         </div>
 
-        {/* Footer with city summary */}
-        <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-3 overflow-x-auto">
+       {/* Footer with city summary */}
+        <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
               {selectedCities.map((sc, index) => (
                 <div 
                   key={sc.city.id}
