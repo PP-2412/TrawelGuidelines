@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import { useMemo } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { EuropeCity } from './europeData'
@@ -54,11 +54,6 @@ const createIcon = (color: string, isSelected: boolean, index?: number) => {
     popupAnchor: [0, -size / 2],
   })
 }
-// Component to handle initial map view (no auto-zoom on selection)
-function MapBoundsHandler() {
-  // Map maintains user's current view - no auto-zooming when cities are selected
-  return null
-}
 
 export default function EuropeMap({ cities, selectedCities, onCityToggle, expanded = false }: EuropeMapProps) {
   // Create route line coordinates
@@ -80,7 +75,7 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
     <MapContainer
       center={[50, 10]}
       zoom={4}
-      className="w-full h-full [&_.leaflet-pane]:z-[1] [&_.leaflet-control]:z-[2] [&_.leaflet-top]:z-[2] [&_.leaflet-bottom]:z-[2]"
+      className={`w-full h-full ${expanded ? '[&_.leaflet-control-zoom]:hidden [&_.leaflet-control-attribution]:hidden' : ''}`}
       style={{ background: '#e8e8e8' }}
       zoomControl={expanded}
       scrollWheelZoom={expanded}
@@ -91,8 +86,6 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-
-      <MapBoundsHandler />
 
       {/* Route line connecting selected cities */}
       {routeCoordinates.length > 1 && (
