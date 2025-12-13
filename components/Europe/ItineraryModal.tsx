@@ -261,10 +261,10 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
         <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
-              {selectedCities.map((sc, index) => (
+             {selectedCities.map((sc, index) => (
                 <div 
                   key={sc.city.id}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex-shrink-0 ${
                     sc.city.name === currentDayData.cityName
                       ? 'bg-[#12103d] text-white'
                       : 'bg-white text-[#44618b]'
