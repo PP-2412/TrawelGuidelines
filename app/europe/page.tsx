@@ -369,8 +369,8 @@ function EuropeContent() {
             </div>
 
             {/* Interactive Map Section */}
-            <div className="mb-6 sm:mb-8">
-              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+            <div className="mb-6 sm:mb-8 relative z-0">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6 isolate">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#12103d] flex items-center justify-center">
@@ -664,7 +664,7 @@ function EuropeContent() {
       {/* Expanded Map Modal */}
       {isMapExpanded && (
         <div 
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setIsMapExpanded(false)}
         >
           <div 
@@ -725,7 +725,7 @@ function EuropeContent() {
       {/* Tour Modal */}
       {selectedTour && (
         <div 
-          className="modal-overlay"
+          className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
           onClick={() => setSelectedTour(null)}
         >
           <div 
