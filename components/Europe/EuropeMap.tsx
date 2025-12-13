@@ -94,7 +94,7 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
     <MapContainer
       center={[50, 10]}
       zoom={4}
-      className="w-full h-full [&_.leaflet-pane]:z-[1] [&_.leaflet-control]:z-[2]"
+      className="w-full h-full [&_.leaflet-pane]:z-[1] [&_.leaflet-control]:z-[2] [&_.leaflet-top]:z-[2] [&_.leaflet-bottom]:z-[2]"
       style={{ background: '#e8e8e8' }}
       zoomControl={expanded}
       scrollWheelZoom={expanded}
