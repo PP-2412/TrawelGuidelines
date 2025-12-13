@@ -92,15 +92,15 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with city image */}
-        <div className="relative h-40 sm:h-48 md:h-56 overflow-hidden">
+        {/* Header with city image - Fixed height */}
+        <div className="relative h-40 sm:h-48 md:h-56 flex-shrink-0">
           <div 
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${cityImage})` }}
@@ -138,8 +138,8 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
           </div>
         </div>
 
-        {/* Day navigation */}
-        <div className="bg-[#f5f5f5] border-b border-[#12103d]/10 px-4 sm:px-6 py-3">
+        {/* Day navigation - Fixed height */}
+        <div className="bg-[#f5f5f5] border-b border-[#12103d]/10 px-4 sm:px-6 py-3 flex-shrink-0">
           <div className="flex items-center justify-between">
             <button
               onClick={() => setCurrentDayIndex(prev => Math.max(0, prev - 1))}
@@ -155,7 +155,7 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
             </button>
 
             {/* Day dots */}
-            <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-none">
+            <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-hide">
               {itinerary.map((day, index) => (
                 <button
                   key={index}
@@ -187,84 +187,86 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
           </div>
         </div>
 
-        {/* Activities content */}
-        <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(90vh-280px)] sm:max-h-[calc(90vh-320px)]">
-          <div className="space-y-6">
-            {['Morning', 'Afternoon', 'Evening'].map((timeOfDay) => {
-              const activities = groupedActivities[timeOfDay]
-              if (!activities || activities.length === 0) return null
+        {/* Activities content - Scrollable, takes remaining space */}
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="p-4 sm:p-6">
+            <div className="space-y-6">
+              {['Morning', 'Afternoon', 'Evening'].map((timeOfDay) => {
+                const activities = groupedActivities[timeOfDay]
+                if (!activities || activities.length === 0) return null
 
-              const TimeIcon = timeIcons[timeOfDay]
-              const colorClass = timeColors[timeOfDay]
+                const TimeIcon = timeIcons[timeOfDay]
+                const colorClass = timeColors[timeOfDay]
 
-              return (
-                <div key={timeOfDay}>
-                  {/* Time of day header */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${colorClass}`}>
-                      <TimeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="text-xs sm:text-sm font-medium">{timeOfDay}</span>
+                return (
+                  <div key={timeOfDay}>
+                    {/* Time of day header */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${colorClass}`}>
+                        <TimeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span className="text-xs sm:text-sm font-medium">{timeOfDay}</span>
+                      </div>
+                    </div>
+
+                    {/* Activities list */}
+                    <div className="space-y-3 pl-2 border-l-2 border-[#12103d]/10 ml-4">
+                      {activities.map((activity, actIndex) => (
+                        <div 
+                          key={actIndex}
+                          className={`relative pl-4 ${
+                            activity.tripTypes 
+                              ? 'bg-gradient-to-r from-[#d19457]/5 to-transparent rounded-r-lg py-2 pr-2' 
+                              : ''
+                          }`}
+                        >
+                          {/* Timeline dot */}
+                          <div className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 ${
+                            activity.tripTypes 
+                              ? 'bg-[#d19457] border-[#d19457]' 
+                              : 'bg-white border-[#12103d]/30'
+                          }`} />
+
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-display text-base sm:text-lg text-[#12103d]">
+                                  {activity.title}
+                                </h4>
+                                {activity.tripTypes && (
+                                  <span className="px-2 py-0.5 bg-[#d19457] text-white text-[10px] sm:text-xs font-medium rounded-full">
+                                    {activity.tripTypes.map(t => tripTypeLabels[t]?.name).join(', ')}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="font-sans text-xs sm:text-sm text-[#44618b] mt-1 leading-relaxed">
+                                {activity.description}
+                              </p>
+                            </div>
+                            {activity.duration && (
+                              <div className="flex items-center gap-1 text-[#44618b] flex-shrink-0">
+                                <Clock className="w-3.5 h-3.5" />
+                                <span className="text-xs font-medium">{activity.duration}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-
-                  {/* Activities list */}
-                  <div className="space-y-3 pl-2 border-l-2 border-[#12103d]/10 ml-4">
-                    {activities.map((activity, actIndex) => (
-                      <div 
-                        key={actIndex}
-                        className={`relative pl-4 ${
-                          activity.tripTypes 
-                            ? 'bg-gradient-to-r from-[#d19457]/5 to-transparent rounded-r-lg py-2 pr-2' 
-                            : ''
-                        }`}
-                      >
-                        {/* Timeline dot */}
-                        <div className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 ${
-                          activity.tripTypes 
-                            ? 'bg-[#d19457] border-[#d19457]' 
-                            : 'bg-white border-[#12103d]/30'
-                        }`} />
-
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h4 className="font-display text-base sm:text-lg text-[#12103d]">
-                                {activity.title}
-                              </h4>
-                              {activity.tripTypes && (
-                                <span className="px-2 py-0.5 bg-[#d19457] text-white text-[10px] sm:text-xs font-medium rounded-full">
-                                  {activity.tripTypes.map(t => tripTypeLabels[t]?.name).join(', ')}
-                                </span>
-                              )}
-                            </div>
-                            <p className="font-sans text-xs sm:text-sm text-[#44618b] mt-1 leading-relaxed">
-                              {activity.description}
-                            </p>
-                          </div>
-                          {activity.duration && (
-                            <div className="flex items-center gap-1 text-[#44618b] flex-shrink-0">
-                              <Clock className="w-3.5 h-3.5" />
-                              <span className="text-xs font-medium">{activity.duration}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
 
-       {/* Footer with city summary */}
+        {/* Footer with city summary - Fixed height, never shrinks */}
         <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
-             {selectedCities.map((sc, index) => (
+            <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
+              {selectedCities.map((sc, index) => (
                 <div 
                   key={sc.city.id}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex-shrink-0 ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex-shrink-0 whitespace-nowrap ${
                     sc.city.name === currentDayData.cityName
                       ? 'bg-[#12103d] text-white'
                       : 'bg-white text-[#44618b]'
@@ -272,11 +274,11 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
                 >
                   <span>{index + 1}.</span>
                   <span>{sc.city.name}</span>
-                  <span className="text-[10px] opacity-70">({sc.nights}N)</span>
+                  <span className="opacity-70">({sc.nights}N)</span>
                 </div>
               ))}
             </div>
-            <div className="text-xs sm:text-sm text-[#44618b]">
+            <div className="text-xs sm:text-sm text-[#44618b] flex-shrink-0 whitespace-nowrap">
               Total: <span className="font-medium text-[#12103d]">{totalDays} nights</span>
             </div>
           </div>
