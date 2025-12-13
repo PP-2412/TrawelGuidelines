@@ -54,23 +54,9 @@ const createIcon = (color: string, isSelected: boolean, index?: number) => {
     popupAnchor: [0, -size / 2],
   })
 }
-
-// Component to handle map bounds
-function MapBoundsHandler({ selectedCities, allCities }: { selectedCities: SelectedCity[], allCities: EuropeCity[] }) {
-  const map = useMap()
-
-  useEffect(() => {
-    if (selectedCities.length > 0) {
-      const bounds = L.latLngBounds(
-        selectedCities.map(sc => [sc.city.coordinates.lat, sc.city.coordinates.lng])
-      )
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 })
-    } else {
-      // Default view of Europe
-      map.setView([50, 10], 4)
-    }
-  }, [selectedCities, map])
-
+// Component to handle initial map view (no auto-zoom on selection)
+function MapBoundsHandler() {
+  // Map maintains user's current view - no auto-zooming when cities are selected
   return null
 }
 
@@ -106,7 +92,7 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
 
-      <MapBoundsHandler selectedCities={selectedCities} allCities={cities} />
+      <MapBoundsHandler />
 
       {/* Route line connecting selected cities */}
       {routeCoordinates.length > 1 && (
