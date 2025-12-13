@@ -5,8 +5,9 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2 } from 'lucide-react'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye } from 'lucide-react'
 import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
+import ItineraryModal from '@/components/Europe/ItineraryModal'
 
 // Dynamically import the map component to avoid SSR issues with Leaflet
 const EuropeMap = dynamic(() => import('@/components/Europe/EuropeMap'), {
@@ -53,6 +54,7 @@ function EuropeContent() {
   const [isTripStyleExpanded, setIsTripStyleExpanded] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
+  const [showItinerary, setShowItinerary] = useState(false)
   
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -80,6 +82,8 @@ function EuropeContent() {
       if (e.key === 'Escape') {
         if (isMapExpanded) {
           setIsMapExpanded(false)
+        } else if (showItinerary) {
+          setShowItinerary(false)
         } else {
           setSelectedTour(null)
         }
@@ -100,10 +104,10 @@ function EuropeContent() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedTour, isMapExpanded])
+  }, [selectedTour, isMapExpanded, showItinerary])
 
   useEffect(() => {
-    if (selectedTour || isMapExpanded) {
+    if (selectedTour || isMapExpanded || showItinerary) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
@@ -111,7 +115,7 @@ function EuropeContent() {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [selectedTour, isMapExpanded])
+  }, [selectedTour, isMapExpanded, showItinerary])
 
   const filteredCities = useMemo(() => {
     if (!searchQuery.trim()) return []
@@ -609,6 +613,20 @@ function EuropeContent() {
                   )}
                 </div>
 
+                {/* View Itinerary Button */}
+                <button
+                  onClick={() => setShowItinerary(true)}
+                  disabled={selectedCities.length === 0}
+                  className={`w-full flex items-center justify-center gap-2 sm:gap-3 py-3.5 sm:py-4 rounded-full font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-300 touch-target ${
+                    selectedCities.length > 0
+                      ? 'bg-gradient-to-r from-[#12103d] to-[#43124a] text-white shadow-lg hover:shadow-xl hover:scale-[1.02]'
+                      : 'bg-[#f5f5f5] text-[#44618b] cursor-not-allowed'
+                  }`}
+                >
+                  <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                  View Itinerary
+                </button>
+
                 {/* Submit */}
                 <button
                   onClick={handleSubmit}
@@ -693,6 +711,15 @@ function EuropeContent() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Itinerary Modal */}
+      {showItinerary && (
+        <ItineraryModal
+          selectedCities={selectedCities}
+          tripType={tripType}
+          onClose={() => setShowItinerary(false)}
+        />
       )}
 
       {/* Tour Modal */}
