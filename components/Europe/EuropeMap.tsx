@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, ZoomControl } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { EuropeCity } from './europeData'
@@ -75,9 +75,9 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
     <MapContainer
       center={[50, 10]}
       zoom={4}
-      className={`w-full h-full ${expanded ? '[&_.leaflet-control-zoom]:hidden [&_.leaflet-control-attribution]:hidden' : ''}`}
+      className="w-full h-full [&_.leaflet-pane]:z-[1] [&_.leaflet-control]:z-[2] [&_.leaflet-top]:z-[2] [&_.leaflet-bottom]:z-[2]"
       style={{ background: '#e8e8e8' }}
-      zoomControl={expanded}
+      zoomControl={false}
       scrollWheelZoom={expanded}
       dragging={true}
       doubleClickZoom={expanded}
@@ -86,6 +86,8 @@ export default function EuropeMap({ cities, selectedCities, onCityToggle, expand
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+
+      {expanded && <ZoomControl position="bottomleft" />}
 
       {/* Route line connecting selected cities */}
       {routeCoordinates.length > 1 && (
