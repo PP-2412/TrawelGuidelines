@@ -5,9 +5,10 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye } from 'lucide-react'
-import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel } from '@/components/Europe/europeData'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock } from 'lucide-react'
+import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType } from '@/components/Europe/europeData'
 import ItineraryModal from '@/components/Europe/ItineraryModal'
+import { generateFullItinerary, Activity } from '@/components/Europe/europeItineraryData'
 
 // Dynamically import the map component to avoid SSR issues with Leaflet
 const EuropeMap = dynamic(() => import('@/components/Europe/EuropeMap'), {
@@ -23,7 +24,7 @@ const EuropeMap = dynamic(() => import('@/components/Europe/EuropeMap'), {
 })
 
 type TabType = 'customise' | 'tours'
-type TripType = 'adventure' | 'romantic' | 'family' | 'friends' | 'cultural' | 'luxury' | null
+type TourViewMode = 'overview' | 'itinerary'
 
 interface SelectedCity {
   city: EuropeCity
@@ -39,6 +40,27 @@ const travelTypes = [
   { id: 'luxury' as const, name: 'Luxury', icon: Gem, color: 'from-[#c77e36] to-[#d19457]' },
 ]
 
+const tripTypeLabels: Record<TripType, { name: string; icon: React.ComponentType<{ className?: string }> }> = {
+  adventure: { name: 'Adventure', icon: Compass },
+  romantic: { name: 'Romantic', icon: Heart },
+  family: { name: 'Family', icon: Users },
+  friends: { name: 'Friends', icon: UserPlus },
+  cultural: { name: 'Cultural', icon: Mountain },
+  luxury: { name: 'Luxury', icon: Gem },
+}
+
+const timeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  Morning: Sun,
+  Afternoon: Sunset,
+  Evening: Moon,
+}
+
+const timeColors: Record<string, string> = {
+  Morning: 'bg-amber-100 text-amber-700 border-amber-200',
+  Afternoon: 'bg-orange-100 text-orange-700 border-orange-200',
+  Evening: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+}
+
 function EuropeContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -50,7 +72,7 @@ function EuropeContent() {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCities, setSelectedCities] = useState<SelectedCity[]>([])
-  const [tripType, setTripType] = useState<TripType>(null)
+  const [tripType, setTripType] = useState<TripType | null>(null)
   const [isTripStyleExpanded, setIsTripStyleExpanded] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
@@ -58,6 +80,8 @@ function EuropeContent() {
   
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [tourViewMode, setTourViewMode] = useState<TourViewMode>('overview')
+  const [tourDayIndex, setTourDayIndex] = useState(0)
 
   useEffect(() => {
     if (tabParam === 'customise' || tabParam === 'customize') {
@@ -75,7 +99,27 @@ function EuropeContent() {
 
   useEffect(() => {
     setCurrentImageIndex(0)
+    setTourViewMode('overview')
+    setTourDayIndex(0)
   }, [selectedTour])
+
+  // Generate itinerary for selected tour
+  const tourItinerary = useMemo(() => {
+    if (!selectedTour) return []
+    return generateFullItinerary(selectedTour.cities, selectedTour.tripType)
+  }, [selectedTour])
+
+  const currentTourDayData = tourItinerary[tourDayIndex]
+
+  // Group activities by time for tour itinerary
+  const groupedTourActivities = useMemo(() => {
+    if (!currentTourDayData) return {}
+    return currentTourDayData.activities.reduce((acc, activity) => {
+      if (!acc[activity.time]) acc[activity.time] = []
+      acc[activity.time].push(activity)
+      return acc
+    }, {} as Record<string, Activity[]>)
+  }, [currentTourDayData])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -89,22 +133,31 @@ function EuropeContent() {
         }
       }
       
-      if (selectedTour && selectedTour.images) {
-        if (e.key === 'ArrowLeft') {
-          setCurrentImageIndex(prev => 
-            prev === 0 ? selectedTour.images.length - 1 : prev - 1
-          )
-        }
-        if (e.key === 'ArrowRight') {
-          setCurrentImageIndex(prev => 
-            prev === selectedTour.images.length - 1 ? 0 : prev + 1
-          )
+      if (selectedTour) {
+        if (tourViewMode === 'overview' && selectedTour.images) {
+          if (e.key === 'ArrowLeft') {
+            setCurrentImageIndex(prev => 
+              prev === 0 ? selectedTour.images.length - 1 : prev - 1
+            )
+          }
+          if (e.key === 'ArrowRight') {
+            setCurrentImageIndex(prev => 
+              prev === selectedTour.images.length - 1 ? 0 : prev + 1
+            )
+          }
+        } else if (tourViewMode === 'itinerary') {
+          if (e.key === 'ArrowLeft' && tourDayIndex > 0) {
+            setTourDayIndex(prev => prev - 1)
+          }
+          if (e.key === 'ArrowRight' && tourDayIndex < tourItinerary.length - 1) {
+            setTourDayIndex(prev => prev + 1)
+          }
         }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedTour, isMapExpanded, showItinerary])
+  }, [selectedTour, isMapExpanded, showItinerary, tourViewMode, tourDayIndex, tourItinerary.length])
 
   useEffect(() => {
     if (selectedTour || isMapExpanded || showItinerary) {
@@ -166,7 +219,7 @@ function EuropeContent() {
     }))
   }
 
-  const handleTripTypeSelect = (type: TripType) => {
+  const handleTripTypeSelect = (type: TripType | null) => {
     if (tripType === type) {
       setIsTripStyleExpanded(!isTripStyleExpanded)
     } else {
@@ -223,6 +276,20 @@ function EuropeContent() {
   }
 
   const selectedTripTypeDetails = tripType ? travelTypes.find(t => t.id === tripType) : null
+
+  // Get city image for tour itinerary
+  const getTourCityImage = (cityName: string) => {
+    if (!selectedTour) return ''
+    const tourCity = selectedTour.cities.find(tc => {
+      const city = getCityById(tc.cityId)
+      return city?.name === cityName
+    })
+    if (tourCity) {
+      const city = getCityById(tourCity.cityId)
+      return city?.image || selectedTour.image
+    }
+    return selectedTour.image
+  }
 
   return (
     <>
@@ -732,171 +799,354 @@ function EuropeContent() {
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative h-48 sm:h-64 md:h-80">
-              <div className="relative w-full h-full overflow-hidden">
-                {selectedTour.images.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ${
-                      idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    style={{ backgroundImage: `url(${img})` }}
-                  />
-                ))}
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12103d] via-[#12103d]/40 to-transparent" />
-              
-              {selectedTour.images.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); prevImage(selectedTour.images) }}
-                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
-                  >
-                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); nextImage(selectedTour.images) }}
-                    className="absolute right-12 sm:right-16 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
-                  >
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
-                  </button>
-                </>
-              )}
-
-              {selectedTour.images.length > 1 && (
-                <div className="absolute bottom-20 sm:bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-10">
-                  {selectedTour.images.map((_, idx) => (
-                    <button
+            {/* Header with image - only show in overview mode */}
+            {tourViewMode === 'overview' ? (
+              <div className="relative h-48 sm:h-64 md:h-80">
+                <div className="relative w-full h-full overflow-hidden">
+                  {selectedTour.images.map((img, idx) => (
+                    <div
                       key={idx}
-                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx) }}
-                      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
-                        idx === currentImageIndex ? 'bg-white w-4 sm:w-6' : 'bg-white/50 hover:bg-white/80'
+                      className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ${
+                        idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
                       }`}
+                      style={{ backgroundImage: `url(${img})` }}
                     />
                   ))}
                 </div>
-              )}
-              
-              <button
-                onClick={() => setSelectedTour(null)}
-                className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 touch-target"
-              >
-                <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
-              </button>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#12103d] via-[#12103d]/40 to-transparent" />
+                
+                {selectedTour.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); prevImage(selectedTour.images) }}
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
+                    >
+                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); nextImage(selectedTour.images) }}
+                      className="absolute right-12 sm:right-16 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 group touch-target"
+                    >
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d] group-hover:text-[#d19457] transition-colors" />
+                    </button>
+                  </>
+                )}
 
-              {selectedTour.tag && (
-                <span className={`absolute top-3 sm:top-4 left-3 sm:left-4 px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-semibold rounded-full ${selectedTour.tagColor}`}>
-                  {selectedTour.tag}
-                </span>
-              )}
+                {selectedTour.images.length > 1 && (
+                  <div className="absolute bottom-20 sm:bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-10">
+                    {selectedTour.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx) }}
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
+                          idx === currentImageIndex ? 'bg-white w-4 sm:w-6' : 'bg-white/50 hover:bg-white/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                <button
+                  onClick={() => setSelectedTour(null)}
+                  className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 touch-target"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
+                </button>
 
-              {selectedTour.images.length > 1 && (
-                <span className="absolute top-3 sm:top-4 left-24 sm:left-32 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
-                  {currentImageIndex + 1} / {selectedTour.images.length}
-                </span>
-              )}
+                {selectedTour.tag && (
+                  <span className={`absolute top-3 sm:top-4 left-3 sm:left-4 px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-semibold rounded-full ${selectedTour.tagColor}`}>
+                    {selectedTour.tag}
+                  </span>
+                )}
 
-              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                  <div className="flex items-center gap-0.5">{renderStars(selectedTour.rating)}</div>
-                  <span className="font-sans text-xs sm:text-sm text-white/80">({selectedTour.rating})</span>
+                {selectedTour.images.length > 1 && (
+                  <span className="absolute top-3 sm:top-4 left-24 sm:left-32 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-sans font-medium rounded-full bg-black/50 backdrop-blur-sm text-white">
+                    {currentImageIndex + 1} / {selectedTour.images.length}
+                  </span>
+                )}
+
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                    <div className="flex items-center gap-0.5">{renderStars(selectedTour.rating)}</div>
+                    <span className="font-sans text-xs sm:text-sm text-white/80">({selectedTour.rating})</span>
+                  </div>
+                  <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white line-clamp-2">{selectedTour.name}</h2>
+                  <p className="font-sans text-sm sm:text-lg text-[#d19457]">{selectedTour.tagline}</p>
                 </div>
-                <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white line-clamp-2">{selectedTour.name}</h2>
-                <p className="font-sans text-sm sm:text-lg text-[#d19457]">{selectedTour.tagline}</p>
               </div>
-            </div>
+            ) : (
+              /* Itinerary Header */
+              <div className="relative h-40 sm:h-48 md:h-56 flex-shrink-0">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${getTourCityImage(currentTourDayData?.cityName || '')})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#12103d] via-[#12103d]/60 to-transparent" />
+                
+                {/* Close button */}
+                <button
+                  onClick={() => setSelectedTour(null)}
+                  className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 touch-target"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
+                </button>
 
+                {/* Trip type badge */}
+                <div className="absolute top-3 sm:top-4 left-3 sm:left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#d19457] text-white text-xs sm:text-sm font-medium">
+                  {tripTypeLabels[selectedTour.tripType] && (
+                    <>
+                      {(() => {
+                        const TripIcon = tripTypeLabels[selectedTour.tripType].icon
+                        return <TripIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      })()}
+                      {tripTypeLabels[selectedTour.tripType].name} Trip
+                    </>
+                  )}
+                </div>
+
+                {/* Day info */}
+                {currentTourDayData && (
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <div className="flex items-center gap-2 text-white/80 text-xs sm:text-sm mb-1">
+                      <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>{currentTourDayData.cityName}</span>
+                      <span className="text-white/50">•</span>
+                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>Day {currentTourDayData.day} of {tourItinerary.length}</span>
+                    </div>
+                    <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-white">
+                      {currentTourDayData.title}
+                    </h2>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Day navigation for itinerary view */}
+            {tourViewMode === 'itinerary' && (
+              <div className="bg-[#f5f5f5] border-b border-[#12103d]/10 px-4 sm:px-6 py-3 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => setTourDayIndex(prev => Math.max(0, prev - 1))}
+                    disabled={tourDayIndex === 0}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all touch-target ${
+                      tourDayIndex === 0
+                        ? 'text-[#44618b]/40 cursor-not-allowed'
+                        : 'text-[#12103d] hover:bg-white'
+                    }`}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="hidden sm:inline">Previous Day</span>
+                  </button>
+
+                  {/* Day dots */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-hide">
+                    {tourItinerary.map((day, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setTourDayIndex(index)}
+                        className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full text-[10px] sm:text-xs font-medium transition-all ${
+                          index === tourDayIndex
+                            ? 'bg-[#d19457] text-white'
+                            : 'bg-white text-[#44618b] hover:bg-[#12103d]/10'
+                        }`}
+                        title={`Day ${day.day}: ${day.cityName}`}
+                      >
+                        {day.day}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setTourDayIndex(prev => Math.min(tourItinerary.length - 1, prev + 1))}
+                    disabled={tourDayIndex === tourItinerary.length - 1}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all touch-target ${
+                      tourDayIndex === tourItinerary.length - 1
+                        ? 'text-[#44618b]/40 cursor-not-allowed'
+                        : 'text-[#12103d] hover:bg-white'
+                    }`}
+                  >
+                    <span className="hidden sm:inline">Next Day</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Content area */}
             <div className="p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[50vh] sm:max-h-[calc(90vh-20rem)]">
-              <p className="font-sans text-sm sm:text-base md:text-lg text-[#44618b] mb-4 sm:mb-6">{selectedTour.description}</p>
+              {tourViewMode === 'overview' ? (
+                /* Overview Content */
+                <>
+                  <p className="font-sans text-sm sm:text-base md:text-lg text-[#44618b] mb-4 sm:mb-6">{selectedTour.description}</p>
 
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
+                      </div>
+                      <div>
+                        <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Duration</p>
+                        <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{selectedTour.duration}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
+                        <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
+                      </div>
+                      <div>
+                        <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Type</p>
+                        <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{getTripTypeLabel(selectedTour.tripType)}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Duration</p>
-                    <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{selectedTour.duration}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center">
-                    <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#43124a]" />
-                  </div>
-                  <div>
-                    <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Type</p>
-                    <p className="font-sans text-xs sm:text-sm font-semibold text-[#12103d]">{getTripTypeLabel(selectedTour.tripType)}</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="mb-6 sm:mb-8">
-                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Cities Visited</h4>
-                <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {selectedTour.cities.map((tc, idx) => {
-                    const city = getCityById(tc.cityId)
-                    if (!city) return null
+                  <div className="mb-6 sm:mb-8">
+                    <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Cities Visited</h4>
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      {selectedTour.cities.map((tc, idx) => {
+                        const city = getCityById(tc.cityId)
+                        if (!city) return null
+                        return (
+                          <div key={tc.cityId} className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#f5f5f5] rounded-full">
+                            <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#12103d] text-white flex items-center justify-center font-sans text-[10px] sm:text-xs font-bold">
+                              {idx + 1}
+                            </span>
+                            <span className="font-sans text-xs sm:text-sm text-[#12103d]">{city.name}</span>
+                            <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">{tc.nights}N</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="mb-6 sm:mb-8">
+                    <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Tour Highlights</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                      {selectedTour.highlights.map((highlight, idx) => (
+                        <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
+                          <span className="font-sans text-xs sm:text-sm text-[#44618b]">{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-6 sm:mb-8">
+                    <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">What&apos;s Included</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                      {selectedTour.included.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#d19457]/10 rounded-lg sm:rounded-xl">
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
+                          <span className="font-sans text-xs sm:text-sm text-[#12103d]">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* Itinerary Content */
+                <div className="space-y-6">
+                  {['Morning', 'Afternoon', 'Evening'].map((timeOfDay) => {
+                    const activities = groupedTourActivities[timeOfDay]
+                    if (!activities || activities.length === 0) return null
+
+                    const TimeIcon = timeIcons[timeOfDay]
+                    const colorClass = timeColors[timeOfDay]
+
                     return (
-                      <div key={tc.cityId} className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#f5f5f5] rounded-full">
-                        <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#12103d] text-white flex items-center justify-center font-sans text-[10px] sm:text-xs font-bold">
-                          {idx + 1}
-                        </span>
-                        <span className="font-sans text-xs sm:text-sm text-[#12103d]">{city.name}</span>
-                        <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">{tc.nights}N</span>
+                      <div key={timeOfDay}>
+                        {/* Time of day header */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${colorClass}`}>
+                            <TimeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <span className="text-xs sm:text-sm font-medium">{timeOfDay}</span>
+                          </div>
+                        </div>
+
+                        {/* Activities list */}
+                        <div className="space-y-3 pl-2 border-l-2 border-[#12103d]/10 ml-4">
+                          {activities.map((activity, actIndex) => (
+                            <div 
+                              key={actIndex}
+                              className={`relative pl-4 ${
+                                activity.tripTypes 
+                                  ? 'bg-gradient-to-r from-[#d19457]/5 to-transparent rounded-r-lg py-2 pr-2' 
+                                  : ''
+                              }`}
+                            >
+                              {/* Timeline dot */}
+                              <div className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 ${
+                                activity.tripTypes 
+                                  ? 'bg-[#d19457] border-[#d19457]' 
+                                  : 'bg-white border-[#12103d]/30'
+                              }`} />
+
+                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <h4 className="font-display text-base sm:text-lg text-[#12103d]">
+                                      {activity.title}
+                                    </h4>
+                                    {activity.tripTypes && (
+                                      <span className="px-2 py-0.5 bg-[#d19457] text-white text-[10px] sm:text-xs font-medium rounded-full">
+                                        {activity.tripTypes.map(t => tripTypeLabels[t]?.name).join(', ')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="font-sans text-xs sm:text-sm text-[#44618b] mt-1 leading-relaxed">
+                                    {activity.description}
+                                  </p>
+                                </div>
+                                {activity.duration && (
+                                  <div className="flex items-center gap-1 text-[#44618b] flex-shrink-0">
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span className="text-xs font-medium">{activity.duration}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )
                   })}
                 </div>
-              </div>
+              )}
+            </div>
 
-              <div className="mb-6 sm:mb-8">
-                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">Tour Highlights</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  {selectedTour.highlights.map((highlight, idx) => (
-                    <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
-                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-xs sm:text-sm text-[#44618b]">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-6 sm:mb-8">
-                <h4 className="font-display text-lg sm:text-xl text-[#12103d] mb-3 sm:mb-4">What&apos;s Included</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                  {selectedTour.included.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-[#d19457]/10 rounded-lg sm:rounded-xl">
-                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457] flex-shrink-0" />
-                      <span className="font-sans text-xs sm:text-sm text-[#12103d]">{item}</span>
-                    </div>
-                  ))}
+            {/* Footer */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6 border-t border-[#12103d]/10 bg-white">
+              <div className="text-center sm:text-left">
+                <span className="font-sans text-xs sm:text-sm text-[#44618b]">Starting from</span>
+                <div>
+                  <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[#d19457]">${selectedTour.price}</span>
+                  <span className="font-sans text-xs sm:text-sm text-[#44618b]">/person</span>
                 </div>
               </div>
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 sm:pt-6 border-t border-[#12103d]/10">
-                <div className="text-center sm:text-left">
-                  <span className="font-sans text-xs sm:text-sm text-[#44618b]">Starting from</span>
-                  <div>
-                    <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[#d19457]">${selectedTour.price}</span>
-                    <span className="font-sans text-xs sm:text-sm text-[#44618b]">/person</span>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-                  <button
-                    onClick={() => customiseFromTour(selectedTour)}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#12103d] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#43124a] transition-all touch-target"
-                  >
-                    <Settings2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Customise
-                  </button>
-                  <a
-                    href="#contact"
-                    onClick={() => setSelectedTour(null)}
-                    className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-6 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
-                  >
-                    Book Now
-                  </a>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+                {/* View Toggle Button */}
+                <button
+                  onClick={() => setTourViewMode(tourViewMode === 'overview' ? 'itinerary' : 'overview')}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#f5f5f5] text-[#12103d] font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#12103d]/10 transition-all touch-target"
+                >
+                  <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {tourViewMode === 'overview' ? 'View Itinerary' : 'View Overview'}
+                </button>
+                <button
+                  onClick={() => customiseFromTour(selectedTour)}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#12103d] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#43124a] transition-all touch-target"
+                >
+                  <Settings2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Customise
+                </button>
+                <a
+                  href="#contact"
+                  onClick={() => setSelectedTour(null)}
+                  className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-6 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
+                >
+                  Book Now
+                </a>
               </div>
             </div>
           </div>
