@@ -837,6 +837,1039 @@ export const cityItineraries: CityItinerary[] = [
       },
     ]
   },
+  // ATHENS
+  {
+    cityId: 'athens',
+    cityName: 'Athens',
+    days: [
+      {
+        day: 1,
+        title: 'Ancient Acropolis',
+        activities: [
+          { time: 'Morning', title: 'Acropolis', description: 'Climb the sacred rock and marvel at the Parthenon, Erechtheion, and Temple of Athena Nike.', duration: '3 hours' },
+          culturalActivity('Morning', 'Archaeological Expert Tour', 'In-depth exploration with an archaeologist explaining ancient Greek civilization.', '4 hours'),
+          luxuryActivity('Morning', 'Private Sunrise Access', 'Early access before crowds with champagne breakfast overlooking Athens.', '3 hours'),
+          { time: 'Afternoon', title: 'Acropolis Museum', description: 'Explore the stunning modern museum housing original Parthenon sculptures.', duration: '2.5 hours' },
+          familyActivity('Afternoon', 'Kids Ancient Greece Workshop', 'Interactive activities teaching children about Greek myths and history.', '2 hours'),
+          { time: 'Evening', title: 'Plaka District', description: 'Wander the oldest neighborhood in Athens with neoclassical architecture and tavernas.', duration: '3 hours' },
+          romanticActivity('Evening', 'Rooftop Dinner', 'Candlelit dinner with illuminated Acropolis views.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Ancient Agora & Markets',
+        activities: [
+          { time: 'Morning', title: 'Ancient Agora', description: 'Walk where Socrates taught and see the well-preserved Temple of Hephaestus.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Philosophy Walking Tour', 'Follow in the footsteps of Plato, Aristotle, and Socrates.', '3 hours'),
+          { time: 'Afternoon', title: 'Central Market', description: 'Experience the vibrant Varvakios Agora with fish, meat, and spices.', duration: '1.5 hours' },
+          friendsActivity('Afternoon', 'Greek Food Tour', 'Sample souvlaki, spanakopita, and local street food with new friends.', '3 hours'),
+          { time: 'Afternoon', title: 'Monastiraki Flea Market', description: 'Browse antiques, jewelry, and souvenirs in this bustling bazaar.', duration: '2 hours' },
+          { time: 'Evening', title: 'Psyrri Nightlife', description: 'Explore the hip neighborhood with rooftop bars and live rebetiko music.', duration: '3 hours' },
+          adventureActivity('Evening', 'Street Art Tour', 'Discover Athens\' vibrant urban art scene in Psyrri and Gazi.', '2 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Museums & Neighborhoods',
+        activities: [
+          { time: 'Morning', title: 'National Archaeological Museum', description: 'See the golden Mask of Agamemnon and treasures spanning 5,000 years.', duration: '3 hours' },
+          culturalActivity('Morning', 'Bronze Age Greece Tour', 'Expert-led exploration of Mycenaean and Cycladic civilizations.', '3.5 hours'),
+          luxuryActivity('Morning', 'Private Museum Tour', 'After-hours access with personal archaeologist guide.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Kolonaki', description: 'Explore the upscale neighborhood with designer boutiques and cafés.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Lycabettus Hill Sunset', 'Take the funicular to the highest point for panoramic views.', '2 hours'),
+          { time: 'Evening', title: 'Gazi District', description: 'Former industrial area now home to Athens\' hottest restaurants and clubs.', duration: '3 hours' },
+          friendsActivity('Evening', 'Gazi Bar Hopping', 'Experience Athens\' legendary nightlife scene.', '4 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Delphi or Coastal',
+        activities: [
+          { time: 'Morning', title: 'Delphi Day Trip', description: 'Visit the ancient sanctuary where the Oracle delivered prophecies.', duration: '5-6 hours' },
+          culturalActivity('Morning', 'Sacred Way Pilgrimage', 'Walk the same path ancient Greeks took to consult the Oracle.', '6 hours'),
+          adventureActivity('Morning', 'Cape Sounion & Temple', description: 'Drive the coastal road to the stunning Temple of Poseidon.', '4 hours'),
+          familyActivity('Afternoon', 'Athens Riviera Beaches', 'Relax at family-friendly beaches along the coast.', '4 hours'),
+          luxuryActivity('Afternoon', 'Private Yacht to Islands', 'Sail to nearby islands for swimming and seafood lunch.', '6 hours'),
+          { time: 'Evening', title: 'Return to Athens', description: 'Head back for a relaxed evening in the city.', duration: '2 hours' },
+          romanticActivity('Evening', 'Seaside Dining', 'Fresh seafood at a taverna by the water in Mikrolimano.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Hidden Athens & Departure',
+        activities: [
+          { time: 'Morning', title: 'Anafiotika', description: 'Discover the hidden Cycladic-style village on the slopes of the Acropolis.', duration: '1.5 hours' },
+          adventureActivity('Morning', 'Athens by Bike', 'Cycle through pedestrian streets and ancient sites.', '3 hours'),
+          { time: 'Morning', title: 'Kerameikos Cemetery', description: 'Visit the ancient cemetery and often-overlooked archaeological site.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Stavros Niarchos Center', description: 'Explore the stunning modern cultural center with gardens and canal.', duration: '2 hours' },
+          familyActivity('Afternoon', 'SNFCC Playground & Activities', 'Free family activities, playgrounds, and bike rentals.', '2.5 hours'),
+          { time: 'Evening', title: 'Farewell Greek Feast', description: 'End with meze, moussaka, and ouzo at a traditional taverna.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Michelin Star Dining', 'Contemporary Greek cuisine at a top Athens restaurant.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // MUNICH
+  {
+    cityId: 'munich',
+    cityName: 'Munich',
+    days: [
+      {
+        day: 1,
+        title: 'Historic Center',
+        activities: [
+          { time: 'Morning', title: 'Marienplatz & Glockenspiel', description: 'Watch the famous clockenspiel show at the heart of Munich.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Old Town Walking Tour', 'Discover 850 years of Bavarian history through the historic center.', '3 hours'),
+          { time: 'Afternoon', title: 'Viktualienmarkt', description: 'Sample Bavarian specialties at Munich\'s famous outdoor food market.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Beer Garden Lunch', 'Join locals at the market\'s beer garden for weisswurst and pretzels.', '2 hours'),
+          { time: 'Afternoon', title: 'Frauenkirche', description: 'Climb the tower of Munich\'s iconic twin-domed cathedral.', duration: '1.5 hours' },
+          { time: 'Evening', title: 'Hofbräuhaus', description: 'Experience the world\'s most famous beer hall with live oompah music.', duration: '3 hours' },
+          luxuryActivity('Evening', 'Private Brewery Tour', 'Behind-the-scenes at a historic Bavarian brewery with tasting.', '3 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Royal Munich',
+        activities: [
+          { time: 'Morning', title: 'Residenz Palace', description: 'Tour the former royal palace with 130 rooms and Treasury.', duration: '3 hours' },
+          culturalActivity('Morning', 'Wittelsbach Dynasty Tour', 'Learn about the 700-year royal family that shaped Bavaria.', '3.5 hours'),
+          luxuryActivity('Morning', 'Private Residenz Experience', 'Exclusive access to restricted rooms with art historian guide.', '3 hours'),
+          { time: 'Afternoon', title: 'English Garden', description: 'Stroll through one of the world\'s largest urban parks.', duration: '2.5 hours' },
+          adventureActivity('Afternoon', 'Eisbach River Surfing', 'Watch (or try!) surfing on the standing wave in the park.', '2 hours'),
+          familyActivity('Afternoon', 'Chinese Tower Beer Garden', 'Family-friendly beer garden with playground and carousel.', '2.5 hours'),
+          { time: 'Evening', title: 'Schwabing District', description: 'Explore the bohemian quarter with trendy restaurants and bars.', duration: '3 hours' },
+          romanticActivity('Evening', 'Garden Restaurant', 'Romantic dinner in a hidden garden restaurant.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Art & Culture',
+        activities: [
+          { time: 'Morning', title: 'Alte Pinakothek', description: 'View masterpieces by Dürer, Rubens, and Rembrandt.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Three Pinakotheks Tour', 'Art journey from Old Masters to contemporary works.', '4 hours'),
+          { time: 'Afternoon', title: 'BMW Welt & Museum', description: 'Explore automotive excellence and BMW\'s history.', duration: '3 hours' },
+          familyActivity('Afternoon', 'BMW Junior Campus', 'Interactive workshops where kids design their own cars.', '2.5 hours'),
+          adventureActivity('Afternoon', 'BMW Driving Experience', 'Test drive latest models on a professional track.', '2 hours'),
+          { time: 'Evening', title: 'Olympiapark', description: 'Visit the 1972 Olympic site and take in sunset views.', duration: '2 hours' },
+          friendsActivity('Evening', 'Olympiaturm Revolving Restaurant', 'Dinner with 360° views in the revolving tower restaurant.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Neuschwanstein',
+        activities: [
+          { time: 'Morning', title: 'Neuschwanstein Castle', description: 'Visit the fairy-tale castle that inspired Disney.', duration: '5-6 hours' },
+          romanticActivity('Morning', 'Mary\'s Bridge Views', 'Cross the dramatic bridge for the iconic castle photo.', '1 hour'),
+          luxuryActivity('Morning', 'Private Castle Tour', 'Skip-the-line with personal guide and helicopter return.', '6 hours'),
+          { time: 'Afternoon', title: 'Hohenschwangau Castle', description: 'Tour King Ludwig\'s childhood home nearby.', duration: '1.5 hours' },
+          adventureActivity('Afternoon', 'Alpine Lake Swimming', 'Swim in the crystal-clear Alpsee below the castles.', '2 hours'),
+          familyActivity('Afternoon', 'Horse-Drawn Carriage', 'Ride up to the castle like royalty!', '30 mins'),
+          { time: 'Evening', title: 'Return to Munich', description: 'Head back through beautiful Bavarian countryside.', duration: '2 hours' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Nymphenburg & Departure',
+        activities: [
+          { time: 'Morning', title: 'Nymphenburg Palace', description: 'Explore the baroque summer palace and its parklands.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Royal Carriage Museum', 'See Ludwig II\'s ornate carriages and sleighs.', '1 hour'),
+          romanticActivity('Morning', 'Palace Gardens Stroll', 'Wander through hidden pavilions and canal gardens.', '2 hours'),
+          { time: 'Afternoon', title: 'Deutsches Museum', description: 'The world\'s largest science and technology museum.', duration: '3 hours' },
+          familyActivity('Afternoon', 'Kids\' Kingdom', 'Interactive exhibits designed specifically for children.', '2.5 hours'),
+          { time: 'Evening', title: 'Farewell Bavarian Feast', description: 'Enjoy schweinshaxe, knödel, and Bavarian beer one last time.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Tantris Dining', 'Legendary two-Michelin-star Bavarian fine dining.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // BERLIN
+  {
+    cityId: 'berlin',
+    cityName: 'Berlin',
+    days: [
+      {
+        day: 1,
+        title: 'Cold War History',
+        activities: [
+          { time: 'Morning', title: 'Brandenburg Gate', description: 'Stand at the symbol of German reunification.', duration: '1 hour' },
+          { time: 'Morning', title: 'Holocaust Memorial', description: 'Walk through the moving Field of Stelae and visit the information center.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Third Reich History Tour', 'Sobering walk through Nazi Berlin\'s most significant sites.', '3.5 hours'),
+          { time: 'Afternoon', title: 'Checkpoint Charlie', description: 'Visit the famous Cold War crossing point and museum.', duration: '2 hours' },
+          { time: 'Afternoon', title: 'Berlin Wall Memorial', description: 'See preserved sections of the wall at Bernauer Strasse.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Trabi Safari', 'Drive a vintage East German Trabant car through the city.', '2.5 hours'),
+          { time: 'Evening', title: 'East Side Gallery', description: 'View the longest remaining stretch of the Wall, now an art gallery.', duration: '1.5 hours' },
+          friendsActivity('Evening', 'Kreuzberg Nightlife', 'Experience Berlin\'s legendary bar scene.', '4 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Museum Island',
+        activities: [
+          { time: 'Morning', title: 'Pergamon Museum', description: 'See the stunning Ishtar Gate and ancient architectural reconstructions.', duration: '3 hours' },
+          culturalActivity('Morning', 'Ancient Civilizations Tour', 'Expert guide through 6,000 years of Middle Eastern history.', '4 hours'),
+          luxuryActivity('Morning', 'Private Museum Access', 'Early entry with personal archaeologist and coffee.', '3 hours'),
+          { time: 'Afternoon', title: 'Neues Museum', description: 'Home to the iconic bust of Nefertiti.', duration: '2 hours' },
+          familyActivity('Afternoon', 'Egyptian Adventure', 'Mummies and pharaohs that kids love!', '2 hours'),
+          { time: 'Evening', title: 'Berlin Cathedral', description: 'Climb the dome for sunset views and attend an organ concert.', duration: '2 hours' },
+          romanticActivity('Evening', 'Spree River Dinner Cruise', 'Float past illuminated landmarks with gourmet dinner.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Alternative Berlin',
+        activities: [
+          { time: 'Morning', title: 'Street Art Tour', description: 'Explore murals and graffiti in Kreuzberg and Friedrichshain.', duration: '3 hours' },
+          adventureActivity('Morning', 'Abandoned Places Tour', 'Explore Berlin\'s fascinating derelict buildings (legal tour!).', '3 hours'),
+          friendsActivity('Morning', 'Flea Market Hopping', 'Browse vintage treasures at Mauerpark or Boxhagener Platz.', '2.5 hours'),
+          { time: 'Afternoon', title: 'RAW Gelände', description: 'Visit the alternative culture hub in a former train yard.', duration: '2 hours' },
+          { time: 'Afternoon', title: 'Turkish Market', description: 'Experience multicultural Berlin at the Maybachufer market.', duration: '1.5 hours' },
+          { time: 'Evening', title: 'Prenzlauer Berg', description: 'Dine in the trendy neighborhood with excellent restaurants.', duration: '3 hours' },
+          luxuryActivity('Evening', 'Rooftop Bar Experience', 'Cocktails at a hidden rooftop with skyline views.', '2 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Royal Potsdam',
+        activities: [
+          { time: 'Morning', title: 'Sanssouci Palace', description: 'Tour Frederick the Great\'s summer palace, the "Prussian Versailles."', duration: '3 hours' },
+          romanticActivity('Morning', 'Palace Gardens Walk', 'Stroll through 700 acres of stunning landscaped gardens.', '2 hours'),
+          luxuryActivity('Morning', 'Private Palace Tour', 'Exclusive access to restricted rooms and wine cellar.', '3.5 hours'),
+          { time: 'Afternoon', title: 'Potsdam Old Town', description: 'Explore the charming Dutch and Russian quarters.', duration: '2 hours' },
+          culturalActivity('Afternoon', 'Cold War Potsdam', 'Visit the Glienicke Bridge and Cecilienhof, site of the 1945 conference.', '2.5 hours'),
+          familyActivity('Afternoon', 'Boat Tour', 'Cruise the lakes and rivers around Potsdam.', '2 hours'),
+          { time: 'Evening', title: 'Return to Berlin', description: 'Head back for dinner in Mitte.', duration: '1.5 hours' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Modern Berlin',
+        activities: [
+          { time: 'Morning', title: 'Reichstag Dome', description: 'Visit the glass dome of the German parliament (book ahead!).', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Tiergarten Park', description: 'Walk through Berlin\'s Central Park to the Victory Column.', duration: '2 hours' },
+          adventureActivity('Morning', 'Bike Tour', 'Cycle through the park and past major landmarks.', '3 hours'),
+          { time: 'Afternoon', title: 'KaDeWe Department Store', description: 'Browse Europe\'s largest department store and its legendary food hall.', duration: '2 hours' },
+          familyActivity('Afternoon', 'Berlin Zoo', 'Visit one of the world\'s oldest and most famous zoos.', '3 hours'),
+          { time: 'Evening', title: 'Farewell Berlin Dinner', description: 'Enjoy currywurst or modern German cuisine for your final meal.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'TV Tower Restaurant', 'Dine in the revolving restaurant with 360° views.', '2.5 hours'),
+        ]
+      },
+    ]
+  },
+
+  // ZURICH
+  {
+    cityId: 'zurich',
+    cityName: 'Zurich',
+    days: [
+      {
+        day: 1,
+        title: 'Old Town & Lake',
+        activities: [
+          { time: 'Morning', title: 'Altstadt Walking Tour', description: 'Explore medieval lanes, guild houses, and the Grossmünster cathedral.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Reformation History', 'Follow in the footsteps of Zwingli through Protestant Zurich.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Lake Zurich Cruise', description: 'Relax on a scenic boat trip with mountain views.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Sunset Champagne Cruise', 'Private boat with champagne and alpine sunset.', '2.5 hours'),
+          familyActivity('Afternoon', 'Swimming in the Lake', 'Join locals at the famous Seebäder (lake swimming areas).', '2 hours'),
+          { time: 'Evening', title: 'Niederdorf', description: 'Dine in the charming "Dörfli" district with cozy restaurants.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Langstrasse Bars', 'Explore Zurich\'s trendiest nightlife district.', '3 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Art & Culture',
+        activities: [
+          { time: 'Morning', title: 'Kunsthaus Zurich', description: 'One of Switzerland\'s finest art museums with Giacometti and Monet.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Dada Art Tour', 'Explore where the Dada movement was born at Cabaret Voltaire.', '2 hours'),
+          luxuryActivity('Morning', 'Private Art Collection Visit', 'Access to exclusive private galleries and collections.', '3 hours'),
+          { time: 'Afternoon', title: 'Bahnhofstrasse Shopping', description: 'Window shop along one of the world\'s most exclusive streets.', duration: '2 hours' },
+          { time: 'Afternoon', title: 'Lindenhof Hill', description: 'Relax in the peaceful park with panoramic old town views.', duration: '1 hour' },
+          { time: 'Evening', title: 'Swiss Fondue Dinner', description: 'Savor traditional cheese fondue at a cozy restaurant.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Candlelit Fondue', 'Intimate fondue experience in a historic cellar.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Day Trip - Mountains',
+        activities: [
+          { time: 'Morning', title: 'Uetliberg Mountain', description: 'Take the train to Zurich\'s local mountain for hiking and views.', duration: '3-4 hours' },
+          adventureActivity('Morning', 'Mountain Biking', 'Rent bikes and ride the trails down from the summit.', '3 hours'),
+          familyActivity('Morning', 'Planet Trail', 'Walk the scale model of the solar system along the ridge.', '2 hours'),
+          { time: 'Afternoon', title: 'Rhine Falls Day Trip', description: 'Visit Europe\'s largest waterfall near Schaffhausen.', duration: '4 hours' },
+          adventureActivity('Afternoon', 'Boat to the Falls', 'Get up close to the thundering waters by boat.', '1 hour'),
+          romanticActivity('Afternoon', 'Stein am Rhein', 'Visit the picture-perfect medieval town nearby.', '2 hours'),
+          { time: 'Evening', title: 'Zurich West', description: 'Explore the trendy former industrial district with hip restaurants.', duration: '3 hours' },
+          friendsActivity('Evening', 'Viadukt Markets & Bars', 'Craft beer and street food under the railway arches.', '3 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Swiss Experience',
+        activities: [
+          { time: 'Morning', title: 'Swiss National Museum', description: 'Discover Swiss history and culture in a castle-like museum.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Swiss Watchmaking', 'Visit the Beyer Clock and Watch Museum.', '1.5 hours'),
+          luxuryActivity('Morning', 'Private Watch Atelier', 'Tour an exclusive watchmaking workshop.', '2 hours'),
+          { time: 'Afternoon', title: 'Chocolate Factory Tour', description: 'Visit Lindt Home of Chocolate with tastings.', duration: '2.5 hours' },
+          familyActivity('Afternoon', 'Chocolate Course', 'Make your own Swiss chocolates with the kids.', '2 hours'),
+          { time: 'Evening', title: 'Opera House', description: 'Attend a performance at the beautiful Zürich Opera.', duration: '3 hours' },
+          luxuryActivity('Evening', 'VIP Opera Experience', 'Premium seats with champagne interval and backstage tour.', '4 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Lakeside & Departure',
+        activities: [
+          { time: 'Morning', title: 'Rapperswil Day Trip', description: 'Take a boat to the "City of Roses" with its medieval castle.', duration: '3 hours' },
+          romanticActivity('Morning', 'Wooden Bridge Walk', 'Cross the historic wooden bridge across the lake.', '1 hour'),
+          familyActivity('Morning', 'Knies Kinderzoo', 'Children\'s zoo with circus animals and rides.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Final Lake Time', description: 'Last swim or stroll along the lakeshore promenade.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Stand-Up Paddleboarding', 'SUP on the calm lake waters with mountain views.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Swiss Dinner', description: 'Final meal of rösti, veal Zurich-style, and Swiss wine.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Lake View Fine Dining', 'Michelin-starred farewell at a lakeside restaurant.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // LISBON
+  {
+    cityId: 'lisbon',
+    cityName: 'Lisbon',
+    days: [
+      {
+        day: 1,
+        title: 'Historic Belém',
+        activities: [
+          { time: 'Morning', title: 'Belém Tower', description: 'Visit the iconic 16th-century fortress on the Tagus River.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Jerónimos Monastery', description: 'Marvel at the Manueline architecture of this UNESCO masterpiece.', duration: '2 hours' },
+          culturalActivity('Morning', 'Age of Discovery Tour', 'Learn about Portugal\'s maritime empire and explorers.', '3.5 hours'),
+          { time: 'Afternoon', title: 'Pastéis de Belém', description: 'Try the original and famous Portuguese custard tarts.', duration: '45 mins' },
+          familyActivity('Afternoon', 'Oceanarium', 'Visit Europe\'s largest indoor aquarium.', '2.5 hours'),
+          { time: 'Evening', title: 'MAAT Museum', description: 'Explore the stunning contemporary art museum on the waterfront.', duration: '2 hours' },
+          romanticActivity('Evening', 'Sunset at Padrão', 'Watch sunset from the Monument to the Discoveries.', '1.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Alfama & Fado',
+        activities: [
+          { time: 'Morning', title: 'Tram 28 Ride', description: 'Take the iconic yellow tram through historic neighborhoods.', duration: '1 hour' },
+          { time: 'Morning', title: 'São Jorge Castle', description: 'Climb to the Moorish castle for panoramic city views.', duration: '2 hours' },
+          adventureActivity('Morning', 'Alfama Walking Tour', 'Get lost in the winding medieval streets of the oldest district.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Flea Market', description: 'Browse the Feira da Ladra (Thieves\' Market) on Tuesday or Saturday.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Ginjinha Tasting', 'Sample the local cherry liqueur at historic bars.', '1.5 hours'),
+          { time: 'Evening', title: 'Fado Dinner', description: 'Experience the soulful Portuguese music at an authentic fado house.', duration: '3 hours' },
+          luxuryActivity('Evening', 'Private Fado Experience', 'Intimate performance with dinner in a historic palace.', '3.5 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Baixa & Bairro Alto',
+        activities: [
+          { time: 'Morning', title: 'Santa Justa Elevator', description: 'Ride the ornate Gothic elevator for city views.', duration: '45 mins' },
+          { time: 'Morning', title: 'Praça do Comércio', description: 'Explore the grand waterfront square and Rua Augusta arch.', duration: '1.5 hours' },
+          romanticActivity('Morning', 'Pink Street Brunch', 'Start the day on the Instagram-famous pink street.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Time Out Market', description: 'Sample Portuguese cuisine from top chefs under one roof.', duration: '2 hours' },
+          familyActivity('Afternoon', 'LX Factory', 'Explore the creative hub with street art, shops, and food.', '2.5 hours'),
+          { time: 'Evening', title: 'Bairro Alto', description: 'Experience Lisbon\'s famous nightlife district.', duration: '3 hours' },
+          friendsActivity('Evening', 'Bar Crawl', 'Join locals hopping between the neighborhood\'s tiny bars.', '4 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Sintra',
+        activities: [
+          { time: 'Morning', title: 'Pena Palace', description: 'Visit the colorful Romantic palace on the hilltop.', duration: '2.5 hours' },
+          romanticActivity('Morning', 'Palace Gardens', 'Wander through the enchanted forest and hidden grottoes.', '2 hours'),
+          luxuryActivity('Morning', 'Private Sintra Tour', 'Exclusive access with vintage car transfers between palaces.', '5 hours'),
+          { time: 'Afternoon', title: 'Quinta da Regaleira', description: 'Explore the mystical palace with its famous Initiation Well.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Moorish Castle Hike', 'Climb the 8th-century castle walls for stunning views.', '2 hours'),
+          familyActivity('Afternoon', 'Monserrate Palace', 'Less crowded palace with beautiful gardens kids love.', '2 hours'),
+          { time: 'Evening', title: 'Cascais Beach Town', description: 'Stop at the charming coastal town for seafood dinner.', duration: '2.5 hours' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Hidden Lisbon',
+        activities: [
+          { time: 'Morning', title: 'National Tile Museum', description: 'Discover Portugal\'s beautiful azulejo tile tradition.', duration: '2 hours' },
+          culturalActivity('Morning', 'Azulejo Art Walk', 'Hunt for the best tile work throughout the city.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Príncipe Real', description: 'Explore the trendy neighborhood with gardens and boutiques.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Wine Tasting', 'Sample Portuguese wines at a local wine bar.', '2 hours'),
+          adventureActivity('Afternoon', 'Street Art Tour', 'Discover Lisbon\'s vibrant urban art scene.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Dinner', description: 'Final feast of bacalhau and vinho verde at a traditional tasca.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Michelin Star Dining', 'Contemporary Portuguese cuisine at a top restaurant.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // DUBLIN
+  {
+    cityId: 'dublin',
+    cityName: 'Dublin',
+    days: [
+      {
+        day: 1,
+        title: 'Literary Dublin',
+        activities: [
+          { time: 'Morning', title: 'Trinity College', description: 'Visit the famous university and see the illuminated Book of Kells.', duration: '2 hours' },
+          culturalActivity('Morning', 'Literary Walking Tour', 'Follow in the footsteps of Joyce, Yeats, and Wilde.', '2.5 hours'),
+          luxuryActivity('Morning', 'Private Library Tour', 'After-hours access to the Long Room with an expert guide.', '2 hours'),
+          { time: 'Afternoon', title: 'Grafton Street', description: 'Stroll the famous shopping street with live buskers.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'St. Stephen\'s Green', description: 'Relax in the beautiful Victorian park.', duration: '1 hour' },
+          { time: 'Evening', title: 'Temple Bar', description: 'Experience Dublin\'s famous cultural quarter with pubs and music.', duration: '3 hours' },
+          friendsActivity('Evening', 'Traditional Music Pub Crawl', 'Discover the best live trad sessions with local guides.', '4 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'History & Guinness',
+        activities: [
+          { time: 'Morning', title: 'Kilmainham Gaol', description: 'Tour the historic prison central to Irish independence.', duration: '2 hours' },
+          culturalActivity('Morning', 'Irish Revolution Tour', 'Deep dive into the 1916 Rising and War of Independence.', '3 hours'),
+          { time: 'Afternoon', title: 'Guinness Storehouse', description: 'Learn about Ireland\'s famous stout and pour your own pint.', duration: '2.5 hours' },
+          friendsActivity('Afternoon', 'Connoisseur Experience', 'Premium tasting with rare beers and food pairing.', '2.5 hours'),
+          luxuryActivity('Afternoon', 'Private Brewery Tour', 'Behind-the-scenes access and meet the brewmasters.', '3 hours'),
+          { time: 'Evening', title: 'Traditional Irish Dinner', description: 'Enjoy Irish stew, colcannon, and live music.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Sunset at Poolbeg Lighthouse', 'Walk the Great South Wall for sunset views.', '2 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Viking Dublin & North Side',
+        activities: [
+          { time: 'Morning', title: 'Dublin Castle', description: 'Explore the complex that was the seat of British rule.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Chester Beatty Library', description: 'See the stunning collection of manuscripts and art.', duration: '1.5 hours' },
+          familyActivity('Morning', 'Dublinia Viking Museum', 'Interactive Viking and medieval Dublin for kids.', '2 hours'),
+          { time: 'Afternoon', title: 'Christ Church Cathedral', description: 'Visit Dublin\'s oldest building with its spooky crypt.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Phoenix Park', description: 'Explore one of Europe\'s largest urban parks.', duration: '2.5 hours' },
+          adventureActivity('Afternoon', 'Phoenix Park Cycling', 'Bike through the park and spot wild deer.', '2 hours'),
+          { time: 'Evening', title: 'Smithfield', description: 'Dinner in the up-and-coming neighborhood.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Jameson Distillery', 'Whiskey tasting and cocktail making.', '2 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Wicklow & Coast',
+        activities: [
+          { time: 'Morning', title: 'Glendalough', description: 'Visit the stunning 6th-century monastic settlement in the Wicklow Mountains.', duration: '3-4 hours' },
+          adventureActivity('Morning', 'Wicklow Way Hiking', 'Hike through the "Garden of Ireland."', '4 hours'),
+          romanticActivity('Morning', 'Private Wicklow Tour', 'Scenic drive through mountains with picnic lunch.', '5 hours'),
+          { time: 'Afternoon', title: 'Powerscourt Estate', description: 'Explore the stunning gardens and waterfall.', duration: '2.5 hours' },
+          familyActivity('Afternoon', 'Powerscourt Playground', 'Beautiful grounds with excellent children\'s activities.', '2.5 hours'),
+          { time: 'Evening', title: 'Coastal Village Dinner', description: 'Fresh seafood in Dalkey or Howth.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Howth Seafood Feast', 'Premium dining overlooking the harbor.', '3 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Georgian Dublin & Departure',
+        activities: [
+          { time: 'Morning', title: 'Merrion Square', description: 'Admire Georgian architecture and Oscar Wilde\'s statue.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'National Gallery', description: 'See works by Caravaggio, Vermeer, and Irish artists.', duration: '2 hours' },
+          culturalActivity('Morning', 'Georgian Dublin Walk', 'Architectural tour of Dublin\'s elegant 18th-century heritage.', '2 hours'),
+          { time: 'Afternoon', title: 'Little Museum of Dublin', description: 'Charming museum telling Dublin\'s 20th-century story.', duration: '1.5 hours' },
+          familyActivity('Afternoon', 'Natural History Museum', 'The "Dead Zoo" fascinates children of all ages.', '1.5 hours'),
+          { time: 'Evening', title: 'Farewell Irish Feast', description: 'Final dinner with live music at a traditional pub.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Chapter One Dining', 'Michelin-starred farewell to Dublin.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // EDINBURGH
+  {
+    cityId: 'edinburgh',
+    cityName: 'Edinburgh',
+    days: [
+      {
+        day: 1,
+        title: 'Royal Mile',
+        activities: [
+          { time: 'Morning', title: 'Edinburgh Castle', description: 'Explore Scotland\'s most iconic fortress perched on Castle Rock.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Scottish History Tour', 'Learn about William Wallace, Mary Queen of Scots, and Scottish kings.', '3 hours'),
+          luxuryActivity('Morning', 'Private Castle Tour', 'Skip-the-line with exclusive access to the Crown Jewels.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Royal Mile Walk', description: 'Stroll from the Castle to Holyrood, exploring closes and wynds.', duration: '2.5 hours' },
+          familyActivity('Afternoon', 'Camera Obscura', 'Mind-bending illusions and rooftop views that kids love.', '2 hours'),
+          { time: 'Evening', title: 'Grassmarket', description: 'Dine in the historic square surrounded by old pubs.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Historic Pub Crawl', 'Visit Scotland\'s oldest and most atmospheric pubs.', '3 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Old Town Mysteries',
+        activities: [
+          { time: 'Morning', title: 'St. Giles\' Cathedral', description: 'Visit the historic heart of Scottish Presbyterianism.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Real Mary King\'s Close', description: 'Descend into the underground streets frozen in time.', duration: '1.5 hours' },
+          adventureActivity('Morning', 'Ghost Tour', 'Explore Edinburgh\'s haunted vaults and graveyards.', '2 hours'),
+          { time: 'Afternoon', title: 'Palace of Holyroodhouse', description: 'Visit the Queen\'s official Scottish residence.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Holyrood Abbey Ruins', 'Wander the atmospheric ruins hand in hand.', '1 hour'),
+          { time: 'Evening', title: 'Whisky Experience', description: 'Take the barrel ride and taste Scotland\'s finest.', duration: '2 hours' },
+          luxuryActivity('Evening', 'Private Whisky Tasting', 'Rare drams with a whisky expert in a historic setting.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'New Town & Arthur\'s Seat',
+        activities: [
+          { time: 'Morning', title: 'Arthur\'s Seat Hike', description: 'Climb the ancient volcano for panoramic city views.', duration: '2.5 hours' },
+          adventureActivity('Morning', 'Sunrise Summit', 'Early hike to catch sunrise over the city.', '3 hours'),
+          familyActivity('Morning', 'Dynamic Earth', 'Interactive science museum about our planet.', '2 hours'),
+          { time: 'Afternoon', title: 'New Town Walk', description: 'Explore Georgian architecture and designer boutiques.', duration: '2 hours' },
+          { time: 'Afternoon', title: 'Scottish National Gallery', description: 'See works by Ramsay, Raeburn, and European masters.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Calton Hill Sunset', 'Watch sunset from the "Athens of the North."', '1.5 hours'),
+          { time: 'Evening', title: 'Traditional Scottish Dinner', description: 'Try haggis, neeps, and tatties with whisky.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Rose Street Pub Crawl', 'Famous drinking street with historic pubs.', '3 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Highlands',
+        activities: [
+          { time: 'Morning', title: 'Scottish Highlands Tour', description: 'Journey through stunning landscapes to Loch Ness or Stirling.', duration: '5-6 hours' },
+          adventureActivity('Morning', 'Loch Lomond Adventure', 'Kayaking, hiking, or speedboat on the bonnie loch.', '6 hours'),
+          romanticActivity('Morning', 'Private Highland Tour', 'Exclusive driver-guide with castle visits and whisky.', '8 hours'),
+          { time: 'Afternoon', title: 'Stirling Castle', description: 'Visit the castle where Scottish kings were crowned.', duration: '2 hours' },
+          familyActivity('Afternoon', 'Highland Cows', 'Meet the iconic "heilan coos" at a farm visit.', '1.5 hours'),
+          { time: 'Evening', title: 'Return to Edinburgh', description: 'Head back through beautiful Scottish countryside.', duration: '2 hours' },
+          luxuryActivity('Evening', 'Castle Dinner', 'Exclusive dining in a historic Scottish castle.', '4 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Leith & Departure',
+        activities: [
+          { time: 'Morning', title: 'Royal Yacht Britannia', description: 'Tour the Queen\'s former floating palace in Leith.', duration: '2 hours' },
+          culturalActivity('Morning', 'Royal Life at Sea', 'Learn about the fascinating life aboard the yacht.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Leith Waterfront', description: 'Explore the trendy harbor neighborhood with great restaurants.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Leith Wine & Dine', 'Sample Scotland\'s best seafood and local brews.', '2.5 hours'),
+          familyActivity('Afternoon', 'Edinburgh Zoo', 'Meet the famous penguin parade!', '3 hours'),
+          { time: 'Evening', title: 'Farewell Scottish Feast', description: 'Final dinner with Scottish game and whisky.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Number One Dining', 'Michelin-starred farewell at The Balmoral.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // BUDAPEST
+  {
+    cityId: 'budapest',
+    cityName: 'Budapest',
+    days: [
+      {
+        day: 1,
+        title: 'Buda Castle District',
+        activities: [
+          { time: 'Morning', title: 'Buda Castle', description: 'Explore the UNESCO-listed castle complex with palace and museums.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Hungarian History Tour', 'Learn about 1,000 years of Hungarian royalty and revolution.', '3 hours'),
+          luxuryActivity('Morning', 'Private Castle Access', 'Exclusive areas and wine tasting in historic cellars.', '3 hours'),
+          { time: 'Afternoon', title: 'Fisherman\'s Bastion', description: 'Enjoy fairytale views from the neo-Gothic terrace.', duration: '1.5 hours' },
+          romanticActivity('Afternoon', 'Bastion at Sunset', 'Watch the golden hour light up Parliament across the river.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Matthias Church', description: 'Visit the ornate church where Hungarian kings were crowned.', duration: '1 hour' },
+          { time: 'Evening', title: 'Castle District Dining', description: 'Traditional Hungarian cuisine in the historic quarter.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Ruin Bar Exploration', 'Discover Budapest\'s famous ruin pubs.', '3 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Pest Side & Parliament',
+        activities: [
+          { time: 'Morning', title: 'Hungarian Parliament', description: 'Tour one of Europe\'s most stunning parliament buildings.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Communist History Tour', 'Visit Memento Park and learn about Soviet-era Hungary.', '3 hours'),
+          { time: 'Afternoon', title: 'St. Stephen\'s Basilica', description: 'Climb the dome and see the holy right hand of Hungary\'s first king.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Andrássy Avenue', description: 'Stroll the elegant UNESCO boulevard to Heroes\' Square.', duration: '2 hours' },
+          familyActivity('Afternoon', 'City Park', 'Explore the park with castle, zoo, and playgrounds.', '3 hours'),
+          { time: 'Evening', title: 'Ruin Bars', description: 'Experience Szimpla Kert and the legendary ruin pub scene.', duration: '3 hours' },
+          luxuryActivity('Evening', 'Rooftop Bar Hopping', 'Exclusive rooftop cocktails with Parliament views.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Thermal Baths',
+        activities: [
+          { time: 'Morning', title: 'Széchenyi Baths', description: 'Soak in Europe\'s largest thermal bath complex.', duration: '3 hours' },
+          friendsActivity('Morning', 'Sparty Night (Planning)', 'Book tickets for the famous thermal bath party.', '30 mins'),
+          luxuryActivity('Morning', 'Private Bath Experience', 'Exclusive access to historic Gellért Baths with treatments.', '4 hours'),
+          { time: 'Afternoon', title: 'Jewish Quarter', description: 'Explore the historic neighborhood with synagogues and cafés.', duration: '2.5 hours' },
+          culturalActivity('Afternoon', 'Great Synagogue Tour', 'Visit Europe\'s largest synagogue and Jewish heritage.', '2 hours'),
+          { time: 'Evening', title: 'Jewish Quarter Dining', description: 'Modern Hungarian cuisine in the trendy district.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Danube Night Cruise', 'Float past illuminated landmarks with wine.', '2 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Danube Bend',
+        activities: [
+          { time: 'Morning', title: 'Szentendre', description: 'Explore the charming artists\' village with Serbian heritage.', duration: '2.5 hours' },
+          romanticActivity('Morning', 'Art Gallery Hopping', 'Browse quaint galleries and cafés hand in hand.', '3 hours'),
+          { time: 'Afternoon', title: 'Visegrád Castle', description: 'Visit the hilltop castle with stunning river views.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Zip Line Adventure', 'Zip across the Danube from the castle ruins.', '1 hour'),
+          familyActivity('Afternoon', 'Medieval Games', 'Try archery and other medieval activities at the castle.', '2 hours'),
+          { time: 'Afternoon', title: 'Esztergom Basilica', description: 'See Hungary\'s largest church on the border with Slovakia.', duration: '1.5 hours' },
+          { time: 'Evening', title: 'Return to Budapest', description: 'Head back via scenic Danube route.', duration: '1.5 hours' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Hidden Budapest',
+        activities: [
+          { time: 'Morning', title: 'Central Market Hall', description: 'Browse Hungary\'s largest and most beautiful market.', duration: '2 hours' },
+          friendsActivity('Morning', 'Food Tour', 'Sample lángos, kürtőskalács, and Hungarian delicacies.', '3 hours'),
+          { time: 'Afternoon', title: 'Gellért Hill', description: 'Climb to the Citadella for panoramic views.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Cave Church', 'Visit the unique church built into the hillside.', '1 hour'),
+          romanticActivity('Afternoon', 'Liberty Statue Sunset', 'Watch sunset from beside the famous statue.', '1.5 hours'),
+          { time: 'Evening', title: 'Farewell Hungarian Feast', description: 'Final meal of goulash, paprikás, and Tokaji wine.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Onyx Restaurant', 'Two-Michelin-star Hungarian fine dining.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // COPENHAGEN
+  {
+    cityId: 'copenhagen',
+    cityName: 'Copenhagen',
+    days: [
+      {
+        day: 1,
+        title: 'Harbor & Hygge',
+        activities: [
+          { time: 'Morning', title: 'Nyhavn', description: 'Stroll the iconic colorful harbor with historic ships.', duration: '1.5 hours' },
+          romanticActivity('Morning', 'Canal Boat Tour', 'Glide through Copenhagen\'s canals with a loved one.', '1 hour'),
+          { time: 'Afternoon', title: 'The Little Mermaid', description: 'Visit the famous statue inspired by Hans Christian Andersen.', duration: '45 mins' },
+          { time: 'Afternoon', title: 'Kastellet', description: 'Explore the star-shaped 17th-century fortress.', duration: '1.5 hours' },
+          familyActivity('Afternoon', 'Bike Around Town', 'Rent bikes and explore like a true Copenhagener.', '3 hours'),
+          { time: 'Evening', title: 'Strøget Shopping', description: 'Browse Europe\'s longest pedestrian street.', duration: '2 hours' },
+          friendsActivity('Evening', 'Vesterbro Bar Scene', 'Craft beer and cocktails in the trendy neighborhood.', '3 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Royal Copenhagen',
+        activities: [
+          { time: 'Morning', title: 'Amalienborg Palace', description: 'Watch the changing of the guard at the royal residence.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Royal History Walk', 'Learn about Danish monarchy and Queen Margrethe II.', '2.5 hours'),
+          luxuryActivity('Morning', 'Private Palace Tour', 'Exclusive access to royal chambers with art historian.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Rosenborg Castle', description: 'See the Crown Jewels and royal treasures.', duration: '2 hours' },
+          familyActivity('Afternoon', 'King\'s Garden', 'Picnic and play in the beautiful royal gardens.', '2 hours'),
+          { time: 'Evening', title: 'Tivoli Gardens', description: 'Experience the world\'s second-oldest amusement park.', duration: '3 hours' },
+          romanticActivity('Evening', 'Tivoli at Night', 'Magical lights and romantic atmosphere after dark.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Design & Food',
+        activities: [
+          { time: 'Morning', title: 'Design Museum', description: 'Explore Danish design from chairs to silverware.', duration: '2 hours' },
+          culturalActivity('Morning', 'Danish Design Walk', 'Visit showrooms of Fritz Hansen, HAY, and more.', '3 hours'),
+          { time: 'Afternoon', title: 'Torvehallerne Market', description: 'Sample gourmet foods at the covered market halls.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Smørrebrød Lunch', 'Try traditional Danish open-faced sandwiches.', '1.5 hours'),
+          luxuryActivity('Afternoon', 'Cooking Class', 'Learn New Nordic cuisine with a local chef.', '3 hours'),
+          { time: 'Evening', title: 'Meatpacking District', description: 'Dine in the trendy Kødbyen area.', duration: '3 hours' },
+          adventureActivity('Evening', 'Street Food at Reffen', 'Explore Copenhagen\'s best street food market.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Alternative Copenhagen',
+        activities: [
+          { time: 'Morning', title: 'Christiania', description: 'Visit the famous freetown with alternative community.', duration: '2 hours' },
+          adventureActivity('Morning', 'Christiania Art Walk', 'Explore the unique street art and architecture.', '2 hours'),
+          { time: 'Afternoon', title: 'Christianshavn', description: 'Climb the spiral tower of Our Saviour\'s Church.', duration: '1.5 hours' },
+          romanticActivity('Afternoon', 'Canal Picnic', 'Relax by the water in this charming neighborhood.', '2 hours'),
+          { time: 'Afternoon', title: 'Copenhagen Opera', description: 'Tour the stunning waterfront opera house.', duration: '1.5 hours' },
+          { time: 'Evening', title: 'New Nordic Dining', description: 'Experience Copenhagen\'s famous food scene.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Noma Experience', 'Dine at the world-famous restaurant (book months ahead!).', '4 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Coast & Departure',
+        activities: [
+          { time: 'Morning', title: 'Louisiana Museum', description: 'Visit the world-class modern art museum by the sea.', duration: '3 hours' },
+          culturalActivity('Morning', 'Art & Architecture Tour', 'Expert-led exploration of the museum and gardens.', '3 hours'),
+          familyActivity('Morning', 'Children\'s Wing', 'Interactive art activities for kids.', '2 hours'),
+          { time: 'Afternoon', title: 'Dragør', description: 'Explore the charming 18th-century fishing village.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Seaside Stroll', 'Walk the cobblestone streets and harbor.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Danish Dinner', description: 'Final meal of Danish specialties and aquavit.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Geranium', 'Three-Michelin-star farewell at Denmark\'s best.', '4 hours'),
+        ]
+      },
+    ]
+  },
+
+  // STOCKHOLM
+  {
+    cityId: 'stockholm',
+    cityName: 'Stockholm',
+    days: [
+      {
+        day: 1,
+        title: 'Gamla Stan',
+        activities: [
+          { time: 'Morning', title: 'Royal Palace', description: 'Explore the official residence of the Swedish monarchy.', duration: '2 hours' },
+          { time: 'Morning', title: 'Changing of the Guard', description: 'Watch the ceremonial guard change (check schedule).', duration: '45 mins' },
+          culturalActivity('Morning', 'Nobel Prize Museum', 'Learn about Nobel laureates and their discoveries.', '2 hours'),
+          { time: 'Afternoon', title: 'Gamla Stan Walking', description: 'Wander the medieval alleys of the Old Town.', duration: '2.5 hours' },
+          familyActivity('Afternoon', 'Smallest Street Hunt', 'Find Mårten Trotzigs Gränd, just 90cm wide!', '1.5 hours'),
+          { time: 'Evening', title: 'Traditional Swedish Dinner', description: 'Try meatballs, gravlax, and schnapps.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Candlelit Cellar Restaurant', 'Intimate dinner in a medieval cellar.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Museums & Djurgården',
+        activities: [
+          { time: 'Morning', title: 'Vasa Museum', description: 'See the remarkably preserved 17th-century warship.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Maritime History Tour', 'Sweden\'s naval heritage with expert guide.', '3 hours'),
+          familyActivity('Morning', 'ABBA Museum', 'Interactive tribute to Sweden\'s famous pop group.', '2 hours'),
+          { time: 'Afternoon', title: 'Skansen Open-Air Museum', description: 'Experience 400 years of Swedish history and Nordic animals.', duration: '3 hours' },
+          adventureActivity('Afternoon', 'Djurgården by Bike', 'Cycle the beautiful island with forests and views.', '2.5 hours'),
+          { time: 'Evening', title: 'Östermalm Food Hall', description: 'Gourmet dining at the renovated market hall.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Fine Dining Experience', 'Contemporary Nordic cuisine at a top restaurant.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Modern Stockholm',
+        activities: [
+          { time: 'Morning', title: 'City Hall', description: 'Tour the venue of the Nobel Prize banquet and climb the tower.', duration: '2 hours' },
+          luxuryActivity('Morning', 'Private City Hall Tour', 'Access to the Golden Hall and Blue Hall with expert.', '2 hours'),
+          { time: 'Afternoon', title: 'Fotografiska', description: 'Visit one of the world\'s largest photography museums.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Monteliusvägen Walk', 'Scenic cliffside path with stunning city views.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Södermalm', description: 'Explore the hip neighborhood with boutiques and cafés.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Söder Bar Hopping', 'Discover Stockholm\'s best bars and nightlife.', '4 hours'),
+          { time: 'Evening', title: 'SoFo District Dining', description: 'Trendy restaurants south of Folkungagatan.', duration: '2.5 hours' },
+        ]
+      },
+      {
+        day: 4,
+        title: 'Archipelago Adventure',
+        activities: [
+          { time: 'Morning', title: 'Archipelago Boat Trip', description: 'Cruise through Stockholm\'s 30,000 islands.', duration: '5-6 hours' },
+          adventureActivity('Morning', 'Kayaking Expedition', 'Paddle through the outer archipelago islands.', '5 hours'),
+          romanticActivity('Morning', 'Private Boat Charter', 'Sail to secluded islands with gourmet picnic.', '6 hours'),
+          familyActivity('Morning', 'Fjäderholmarna Day Trip', 'Easy island escape with crafts and ice cream.', '4 hours'),
+          { time: 'Afternoon', title: 'Island Exploration', description: 'Swim, hike, and enjoy fika on an island.', duration: '3 hours' },
+          { time: 'Evening', title: 'Seafood Dinner', description: 'Fresh seafood at a waterfront restaurant.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Island Restaurant', 'Exclusive dining on a private archipelago island.', '4 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Design & Departure',
+        activities: [
+          { time: 'Morning', title: 'Swedish Design Walk', description: 'Visit flagship stores of Swedish design brands.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Nordic Design Tour', 'Expert-led exploration of Scandinavian aesthetics.', '3 hours'),
+          { time: 'Afternoon', title: 'Subway Art Tour', description: 'Explore the world\'s longest art gallery in Stockholm\'s metro.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Metro Photography Walk', 'Capture the stunning station artwork.', '2 hours'),
+          familyActivity('Afternoon', 'Junibacken', 'Enter the world of Astrid Lindgren\'s stories.', '2.5 hours'),
+          { time: 'Evening', title: 'Farewell Swedish Feast', description: 'Final smörgåsbord and Swedish specialties.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Frantzén', 'Three-Michelin-star finale at Sweden\'s best restaurant.', '4 hours'),
+        ]
+      },
+    ]
+  },
+
+  // NICE
+  {
+    cityId: 'nice',
+    cityName: 'Nice',
+    days: [
+      {
+        day: 1,
+        title: 'Promenade & Old Town',
+        activities: [
+          { time: 'Morning', title: 'Promenade des Anglais', description: 'Stroll the famous seaside boulevard with stunning views.', duration: '1.5 hours' },
+          adventureActivity('Morning', 'Beachside Run or Bike', 'Start the day with exercise along the Mediterranean.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Vieux Nice', description: 'Explore the charming old town with Italian influences.', duration: '2.5 hours' },
+          { time: 'Afternoon', title: 'Cours Saleya Market', description: 'Browse the flower market and local produce.', duration: '1.5 hours' },
+          friendsActivity('Afternoon', 'Socca & Wine Tasting', 'Sample the local chickpea pancake with Provençal wines.', '2 hours'),
+          { time: 'Evening', title: 'Castle Hill Sunset', description: 'Climb to the park for panoramic views at golden hour.', duration: '2 hours' },
+          romanticActivity('Evening', 'Rooftop Dinner', 'Candlelit dinner overlooking the Baie des Anges.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Art & Beach',
+        activities: [
+          { time: 'Morning', title: 'Musée Matisse', description: 'Explore the largest collection of Matisse\'s works.', duration: '2 hours' },
+          culturalActivity('Morning', 'Art of Nice Tour', 'Visit Matisse, Chagall, and modern art museums.', '4 hours'),
+          { time: 'Afternoon', title: 'Beach Time', description: 'Relax on the famous pebbly beaches of Nice.', duration: '3 hours' },
+          luxuryActivity('Afternoon', 'Private Beach Club', 'VIP loungers, cocktails, and Mediterranean views.', '4 hours'),
+          familyActivity('Afternoon', 'Water Sports', 'Paddleboarding, kayaking, or snorkeling.', '2.5 hours'),
+          { time: 'Evening', title: 'Port Area Dining', description: 'Fresh seafood in the charming port district.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Bar Crawl', 'Experience Nice\'s nightlife scene.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Day Trip - Monaco',
+        activities: [
+          { time: 'Morning', title: 'Monte Carlo Casino', description: 'Visit the legendary casino and watch the luxury cars.', duration: '2 hours' },
+          luxuryActivity('Morning', 'Casino VIP Tour', 'Private tour of gaming rooms and champagne.', '2 hours'),
+          { time: 'Afternoon', title: 'Prince\'s Palace', description: 'See the changing of the guard and old Monaco.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Oceanographic Museum', description: 'Jacques Cousteau\'s marine museum on the cliff.', duration: '2 hours' },
+          familyActivity('Afternoon', 'Aquarium Visit', 'Kids love the sharks and exotic fish!', '2 hours'),
+          adventureActivity('Afternoon', 'Formula 1 Track Walk', 'Walk the famous street circuit.', '1.5 hours'),
+          { time: 'Evening', title: 'Monaco Dining', description: 'Glamorous dinner in the principality.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Larvotto Beach Sunset', 'Romantic walk on Monaco\'s main beach.', '1.5 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Eze & Perfume',
+        activities: [
+          { time: 'Morning', title: 'Eze Village', description: 'Explore the stunning medieval village perched above the sea.', duration: '2.5 hours' },
+          romanticActivity('Morning', 'Exotic Garden', 'Wander through cacti with Mediterranean views.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Fragonard Perfume Factory', description: 'Tour and create your own perfume in Grasse.', duration: '2.5 hours' },
+          luxuryActivity('Afternoon', 'Private Perfume Creation', 'Design your signature scent with a master perfumer.', '3 hours'),
+          familyActivity('Afternoon', 'Grasse Discovery', 'Kid-friendly workshop making your own soap.', '2 hours'),
+          { time: 'Evening', title: 'Return to Nice', description: 'Scenic drive along the Grande Corniche.', duration: '1 hour' },
+          friendsActivity('Evening', 'Rooftop Aperitif', 'Cocktails with friends overlooking the bay.', '2 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Riviera & Departure',
+        activities: [
+          { time: 'Morning', title: 'Villefranche-sur-Mer', description: 'Visit the charming fishing village with a beautiful bay.', duration: '2 hours' },
+          adventureActivity('Morning', 'Snorkeling Paradise', 'Crystal-clear waters perfect for underwater exploring.', '2 hours'),
+          romanticActivity('Morning', 'Waterfront Coffee', 'Romantic morning by the colorful harbor.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Cap Ferrat', description: 'Explore the luxurious peninsula and Villa Ephrussi.', duration: '2.5 hours' },
+          culturalActivity('Afternoon', 'Rothschild Gardens', 'Tour the stunning villa and nine themed gardens.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Riviera Dinner', description: 'Final Niçoise cuisine with salade Niçoise and pissaladière.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Michelin Star Dining', 'End your Riviera trip at a top restaurant.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // SEVILLE
+  {
+    cityId: 'seville',
+    cityName: 'Seville',
+    days: [
+      {
+        day: 1,
+        title: 'Alcázar & Cathedral',
+        activities: [
+          { time: 'Morning', title: 'Real Alcázar', description: 'Explore the stunning Mudéjar palace and its gardens.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Moorish Architecture Tour', 'Expert guide explains 1,000 years of Arab influence.', '3 hours'),
+          luxuryActivity('Morning', 'Private Alcázar Access', 'Before-opening tour with breakfast in the gardens.', '3 hours'),
+          { time: 'Afternoon', title: 'Seville Cathedral', description: 'Visit the world\'s largest Gothic cathedral and Giralda tower.', duration: '2 hours' },
+          { time: 'Afternoon', title: 'Barrio Santa Cruz', description: 'Get lost in the charming Jewish quarter\'s white alleys.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Hidden Patios Walk', 'Discover secret courtyards and orange blossom scents.', '2 hours'),
+          { time: 'Evening', title: 'Tapas in Triana', description: 'Cross the bridge to the traditional neighborhood for dinner.', duration: '3 hours' },
+          friendsActivity('Evening', 'Tapas Crawl', 'Join a social tapas tour through local bars.', '3.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Plaza de España & Flamenco',
+        activities: [
+          { time: 'Morning', title: 'Plaza de España', description: 'Marvel at the semicircular square from the 1929 Exposition.', duration: '1.5 hours' },
+          familyActivity('Morning', 'Row Boats', 'Paddle the canal around the stunning plaza.', '1 hour'),
+          { time: 'Morning', title: 'Maria Luisa Park', description: 'Stroll through the beautiful gardens behind the plaza.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Flamenco Museum', description: 'Learn about the passionate art form born in Andalusia.', duration: '1.5 hours' },
+          adventureActivity('Afternoon', 'Flamenco Dance Class', 'Learn the basics from a professional dancer.', '1.5 hours'),
+          { time: 'Evening', title: 'Flamenco Show', description: 'Experience authentic flamenco at an intimate tablao.', duration: '2 hours' },
+          luxuryActivity('Evening', 'Private Flamenco & Dinner', 'Exclusive performance with gourmet Andalusian meal.', '3.5 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Metropol & Markets',
+        activities: [
+          { time: 'Morning', title: 'Metropol Parasol', description: 'Walk atop the world\'s largest wooden structure.', duration: '1.5 hours' },
+          adventureActivity('Morning', 'Sunrise Views', 'Catch the city waking up from the mushroom structure.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Mercado de Triana', description: 'Browse the neighborhood market with tapas and ceramics.', duration: '2 hours' },
+          friendsActivity('Afternoon', 'Market Food Tour', 'Sample jamón, olives, and local specialties.', '3 hours'),
+          culturalActivity('Afternoon', 'Ceramic Workshop', 'Learn traditional Sevillano tile painting.', '2 hours'),
+          { time: 'Evening', title: 'Alameda de Hércules', description: 'Join locals in the trendy square with bars and restaurants.', duration: '3 hours' },
+          romanticActivity('Evening', 'Rooftop Terrace', 'Sunset drinks overlooking the Giralda.', '2 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Córdoba',
+        activities: [
+          { time: 'Morning', title: 'Mezquita of Córdoba', description: 'Visit the stunning mosque-cathedral hybrid.', duration: '2 hours' },
+          culturalActivity('Morning', 'Al-Andalus History', 'Deep dive into Moorish Spain with an expert guide.', '3 hours'),
+          luxuryActivity('Morning', 'Private Mezquita Tour', 'Exclusive access and historical insights.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Jewish Quarter', description: 'Explore the medieval streets and synagogue.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Patio Festival Gardens', 'See the famous flower-filled courtyards.', '2 hours'),
+          familyActivity('Afternoon', 'Roman Bridge Walk', 'Cross the ancient bridge over the Guadalquivir.', '45 mins'),
+          { time: 'Evening', title: 'Return to Seville', description: 'High-speed train back for final evening.', duration: '45 mins' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Hidden Seville',
+        activities: [
+          { time: 'Morning', title: 'Hospital de los Venerables', description: 'See the Velázquez Centro in this baroque church.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Casa de Pilatos', description: 'Tour the beautiful Renaissance palace with tile work.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Sevillano Art Walk', 'Discover hidden masterpieces throughout the city.', '3 hours'),
+          { time: 'Afternoon', title: 'Guadalquivir River', description: 'Take a river cruise or walk along the riverfront.', duration: '2 hours' },
+          adventureActivity('Afternoon', 'Kayaking the River', 'Paddle past Torre del Oro and historic bridges.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Andalusian Feast', description: 'Final meal of gazpacho, pescaíto frito, and fino sherry.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Rooftop Fine Dining', 'Michelin-starred farewell with cathedral views.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // DUBROVNIK
+  {
+    cityId: 'dubrovnik',
+    cityName: 'Dubrovnik',
+    days: [
+      {
+        day: 1,
+        title: 'City Walls & Old Town',
+        activities: [
+          { time: 'Morning', title: 'City Walls Walk', description: 'Circle the complete medieval walls with stunning views.', duration: '2.5 hours' },
+          adventureActivity('Morning', 'Sunrise Walls Walk', 'Beat the crowds with an early morning climb.', '2 hours'),
+          luxuryActivity('Morning', 'Private Walls Tour', 'Expert guide with historical insights and photo stops.', '3 hours'),
+          { time: 'Afternoon', title: 'Stradun', description: 'Stroll the gleaming marble main street.', duration: '1.5 hours' },
+          { time: 'Afternoon', title: 'Rector\'s Palace', description: 'Visit the Gothic-Renaissance palace and museum.', duration: '1.5 hours' },
+          culturalActivity('Afternoon', 'Republic of Ragusa Tour', 'Learn about Dubrovnik\'s independent history.', '2.5 hours'),
+          { time: 'Evening', title: 'Old Town Dining', description: 'Fresh Adriatic seafood in a centuries-old restaurant.', duration: '2.5 hours' },
+          romanticActivity('Evening', 'Buža Bar Sunset', 'Cliff-side bar with sea views and magical sunsets.', '2 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Game of Thrones & Islands',
+        activities: [
+          { time: 'Morning', title: 'Game of Thrones Tour', description: 'Visit filming locations from King\'s Landing.', duration: '3 hours' },
+          friendsActivity('Morning', 'GOT Photo Tour', 'Recreate iconic scenes with props and costumes.', '3 hours'),
+          { time: 'Afternoon', title: 'Lokrum Island', description: 'Take the ferry to the botanical garden island.', duration: '3 hours' },
+          familyActivity('Afternoon', 'Peacocks & Swimming', 'Kids love the peacocks and the Dead Sea swimming hole.', '3 hours'),
+          romanticActivity('Afternoon', 'Monastery Gardens', 'Peaceful stroll through the botanical paradise.', '2 hours'),
+          { time: 'Evening', title: 'Fort Lovrijenac', description: 'Visit the dramatic fortress featured in GOT.', duration: '1.5 hours' },
+          luxuryActivity('Evening', 'Private Fort Dinner', 'Exclusive dining with fortress and sea views.', '3 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Sea Adventures',
+        activities: [
+          { time: 'Morning', title: 'Elafiti Islands Cruise', description: 'Sail to three islands for swimming and lunch.', duration: '5-6 hours' },
+          adventureActivity('Morning', 'Sea Kayaking', 'Paddle along the city walls and to caves.', '3 hours'),
+          luxuryActivity('Morning', 'Private Yacht Charter', 'Exclusive sailing with chef-prepared lunch.', '6 hours'),
+          familyActivity('Morning', 'Beach Day Trip', 'Visit family-friendly Lapad or Banje beaches.', '4 hours'),
+          { time: 'Afternoon', title: 'Cable Car', description: 'Ride to Mt. Srđ for panoramic views.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Hilltop Sunset', 'Watch the sun set over the Old Town from above.', '2 hours'),
+          { time: 'Evening', title: 'Porporela Pier', description: 'Dine at the tip of the old harbor.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Bar Hopping', 'Discover hidden bars in the old town.', '3 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Day Trip - Montenegro',
+        activities: [
+          { time: 'Morning', title: 'Bay of Kotor', description: 'Visit the stunning fjord-like bay and medieval towns.', duration: '4-5 hours' },
+          romanticActivity('Morning', 'Kotor Old Town', 'Wander hand-in-hand through the romantic streets.', '2 hours'),
+          adventureActivity('Morning', 'Kotor Fortress Hike', 'Climb 1,350 steps for incredible bay views.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Perast & Our Lady of the Rocks', description: 'Visit the picturesque town and island church.', duration: '2 hours' },
+          luxuryActivity('Afternoon', 'Private Speedboat Tour', 'Explore the bay in style with swimming stops.', '4 hours'),
+          familyActivity('Afternoon', 'Beach Stop', 'Swim at one of Montenegro\'s beautiful beaches.', '2 hours'),
+          { time: 'Evening', title: 'Return to Dubrovnik', description: 'Scenic drive back along the coast.', duration: '1.5 hours' },
+        ]
+      },
+      {
+        day: 5,
+        title: 'Hidden Dubrovnik',
+        activities: [
+          { time: 'Morning', title: 'Morning Markets', description: 'Shop at Gundulićeva Poljana market for local products.', duration: '1.5 hours' },
+          { time: 'Morning', title: 'Dominican Monastery', description: 'See the impressive cloister and religious art.', duration: '1.5 hours' },
+          culturalActivity('Morning', 'Art & Architecture Walk', 'Discover hidden churches and Renaissance details.', '2.5 hours'),
+          { time: 'Afternoon', title: 'War Photo Limited', description: 'Powerful photography exhibition on conflict.', duration: '1.5 hours' },
+          adventureActivity('Afternoon', 'Cliff Jumping', 'Jump into the crystal-clear Adriatic at secret spots.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Dalmatian Feast', description: 'Final meal of fresh fish, peka, and local wine.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Restaurant 360°', 'Michelin-starred dining on the city walls.', '3 hours'),
+        ]
+      },
+    ]
+  },
+
+  // AMALFI COAST
+  {
+    cityId: 'amalfi',
+    cityName: 'Amalfi Coast',
+    days: [
+      {
+        day: 1,
+        title: 'Positano',
+        activities: [
+          { time: 'Morning', title: 'Arrive in Positano', description: 'Settle into the vertical village tumbling down to the sea.', duration: '2 hours' },
+          luxuryActivity('Morning', 'Private Transfer', 'Arrive in style with a private driver from Naples.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Beach & Town', description: 'Relax on the pebble beach and explore boutiques.', duration: '3 hours' },
+          romanticActivity('Afternoon', 'Spiaggia Grande', 'Swim and sunbathe on the iconic beach.', '3 hours'),
+          familyActivity('Afternoon', 'Boat Rental', 'Rent a small boat and explore the coastline.', '3 hours'),
+          { time: 'Evening', title: 'Cliffside Dinner', description: 'Dine on a terrace overlooking the twinkling town.', duration: '2.5 hours' },
+          friendsActivity('Evening', 'Aperitivo Hopping', 'Sample Aperol Spritz at different panoramic bars.', '2.5 hours'),
+        ]
+      },
+      {
+        day: 2,
+        title: 'Path of the Gods',
+        activities: [
+          { time: 'Morning', title: 'Path of the Gods Hike', description: 'Walk the spectacular coastal trail with stunning views.', duration: '4-5 hours' },
+          adventureActivity('Morning', 'Full Trail Adventure', 'Complete the entire route from Bomerano to Positano.', '5 hours'),
+          familyActivity('Morning', 'Shorter Section', 'Family-friendly portion of the trail with views.', '2.5 hours'),
+          { time: 'Afternoon', title: 'Nocelle Village', description: 'Explore the peaceful mountain village.', duration: '1.5 hours' },
+          romanticActivity('Afternoon', 'Picnic with Views', 'Pack a lunch and find a scenic spot on the trail.', '2 hours'),
+          { time: 'Evening', title: 'Recovery Dinner', description: 'Celebrate your hike with pasta and local wine.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Spa Treatment', 'Relax sore muscles at a cliffside spa.', '2 hours'),
+        ]
+      },
+      {
+        day: 3,
+        title: 'Amalfi & Ravello',
+        activities: [
+          { time: 'Morning', title: 'Amalfi Town', description: 'Explore the historic maritime republic and cathedral.', duration: '2.5 hours' },
+          culturalActivity('Morning', 'Paper Museum', 'Learn about Amalfi\'s famous paper-making tradition.', '1.5 hours'),
+          { time: 'Afternoon', title: 'Ravello', description: 'Visit the hilltown known for its gardens and villas.', duration: '3 hours' },
+          romanticActivity('Afternoon', 'Villa Rufolo Gardens', 'Wander the romantic terraced gardens.', '1.5 hours'),
+          luxuryActivity('Afternoon', 'Villa Cimbrone', 'Visit the infinity terrace with the best views on the coast.', '2 hours'),
+          { time: 'Evening', title: 'Ravello Concert', description: 'Attend a classical music performance (seasonal).', duration: '2 hours' },
+          friendsActivity('Evening', 'Limoncello Tasting', 'Sample the local lemon liqueur at different bars.', '2 hours'),
+        ]
+      },
+      {
+        day: 4,
+        title: 'Capri Day Trip',
+        activities: [
+          { time: 'Morning', title: 'Ferry to Capri', description: 'Take the scenic ferry to the glamorous island.', duration: '1 hour' },
+          { time: 'Morning', title: 'Blue Grotto', description: 'Visit the famous sea cave with glowing blue water.', duration: '1.5 hours' },
+          adventureActivity('Morning', 'Island Boat Tour', 'Circumnavigate Capri with swimming stops.', '3 hours'),
+          { time: 'Afternoon', title: 'Capri Town & Anacapri', description: 'Explore both towns, take the chairlift to Monte Solaro.', duration: '3 hours' },
+          luxuryActivity('Afternoon', 'Designer Shopping', 'Browse the exclusive boutiques of Capri town.', '2 hours'),
+          familyActivity('Afternoon', 'Gardens of Augustus', 'Beautiful gardens with views of the Faraglioni rocks.', '1.5 hours'),
+          { time: 'Evening', title: 'Return to Amalfi', description: 'Ferry back with sunset over the coast.', duration: '1 hour' },
+          romanticActivity('Evening', 'Sunset Ferry', 'Watch the coastline glow golden from the boat.', '1.5 hours'),
+        ]
+      },
+      {
+        day: 5,
+        title: 'Coastal Exploration',
+        activities: [
+          { time: 'Morning', title: 'Boat Tour', description: 'Hire a private boat to explore grottoes and hidden beaches.', duration: '4 hours' },
+          adventureActivity('Morning', 'Snorkeling Adventure', 'Discover underwater caves and marine life.', '3 hours'),
+          luxuryActivity('Morning', 'Luxury Yacht Day', 'Full-day yacht with crew, lunch, and champagne.', '6 hours'),
+          { time: 'Afternoon', title: 'Furore Fjord', description: 'Visit the tiny beach village in a dramatic inlet.', duration: '2 hours' },
+          romanticActivity('Afternoon', 'Secluded Beach', 'Find a hidden cove for private sunbathing.', '3 hours'),
+          familyActivity('Afternoon', 'Lemon Grove Visit', 'See how limoncello is made and taste fresh lemons.', '2 hours'),
+          { time: 'Evening', title: 'Farewell Amalfi Dinner', description: 'Final feast of fresh seafood, limoncello, and sea views.', duration: '2.5 hours' },
+          luxuryActivity('Evening', 'Michelin Star Dining', 'End your trip at a top Amalfi Coast restaurant.', '3 hours'),
+        ]
+      },
+    ]
+  },
 ]
 
 // Helper function to get itinerary for a city
