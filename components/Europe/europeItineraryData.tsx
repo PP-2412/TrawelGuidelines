@@ -887,7 +887,7 @@ export const cityItineraries: CityItinerary[] = [
         activities: [
           { time: 'Morning', title: 'Delphi Day Trip', description: 'Visit the ancient sanctuary where the Oracle delivered prophecies.', duration: '5-6 hours' },
           culturalActivity('Morning', 'Sacred Way Pilgrimage', 'Walk the same path ancient Greeks took to consult the Oracle.', '6 hours'),
-          adventureActivity('Morning', 'Cape Sounion & Temple', description: 'Drive the coastal road to the stunning Temple of Poseidon.', '4 hours'),
+          adventureActivity('Morning', 'Cape Sounion & Temple', 'Drive the coastal road to the stunning Temple of Poseidon.', '4 hours'),
           familyActivity('Afternoon', 'Athens Riviera Beaches', 'Relax at family-friendly beaches along the coast.', '4 hours'),
           luxuryActivity('Afternoon', 'Private Yacht to Islands', 'Sail to nearby islands for swimming and seafood lunch.', '6 hours'),
           { time: 'Evening', title: 'Return to Athens', description: 'Head back for a relaxed evening in the city.', duration: '2 hours' },
