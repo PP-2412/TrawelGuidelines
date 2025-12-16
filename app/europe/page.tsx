@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, Suspense, useCallback } from 'react'
+import { useState, useEffect, useMemo, Suspense, useCallback, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
@@ -83,6 +83,9 @@ function EuropeContent() {
   const [tourViewMode, setTourViewMode] = useState<TourViewMode>('overview')
   const [tourDayIndex, setTourDayIndex] = useState(0)
 
+  // Ref for the tour modal content scroll area
+  const tourModalContentRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (tabParam === 'customise' || tabParam === 'customize') {
       setActiveTab('customise')
@@ -102,6 +105,13 @@ function EuropeContent() {
     setTourViewMode('overview')
     setTourDayIndex(0)
   }, [selectedTour])
+
+  // Reset scroll position when switching between overview and itinerary views
+  useEffect(() => {
+    if (tourModalContentRef.current) {
+      tourModalContentRef.current.scrollTop = 0
+    }
+  }, [tourViewMode])
 
   // Generate itinerary for selected tour
   const tourItinerary = useMemo(() => {
@@ -974,7 +984,7 @@ function EuropeContent() {
             )}
 
             {/* Content area */}
-            <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 md:p-8">
+            <div ref={tourModalContentRef} className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 md:p-8">
               {tourViewMode === 'overview' ? (
                 /* Overview Content */
                 <>
