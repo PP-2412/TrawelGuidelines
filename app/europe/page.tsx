@@ -507,23 +507,59 @@ function EuropeContent() {
                     </div>
                   </div>
 
-                  {/* Search box and city list side by side */}
+                  {/* Popular destinations - Horizontal scroll on mobile */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice', 'prague', 'vienna'].map((cityId) => {
+                        const city = getCityById(cityId)
+                        if (!city) return null
+                        const isSelected = selectedCities.some(sc => sc.city.id === city.id)
+                        return (
+                          <button
+                            key={city.id}
+                            onClick={() => toggleCity(city)}
+                            className={`group flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200 touch-target ${
+                              isSelected
+                                ? 'bg-[#d19457] border-[#d19457] shadow-md'
+                                : 'bg-white border-[#12103d]/10 hover:border-[#d19457]/50 hover:shadow-sm'
+                            }`}
+                          >
+                            <div 
+                              className="w-6 h-6 rounded-md bg-cover bg-center flex-shrink-0"
+                              style={{ backgroundImage: `url(${city.image})` }}
+                            />
+                            <span className={`font-sans text-xs font-medium ${isSelected ? 'text-white' : 'text-[#12103d]'}`}>
+                              {city.name}
+                            </span>
+                            {isSelected ? (
+                              <Check className="w-3.5 h-3.5 text-white" />
+                            ) : (
+                              <Plus className="w-3.5 h-3.5 text-[#d19457] opacity-50 group-hover:opacity-100 transition-opacity" />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Search and All Cities side by side */}
                   <div className="flex flex-col sm:flex-row gap-4">
                     {/* Left side - Search */}
                     <div className="w-full sm:w-1/2">
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">Search</p>
                       <div className="relative">
                         <input
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search cities..."
-                          className="w-full px-4 sm:px-5 py-3 sm:py-4 pl-10 sm:pl-12 border border-[#12103d]/10 rounded-xl font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457]"
+                          placeholder="Type city name..."
+                          className="w-full px-4 py-3 pl-10 border border-[#12103d]/10 rounded-lg font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457] bg-[#f9f9f9]"
                         />
-                        <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#44618b]" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#44618b]" />
                       </div>
 
                       {filteredCities.length > 0 && (
-                        <div className="mt-3 border border-[#12103d]/10 rounded-xl overflow-hidden bg-white shadow-sm">
+                        <div className="mt-2 border border-[#12103d]/10 rounded-lg overflow-hidden bg-white shadow-sm">
                           {filteredCities.map((city) => (
                             <button
                               key={city.id}
@@ -540,75 +576,61 @@ function EuropeContent() {
                         </div>
                       )}
 
-                      {/* Popular destinations */}
-                      <div className="mt-4">
-                        <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">Popular</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice'].map((cityId) => {
-                            const city = getCityById(cityId)
-                            if (!city) return null
-                            const isSelected = selectedCities.some(sc => sc.city.id === city.id)
-                            return (
-                              <button
-                                key={city.id}
-                                onClick={() => toggleCity(city)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 touch-target ${
-                                  isSelected
-                                    ? 'bg-[#d19457] text-white'
-                                    : 'bg-[#f5f5f5] text-[#12103d] hover:bg-[#12103d]/10'
-                                }`}
-                              >
-                                {city.name}
-                                {isSelected ? (
-                                  <Check className="w-3 h-3" />
-                                ) : (
-                                  <Plus className="w-3 h-3 text-[#d19457]" />
-                                )}
-                              </button>
-                            )
-                          })}
+                      {/* Selected count indicator */}
+                      {selectedCities.length > 0 && (
+                        <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-[#d19457]/10 rounded-lg">
+                          <Check className="w-4 h-4 text-[#d19457]" />
+                          <span className="font-sans text-xs text-[#12103d]">
+                            <span className="font-semibold">{selectedCities.length}</span> {selectedCities.length === 1 ? 'city' : 'cities'} selected
+                          </span>
                         </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Right side - Scrollable text list */}
                     <div className="w-full sm:w-1/2">
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">All Cities (A-Z)</p>
-                      <div className="h-[240px] sm:h-[280px] overflow-y-auto rounded-xl border border-[#12103d]/10 bg-[#f9f9f9]">
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">Browse All</p>
+                      <div className="h-[200px] sm:h-[220px] overflow-y-auto rounded-lg border border-[#12103d]/10 bg-white">
                         {[...europeCities]
                           .sort((a, b) => a.name.localeCompare(b.name))
                           .map((city, index) => {
                             const isSelected = selectedCities.some(sc => sc.city.id === city.id)
-                            const prevCity = index > 0 ? [...europeCities].sort((a, b) => a.name.localeCompare(b.name))[index - 1] : null
+                            const sortedCities = [...europeCities].sort((a, b) => a.name.localeCompare(b.name))
+                            const prevCity = index > 0 ? sortedCities[index - 1] : null
                             const showLetter = !prevCity || prevCity.name[0].toUpperCase() !== city.name[0].toUpperCase()
                             
                             return (
                               <div key={city.id}>
                                 {showLetter && (
-                                  <div className="sticky top-0 px-3 py-1.5 bg-[#12103d] text-white text-[10px] font-bold uppercase tracking-wider">
-                                    {city.name[0]}
+                                  <div className="sticky top-0 px-3 py-1 bg-[#f5f5f5] border-b border-[#12103d]/5">
+                                    <span className="font-sans text-[10px] font-bold text-[#d19457] uppercase">
+                                      {city.name[0]}
+                                    </span>
                                   </div>
                                 )}
                                 <button
                                   onClick={() => toggleCity(city)}
-                                  className={`w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors touch-target border-b border-[#12103d]/5 ${
+                                  className={`w-full flex items-center justify-between px-3 py-2 text-left transition-all touch-target ${
                                     isSelected 
                                       ? 'bg-[#d19457]/10' 
-                                      : 'hover:bg-white active:bg-white'
+                                      : 'hover:bg-[#f9f9f9]'
                                   }`}
                                 >
-                                  <div>
+                                  <div className="flex items-center gap-2">
+                                    {isSelected && (
+                                      <div className="w-1.5 h-1.5 rounded-full bg-[#d19457]" />
+                                    )}
                                     <span className={`font-sans text-sm ${isSelected ? 'text-[#d19457] font-medium' : 'text-[#12103d]'}`}>
                                       {city.name}
                                     </span>
-                                    <span className="font-sans text-xs text-[#44618b] ml-2">
+                                    <span className="font-sans text-[10px] text-[#44618b]">
                                       {city.country}
                                     </span>
                                   </div>
                                   {isSelected ? (
-                                    <Check className="w-4 h-4 text-[#d19457] flex-shrink-0" />
+                                    <Check className="w-4 h-4 text-[#d19457]" />
                                   ) : (
-                                    <Plus className="w-4 h-4 text-[#d19457] flex-shrink-0" />
+                                    <Plus className="w-4 h-4 text-[#44618b]/30 hover:text-[#d19457]" />
                                   )}
                                 </button>
                               </div>
