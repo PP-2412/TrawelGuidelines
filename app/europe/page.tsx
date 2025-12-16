@@ -496,144 +496,101 @@ function EuropeContent() {
             <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
               <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                 {/* Search Cities */}
-                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#d19457] flex items-center justify-center">
-                      <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Search & Add Cities</h3>
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Or use the map above</p>
-                    </div>
-                  </div>
-
-                  {/* Popular destinations - Horizontal scroll on mobile */}
-                  <div className="mb-4">
-                    <div className="flex flex-wrap gap-2">
-                      {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice', 'prague', 'vienna'].map((cityId) => {
-                        const city = getCityById(cityId)
-                        if (!city) return null
-                        const isSelected = selectedCities.some(sc => sc.city.id === city.id)
-                        return (
-                          <button
-                            key={city.id}
-                            onClick={() => toggleCity(city)}
-                            className={`group flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200 touch-target ${
-                              isSelected
-                                ? 'bg-[#d19457] border-[#d19457] shadow-md'
-                                : 'bg-white border-[#12103d]/10 hover:border-[#d19457]/50 hover:shadow-sm'
-                            }`}
-                          >
-                            <div 
-                              className="w-6 h-6 rounded-md bg-cover bg-center flex-shrink-0"
-                              style={{ backgroundImage: `url(${city.image})` }}
-                            />
-                            <span className={`font-sans text-xs font-medium ${isSelected ? 'text-white' : 'text-[#12103d]'}`}>
-                              {city.name}
-                            </span>
-                            {isSelected ? (
-                              <Check className="w-3.5 h-3.5 text-white" />
-                            ) : (
-                              <Plus className="w-3.5 h-3.5 text-[#d19457] opacity-50 group-hover:opacity-100 transition-opacity" />
-                            )}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Search and All Cities side by side */}
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Left side - Search */}
-                    <div className="w-full sm:w-1/2">
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">Search</p>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Type city name..."
-                          className="w-full px-4 py-3 pl-10 border border-[#12103d]/10 rounded-lg font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457] bg-[#f9f9f9]"
-                        />
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#44618b]" />
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#d19457] flex items-center justify-center">
+                        <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                       </div>
+                      <h3 className="font-display text-base sm:text-lg text-[#12103d]">Add Cities</h3>
+                    </div>
+                    {selectedCities.length > 0 && (
+                      <span className="px-2 py-1 bg-[#d19457]/10 rounded-full font-sans text-[10px] sm:text-xs text-[#d19457] font-medium">
+                        {selectedCities.length} selected
+                      </span>
+                    )}
+                  </div>
 
-                      {filteredCities.length > 0 && (
-                        <div className="mt-2 border border-[#12103d]/10 rounded-lg overflow-hidden bg-white shadow-sm">
-                          {filteredCities.map((city) => (
+                  {/* Search box full width */}
+                  <div className="relative mb-3">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search cities..."
+                      className="w-full px-3 py-2 pl-9 border border-[#12103d]/10 rounded-lg font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457] bg-[#f9f9f9]"
+                    />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#44618b]" />
+                  </div>
+
+                  {/* Search results dropdown */}
+                  {filteredCities.length > 0 && (
+                    <div className="mb-3 border border-[#12103d]/10 rounded-lg overflow-hidden bg-white shadow-sm">
+                      {filteredCities.map((city) => (
+                        <button
+                          key={city.id}
+                          onClick={() => addCity(city)}
+                          className="w-full flex items-center justify-between px-3 py-2 hover:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
+                        >
+                          <span className="font-sans text-sm text-[#12103d]">{city.name} <span className="text-xs text-[#44618b]">{city.country}</span></span>
+                          <Plus className="w-4 h-4 text-[#d19457]" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Quick add + Browse in two columns */}
+                  <div className="flex gap-3">
+                    {/* Left - Quick Add */}
+                    <div className="flex-1">
+                      <p className="font-sans text-[9px] text-[#44618b] uppercase tracking-wider mb-1.5">Quick Add</p>
+                      <div className="flex flex-wrap gap-1">
+                        {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice', 'prague', 'vienna'].map((cityId) => {
+                          const city = getCityById(cityId)
+                          if (!city) return null
+                          const isSelected = selectedCities.some(sc => sc.city.id === city.id)
+                          return (
                             <button
                               key={city.id}
-                              onClick={() => addCity(city)}
-                              className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
+                              onClick={() => toggleCity(city)}
+                              className={`px-2 py-1 rounded text-[11px] font-medium transition-all touch-target ${
+                                isSelected
+                                  ? 'bg-[#d19457] text-white'
+                                  : 'bg-[#f5f5f5] text-[#12103d] hover:bg-[#12103d]/10'
+                              }`}
                             >
-                              <div className="text-left">
-                                <span className="font-sans text-sm text-[#12103d]">{city.name}</span>
-                                <span className="font-sans text-xs text-[#44618b] ml-2">{city.country}</span>
-                              </div>
-                              <Plus className="w-4 h-4 text-[#d19457]" />
+                              {city.name}
                             </button>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Selected count indicator */}
-                      {selectedCities.length > 0 && (
-                        <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-[#d19457]/10 rounded-lg">
-                          <Check className="w-4 h-4 text-[#d19457]" />
-                          <span className="font-sans text-xs text-[#12103d]">
-                            <span className="font-semibold">{selectedCities.length}</span> {selectedCities.length === 1 ? 'city' : 'cities'} selected
-                          </span>
-                        </div>
-                      )}
+                          )
+                        })}
+                      </div>
                     </div>
 
-                    {/* Right side - Scrollable text list */}
-                    <div className="w-full sm:w-1/2">
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">Browse All</p>
-                      <div className="h-[200px] sm:h-[220px] overflow-y-auto rounded-lg border border-[#12103d]/10 bg-white">
+                    {/* Right - Browse All */}
+                    <div className="w-[45%] sm:w-[40%]">
+                      <p className="font-sans text-[9px] text-[#44618b] uppercase tracking-wider mb-1.5">Browse All</p>
+                      <div className="h-[120px] overflow-y-auto rounded-lg border border-[#12103d]/10 bg-[#f9f9f9]">
                         {[...europeCities]
                           .sort((a, b) => a.name.localeCompare(b.name))
-                          .map((city, index) => {
+                          .map((city) => {
                             const isSelected = selectedCities.some(sc => sc.city.id === city.id)
-                            const sortedCities = [...europeCities].sort((a, b) => a.name.localeCompare(b.name))
-                            const prevCity = index > 0 ? sortedCities[index - 1] : null
-                            const showLetter = !prevCity || prevCity.name[0].toUpperCase() !== city.name[0].toUpperCase()
-                            
                             return (
-                              <div key={city.id}>
-                                {showLetter && (
-                                  <div className="sticky top-0 px-3 py-1 bg-[#f5f5f5] border-b border-[#12103d]/5">
-                                    <span className="font-sans text-[10px] font-bold text-[#d19457] uppercase">
-                                      {city.name[0]}
-                                    </span>
-                                  </div>
+                              <button
+                                key={city.id}
+                                onClick={() => toggleCity(city)}
+                                className={`w-full flex items-center justify-between px-2 py-1.5 text-left transition-all touch-target border-b border-[#12103d]/5 last:border-b-0 ${
+                                  isSelected ? 'bg-[#d19457]/10' : 'hover:bg-white'
+                                }`}
+                              >
+                                <span className={`font-sans text-xs ${isSelected ? 'text-[#d19457] font-medium' : 'text-[#12103d]'}`}>
+                                  {city.name}
+                                </span>
+                                {isSelected ? (
+                                  <Check className="w-3 h-3 text-[#d19457]" />
+                                ) : (
+                                  <Plus className="w-3 h-3 text-[#44618b]/30" />
                                 )}
-                                <button
-                                  onClick={() => toggleCity(city)}
-                                  className={`w-full flex items-center justify-between px-3 py-2 text-left transition-all touch-target ${
-                                    isSelected 
-                                      ? 'bg-[#d19457]/10' 
-                                      : 'hover:bg-[#f9f9f9]'
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-2">
-                                    {isSelected && (
-                                      <div className="w-1.5 h-1.5 rounded-full bg-[#d19457]" />
-                                    )}
-                                    <span className={`font-sans text-sm ${isSelected ? 'text-[#d19457] font-medium' : 'text-[#12103d]'}`}>
-                                      {city.name}
-                                    </span>
-                                    <span className="font-sans text-[10px] text-[#44618b]">
-                                      {city.country}
-                                    </span>
-                                  </div>
-                                  {isSelected ? (
-                                    <Check className="w-4 h-4 text-[#d19457]" />
-                                  ) : (
-                                    <Plus className="w-4 h-4 text-[#44618b]/30 hover:text-[#d19457]" />
-                                  )}
-                                </button>
-                              </div>
+                              </button>
                             )
                           })}
                       </div>
