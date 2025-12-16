@@ -528,15 +528,11 @@ function EuropeContent() {
                             <button
                               key={city.id}
                               onClick={() => addCity(city)}
-                              className="w-full flex items-center gap-3 p-3 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
+                              className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
                             >
-                              <div
-                                className="w-10 h-10 rounded-lg bg-cover bg-center flex-shrink-0"
-                                style={{ backgroundImage: `url(${city.image})` }}
-                              />
-                              <div className="flex-1 text-left">
-                                <h4 className="font-display text-sm sm:text-base text-[#12103d]">{city.name}</h4>
-                                <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{city.country}</p>
+                              <div className="text-left">
+                                <span className="font-sans text-sm text-[#12103d]">{city.name}</span>
+                                <span className="font-sans text-xs text-[#44618b] ml-2">{city.country}</span>
                               </div>
                               <Plus className="w-4 h-4 text-[#d19457]" />
                             </button>
@@ -555,11 +551,10 @@ function EuropeContent() {
                             return (
                               <button
                                 key={city.id}
-                                onClick={() => !isSelected && addCity(city)}
-                                disabled={isSelected}
+                                onClick={() => toggleCity(city)}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 touch-target ${
                                   isSelected
-                                    ? 'bg-[#d19457] text-white cursor-default'
+                                    ? 'bg-[#d19457] text-white'
                                     : 'bg-[#f5f5f5] text-[#12103d] hover:bg-[#12103d]/10'
                                 }`}
                               >
@@ -595,11 +590,10 @@ function EuropeContent() {
                                   </div>
                                 )}
                                 <button
-                                  onClick={() => !isSelected && addCity(city)}
-                                  disabled={isSelected}
+                                  onClick={() => toggleCity(city)}
                                   className={`w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors touch-target border-b border-[#12103d]/5 ${
                                     isSelected 
-                                      ? 'bg-[#d19457]/10 cursor-default' 
+                                      ? 'bg-[#d19457]/10' 
                                       : 'hover:bg-white active:bg-white'
                                   }`}
                                 >
