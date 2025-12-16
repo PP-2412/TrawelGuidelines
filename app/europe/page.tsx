@@ -1116,34 +1116,34 @@ function EuropeContent() {
             </div>
 
             {/* Footer */}
-            <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6 border-t border-[#12103d]/10 bg-white">
+            <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 sm:p-4 md:p-5 border-t border-[#12103d]/10 bg-white">
               <div className="text-center sm:text-left">
-                <span className="font-sans text-xs sm:text-sm text-[#44618b]">Starting from</span>
+                <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">Starting from</span>
                 <div>
-                  <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[#d19457]">${selectedTour.price}</span>
-                  <span className="font-sans text-xs sm:text-sm text-[#44618b]">/person</span>
+                  <span className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-[#d19457]">${selectedTour.price}</span>
+                  <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">/person</span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 {/* View Toggle Button */}
                 <button
                   onClick={() => setTourViewMode(tourViewMode === 'overview' ? 'itinerary' : 'overview')}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#f5f5f5] text-[#12103d] font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#12103d]/10 transition-all touch-target"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-[#f5f5f5] text-[#12103d] font-sans text-[10px] sm:text-xs font-semibold tracking-wider uppercase px-3 sm:px-4 py-2.5 sm:py-3 rounded-full hover:bg-[#12103d]/10 transition-all touch-target"
                 >
-                  <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   {tourViewMode === 'overview' ? 'View Itinerary' : 'View Overview'}
                 </button>
                 <button
                   onClick={() => customiseFromTour(selectedTour)}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#12103d] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 sm:px-6 py-3.5 sm:py-4 rounded-full hover:bg-[#43124a] transition-all touch-target"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-[#12103d] text-white font-sans text-[10px] sm:text-xs font-semibold tracking-wider uppercase px-3 sm:px-4 py-2.5 sm:py-3 rounded-full hover:bg-[#43124a] transition-all touch-target"
                 >
-                  <Settings2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Customise
                 </button>
                 <a
                   href="#contact"
                   onClick={() => setSelectedTour(null)}
-                  className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs sm:text-sm font-semibold tracking-wider uppercase px-6 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
+                  className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-[10px] sm:text-xs font-semibold tracking-wider uppercase px-4 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
                 >
                   Book Now
                 </a>
