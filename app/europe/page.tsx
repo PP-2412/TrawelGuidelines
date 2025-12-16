@@ -507,63 +507,115 @@ function EuropeContent() {
                     </div>
                   </div>
 
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search cities (e.g., Paris, Rome...)"
-                      className="w-full px-4 sm:px-5 py-3 sm:py-4 pl-10 sm:pl-12 border border-[#12103d]/10 rounded-lg sm:rounded-xl font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457]"
-                    />
-                    <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#44618b]" />
-                  </div>
+                  {/* Search box and city list side by side */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    {/* Left side - Search */}
+                    <div className="w-full sm:w-1/2">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search cities..."
+                          className="w-full px-4 sm:px-5 py-3 sm:py-4 pl-10 sm:pl-12 border border-[#12103d]/10 rounded-lg sm:rounded-xl font-sans text-sm focus:outline-none focus:ring-2 focus:ring-[#d19457]/50 focus:border-[#d19457]"
+                        />
+                        <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#44618b]" />
+                      </div>
 
-                  {filteredCities.length > 0 && (
-                    <div className="mt-4 border border-[#12103d]/10 rounded-lg sm:rounded-xl overflow-hidden">
-                      {filteredCities.map((city) => (
-                        <button
-                          key={city.id}
-                          onClick={() => addCity(city)}
-                          className="w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
-                        >
-                          <div
-                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-cover bg-center flex-shrink-0"
-                            style={{ backgroundImage: `url(${city.image})` }}
-                          />
-                          <div className="flex-1 text-left">
-                            <h4 className="font-display text-base sm:text-lg text-[#12103d]">{city.name}</h4>
-                            <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{city.country}</p>
-                          </div>
-                          <div className="flex items-center gap-2 text-[#d19457]">
-                            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="font-sans text-xs sm:text-sm font-medium hidden sm:inline">Add</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {searchQuery === '' && selectedCities.length === 0 && (
-                    <div className="mt-4 sm:mt-6">
-                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2 sm:mb-3">Popular destinations</p>
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice'].map((cityId) => {
-                          const city = getCityById(cityId)
-                          if (!city) return null
-                          return (
+                      {filteredCities.length > 0 && (
+                        <div className="mt-3 border border-[#12103d]/10 rounded-lg sm:rounded-xl overflow-hidden">
+                          {filteredCities.map((city) => (
                             <button
                               key={city.id}
                               onClick={() => addCity(city)}
-                              className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#f5f5f5] hover:bg-[#12103d]/10 active:bg-[#12103d]/10 transition-colors touch-target"
+                              className="w-full flex items-center gap-3 p-2.5 sm:p-3 hover:bg-[#f5f5f5] active:bg-[#f5f5f5] transition-colors border-b border-[#12103d]/5 last:border-b-0 touch-target"
                             >
-                              <span className="font-sans text-xs sm:text-sm text-[#12103d]">{city.name}</span>
-                              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d19457]" />
+                              <div
+                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-cover bg-center flex-shrink-0"
+                                style={{ backgroundImage: `url(${city.image})` }}
+                              />
+                              <div className="flex-1 text-left">
+                                <h4 className="font-display text-sm sm:text-base text-[#12103d]">{city.name}</h4>
+                                <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{city.country}</p>
+                              </div>
+                              <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-[#d19457]" />
                             </button>
-                          )
-                        })}
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right side - Scrollable all cities list */}
+                    <div className="w-full sm:w-1/2">
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2">All Cities</p>
+                      <div className="h-[200px] sm:h-[240px] overflow-y-auto border border-[#12103d]/10 rounded-lg sm:rounded-xl">
+                        {[...europeCities]
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((city) => {
+                            const isSelected = selectedCities.some(sc => sc.city.id === city.id)
+                            return (
+                              <button
+                                key={city.id}
+                                onClick={() => !isSelected && addCity(city)}
+                                disabled={isSelected}
+                                className={`w-full flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 border-b border-[#12103d]/5 last:border-b-0 transition-colors touch-target ${
+                                  isSelected 
+                                    ? 'bg-[#d19457]/10 cursor-default' 
+                                    : 'hover:bg-[#f5f5f5] active:bg-[#f5f5f5]'
+                                }`}
+                              >
+                                <div
+                                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-cover bg-center flex-shrink-0"
+                                  style={{ backgroundImage: `url(${city.image})` }}
+                                />
+                                <div className="flex-1 text-left min-w-0">
+                                  <h4 className="font-display text-xs sm:text-sm text-[#12103d] truncate">{city.name}</h4>
+                                  <p className="font-sans text-[9px] sm:text-[10px] text-[#44618b]">{city.country}</p>
+                                </div>
+                                {isSelected ? (
+                                  <Check className="w-4 h-4 text-[#d19457] flex-shrink-0" />
+                                ) : (
+                                  <Plus className="w-4 h-4 text-[#d19457] flex-shrink-0" />
+                                )}
+                              </button>
+                            )
+                          })}
                       </div>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Popular destinations - Always visible */}
+                  <div className="mt-4 sm:mt-6 pt-4 border-t border-[#12103d]/10">
+                    <p className="font-sans text-[10px] sm:text-xs text-[#44618b] uppercase tracking-wider mb-2 sm:mb-3">Popular destinations</p>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      {['paris', 'rome', 'barcelona', 'amsterdam', 'london', 'venice'].map((cityId) => {
+                        const city = getCityById(cityId)
+                        if (!city) return null
+                        const isSelected = selectedCities.some(sc => sc.city.id === city.id)
+                        return (
+                          <button
+                            key={city.id}
+                            onClick={() => !isSelected && addCity(city)}
+                            disabled={isSelected}
+                            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors touch-target ${
+                              isSelected
+                                ? 'bg-[#d19457]/20 cursor-default'
+                                : 'bg-[#f5f5f5] hover:bg-[#12103d]/10 active:bg-[#12103d]/10'
+                            }`}
+                          >
+                            <span className={`font-sans text-xs sm:text-sm ${isSelected ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                              {city.name}
+                            </span>
+                            {isSelected ? (
+                              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d19457]" />
+                            ) : (
+                              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d19457]" />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
                 </div>
 
                 {selectedCities.length > 0 && (
