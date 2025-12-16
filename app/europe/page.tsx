@@ -796,12 +796,12 @@ function EuropeContent() {
           onClick={() => setSelectedTour(null)}
         >
           <div 
-            className="modal-content"
+            className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header with image - only show in overview mode */}
             {tourViewMode === 'overview' ? (
-              <div className="relative h-48 sm:h-64 md:h-80">
+              <div className="relative h-48 sm:h-64 md:h-80 flex-shrink-0">
                 <div className="relative w-full h-full overflow-hidden">
                   {selectedTour.images.map((img, idx) => (
                     <div
@@ -974,7 +974,7 @@ function EuropeContent() {
             )}
 
             {/* Content area */}
-            <div className="p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[50vh] sm:max-h-[calc(90vh-20rem)]">
+            <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 md:p-8">
               {tourViewMode === 'overview' ? (
                 /* Overview Content */
                 <>
@@ -1116,7 +1116,7 @@ function EuropeContent() {
             </div>
 
             {/* Footer */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6 border-t border-[#12103d]/10 bg-white">
+            <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 sm:p-6 md:p-8 pt-4 sm:pt-6 border-t border-[#12103d]/10 bg-white">
               <div className="text-center sm:text-left">
                 <span className="font-sans text-xs sm:text-sm text-[#44618b]">Starting from</span>
                 <div>
