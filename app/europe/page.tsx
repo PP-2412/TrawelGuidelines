@@ -240,15 +240,13 @@ function EuropeContent() {
   }
 
   const customiseFromTour = (tour: EuropeTour) => {
-    const cities: SelectedCity[] = tour.cities
-      .map(tc => {
-        const city = getCityById(tc.cityId)
-        if (city) {
-          return { city, nights: tc.nights, tripType: tour.tripType }
-        }
-        return null
-      })
-      .filter((sc): sc is SelectedCity => sc !== null)
+    const cities: SelectedCity[] = []
+    for (const tc of tour.cities) {
+      const city = getCityById(tc.cityId)
+      if (city) {
+        cities.push({ city, nights: tc.nights, tripType: tour.tripType })
+      }
+    }
     
     setSelectedCities(cities)
     setSelectedTour(null)
