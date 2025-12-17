@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, ChevronLeft, ChevronRight, Sun, Sunset, Moon, MapPin, Clock, Calendar, Compass, Heart, Users, UserPlus, Mountain, Gem } from 'lucide-react'
-import { TripType } from './europeData'
+import { X, ChevronLeft, ChevronRight, Sun, Sunset, Moon, MapPin, Clock, Calendar, Compass, Heart, Users, UserPlus, Mountain, Gem, Plane, Train } from 'lucide-react'
+import { TripType, calculateDistance } from './europeData'
 import { Activity, generateFullItinerary } from './europeItineraryData'
 
 interface SelectedCity {
@@ -262,21 +262,38 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
         {/* Footer with city summary - Fixed height, never shrinks */}
         <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
-              {selectedCities.map((sc, index) => (
-                <div 
-                  key={sc.city.id}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium flex-shrink-0 whitespace-nowrap ${
-                    sc.city.name === currentDayData.cityName
-                      ? 'bg-[#12103d] text-white'
-                      : 'bg-white text-[#44618b]'
-                  }`}
-                >
-                  <span>{index + 1}.</span>
-                  <span>{sc.city.name}</span>
-                  <span className="opacity-70">({sc.nights}N)</span>
-                </div>
-              ))}
+            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
+              {selectedCities.map((sc, index) => {
+                // Calculate distance to next city for transport mode
+                const nextCity = selectedCities[index + 1]
+                const distance = nextCity ? calculateDistance(sc.city.id, nextCity.city.id) : 0
+                const isLongDistance = distance > 1000
+                const TransportIcon = isLongDistance ? Plane : Train
+                
+                return (
+                  <div key={sc.city.id} className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+                    <div 
+                      className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap ${
+                        sc.city.name === currentDayData.cityName
+                          ? 'bg-[#12103d] text-white'
+                          : 'bg-white text-[#44618b]'
+                      }`}
+                    >
+                      <span>{index + 1}.</span>
+                      <span>{sc.city.name}</span>
+                      <span className="opacity-70">({sc.nights}N)</span>
+                    </div>
+                    
+                    {/* Transport mode indicator between cities */}
+                    {nextCity && (
+                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white text-[#44618b] text-[10px] sm:text-xs">
+                        <TransportIcon className="w-3 h-3" />
+                        <span className="hidden sm:inline">{distance}km</span>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
             </div>
             <div className="text-xs sm:text-sm text-[#44618b] flex-shrink-0 whitespace-nowrap">
               Total: <span className="font-medium text-[#12103d]">{totalDays} nights</span>
