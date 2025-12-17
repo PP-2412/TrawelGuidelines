@@ -218,7 +218,7 @@ function EuropeContent() {
     })
   }, [])
 
-  const updateNights = (cityId: string, delta: number) => {
+  const updateNights = useCallback((cityId: string, delta: number) => {
     setSelectedCities(prev => prev.map(sc => {
       if (sc.city.id === cityId) {
         const newNights = Math.max(sc.city.minNights, Math.min(sc.city.maxNights, sc.nights + delta))
@@ -226,15 +226,15 @@ function EuropeContent() {
       }
       return sc
     }))
-  }
+  }, [])
 
-  const updateTripType = (cityId: string, tripType: TripType) => {
+  const updateTripType = useCallback((cityId: string, tripType: TripType) => {
     setSelectedCities(prev => prev.map(sc => 
       sc.city.id === cityId ? { ...sc, tripType } : sc
     ))
-  }
+  }, [])
 
-  const customiseFromTour = (tour: EuropeTour) => {
+  const customiseFromTour = useCallback((tour: EuropeTour) => {
     const cities: SelectedCity[] = tour.cities
       .map(tc => {
         const city = getCityById(tc.cityId)
@@ -250,7 +250,7 @@ function EuropeContent() {
     handleTabChange('customise')
     
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  }, [])
 
   const handleSubmit = () => {
     setIsSubmitting(true)
