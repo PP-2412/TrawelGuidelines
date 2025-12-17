@@ -1890,33 +1890,40 @@ export const filterActivitiesByTripType = (activities: Activity[], tripType: Tri
 }
 
 // Generate a complete itinerary for selected cities
+// Generate a complete itinerary for selected cities
 export const generateFullItinerary = (
-  selectedCities: Array<{ cityId: string; nights: number }>,
-  tripType: TripType | null
-): Array<{ day: number; cityName: string; title: string; activities: Activity[] }> => {
-  const fullItinerary: Array<{ day: number; cityName: string; title: string; activities: Activity[] }> = []
+  selectedCities: Array<{ cityId: string; nights: number; tripType?: TripType | null }>,
+  globalTripType: TripType | null
+): Array<{ day: number; cityName: string; title: string; activities: Activity[]; tripType: TripType | null }> => {
+  const fullItinerary: Array<{ day: number; cityName: string; title: string; activities: Activity[]; tripType: TripType | null }> = []
   let currentDay = 1
 
-  selectedCities.forEach(({ cityId, nights }) => {
+  selectedCities.forEach(({ cityId, nights, tripType }) => {
     const cityItinerary = getCityItinerary(cityId)
     if (!cityItinerary) return
+    
+    // Use per-city tripType if available, otherwise fall back to global
+    const effectiveTripType = tripType ?? globalTripType
 
     for (let i = 0; i < nights; i++) {
       const dayIndex = Math.min(i, cityItinerary.days.length - 1)
       const dayData = cityItinerary.days[dayIndex]
       
-      const filteredActivities = filterActivitiesByTripType(dayData.activities, tripType)
+      const filteredActivities = filterActivitiesByTripType(dayData.activities, effectiveTripType)
       
       fullItinerary.push({
         day: currentDay,
         cityName: cityItinerary.cityName,
         title: dayData.title,
-        activities: filteredActivities
+        activities: filteredActivities,
+        tripType: effectiveTripType
       })
       
       currentDay++
     }
   })
 
+  return fullItinerary
+}
   return fullItinerary
 }
