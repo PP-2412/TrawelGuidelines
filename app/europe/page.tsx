@@ -29,7 +29,6 @@ type TourViewMode = 'overview' | 'itinerary'
 interface SelectedCity {
   city: EuropeCity
   nights: number
-  tripType: TripType | null
 }
 
 const travelTypes = [
@@ -73,6 +72,8 @@ function EuropeContent() {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCities, setSelectedCities] = useState<SelectedCity[]>([])
+  const [tripType, setTripType] = useState<TripType | null>(null)
+  const [isTripStyleExpanded, setIsTripStyleExpanded] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
   const [showItinerary, setShowItinerary] = useState(false)
@@ -198,7 +199,7 @@ function EuropeContent() {
   const addCity = useCallback((city: EuropeCity) => {
     setSelectedCities(prev => {
       if (prev.some(sc => sc.city.id === city.id)) return prev
-      return [...prev, { city, nights: city.suggestedNights, tripType: null }]
+      return [...prev, { city, nights: city.suggestedNights }]
     })
     setSearchQuery('')
   }, [])
@@ -213,12 +214,12 @@ function EuropeContent() {
       if (exists) {
         return prev.filter(sc => sc.city.id !== city.id)
       } else {
-        return [...prev, { city, nights: city.suggestedNights, tripType: null }]
+        return [...prev, { city, nights: city.suggestedNights }]
       }
     })
   }, [])
 
-  const updateNights = useCallback((cityId: string, delta: number) => {
+  const updateNights = (cityId: string, delta: number) => {
     setSelectedCities(prev => prev.map(sc => {
       if (sc.city.id === cityId) {
         const newNights = Math.max(sc.city.minNights, Math.min(sc.city.maxNights, sc.nights + delta))
@@ -226,42 +227,47 @@ function EuropeContent() {
       }
       return sc
     }))
-  }, [])
+  }
 
-  const updateTripType = useCallback((cityId: string, tripType: TripType) => {
-    setSelectedCities(prev => prev.map(sc => 
-      sc.city.id === cityId ? { ...sc, tripType } : sc
-    ))
-  }, [])
+  const handleTripTypeSelect = (type: TripType | null) => {
+    if (tripType === type) {
+      setIsTripStyleExpanded(!isTripStyleExpanded)
+    } else {
+      setTripType(type)
+      setIsTripStyleExpanded(false)
+    }
+  }
 
-  const customiseFromTour = useCallback((tour: EuropeTour) => {
+  const customiseFromTour = (tour: EuropeTour) => {
     const cities: SelectedCity[] = tour.cities
       .map(tc => {
         const city = getCityById(tc.cityId)
         if (city) {
-          return { city, nights: tc.nights, tripType: tour.tripType }
+          return { city, nights: tc.nights }
         }
         return null
       })
       .filter((sc): sc is SelectedCity => sc !== null)
     
     setSelectedCities(cities)
+    setTripType(tour.tripType)
+    setIsTripStyleExpanded(false)
     setSelectedTour(null)
     handleTabChange('customise')
     
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
+  }
 
   const handleSubmit = () => {
     setIsSubmitting(true)
     setTimeout(() => {
       setIsSubmitting(false)
-      const cityInfo = selectedCities.map(sc => `${sc.city.name} (${sc.tripType})`).join(', ')
-      alert(`Thank you! Your custom ${totalNights}-night Europe trip to ${cityInfo} has been submitted. Our travel experts will contact you within 24 hours!`)
+      const cityNames = selectedCities.map(sc => sc.city.name).join(', ')
+      alert(`Thank you! Your custom ${totalNights}-night Europe trip to ${cityNames} has been submitted. Our travel experts will contact you within 24 hours!`)
     }, 1500)
   }
 
-  const isFormComplete = selectedCities.length > 0 && selectedCities.every(sc => sc.tripType !== null)
+  const isFormComplete = selectedCities.length > 0 && tripType
 
   const renderStars = (rating: number) => {
     const stars = []
@@ -278,6 +284,8 @@ function EuropeContent() {
   const prevImage = (images: string[]) => {
     setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
   }
+
+  const selectedTripTypeDetails = tripType ? travelTypes.find(t => t.id === tripType) : null
 
   // Get city image for tour itinerary
   const getTourCityImage = (cityName: string) => {
@@ -599,7 +607,7 @@ function EuropeContent() {
                         </div>
                         <div>
                           <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Your Itinerary</h3>
-                          <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Adjust nights & style per city</p>
+                          <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Adjust nights per city</p>
                         </div>
                       </div>
                       <div className="bg-[#12103d] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
@@ -609,77 +617,46 @@ function EuropeContent() {
 
                     <div className="space-y-3 sm:space-y-4">
                       {selectedCities.map((sc, index) => (
-                        <div key={sc.city.id} className="bg-[#f5f5f5] rounded-lg sm:rounded-xl overflow-hidden">
-                          {/* City header */}
-                          <div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4">
-                            <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#d19457] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
-                              {index + 1}
-                            </div>
-                            <div
-                              className="w-10 h-10 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-cover bg-center flex-shrink-0 hidden xs:block"
-                              style={{ backgroundImage: `url(${sc.city.image})` }}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-display text-sm sm:text-lg text-[#12103d] truncate">{sc.city.name}</h4>
-                              <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{sc.city.country}</p>
-                            </div>
-                            
-                            <div className="flex items-center gap-1.5 sm:gap-3">
-                              <button
-                                onClick={() => updateNights(sc.city.id, -1)}
-                                disabled={sc.nights <= sc.city.minNights}
-                                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
-                              >
-                                <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
-                              </button>
-                              <div className="text-center min-w-[40px] sm:min-w-[60px]">
-                                <span className="font-display text-lg sm:text-2xl text-[#d19457]">{sc.nights}</span>
-                                <span className="font-sans text-[10px] sm:text-xs text-[#44618b] block">nights</span>
-                              </div>
-                              <button
-                                onClick={() => updateNights(sc.city.id, 1)}
-                                disabled={sc.nights >= sc.city.maxNights}
-                                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
-                              >
-                                <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
-                              </button>
-                            </div>
-
+                        <div key={sc.city.id} className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
+                          <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#d19457] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
+                            {index + 1}
+                          </div>
+                          <div
+                            className="w-10 h-10 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-cover bg-center flex-shrink-0 hidden xs:block"
+                            style={{ backgroundImage: `url(${sc.city.image})` }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-display text-sm sm:text-lg text-[#12103d] truncate">{sc.city.name}</h4>
+                            <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">{sc.city.country}</p>
+                          </div>
+                          
+                          <div className="flex items-center gap-1.5 sm:gap-3">
                             <button
-                              onClick={() => removeCity(sc.city.id)}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-200 transition-colors touch-target flex-shrink-0"
+                              onClick={() => updateNights(sc.city.id, -1)}
+                              disabled={sc.nights <= sc.city.minNights}
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
                             >
-                              <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                              <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
+                            </button>
+                            <div className="text-center min-w-[40px] sm:min-w-[60px]">
+                              <span className="font-display text-lg sm:text-2xl text-[#d19457]">{sc.nights}</span>
+                              <span className="font-sans text-[10px] sm:text-xs text-[#44618b] block">nights</span>
+                            </div>
+                            <button
+                              onClick={() => updateNights(sc.city.id, 1)}
+                              disabled={sc.nights >= sc.city.maxNights}
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#12103d]/10 flex items-center justify-center hover:bg-[#12103d]/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed touch-target"
+                            >
+                              <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-[#12103d]" />
                             </button>
                           </div>
 
-                          {/* Trip style selector for this city */}
-                          <div className="px-3 sm:px-4 pb-3 sm:pb-4">
-                            <p className="font-sans text-[9px] text-[#44618b] uppercase tracking-wider mb-2">
-                              Trip Style {!sc.tripType && <span className="text-red-500">*</span>}
-                            </p>
-                            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-                              {travelTypes.map((type) => {
-                                const Icon = type.icon
-                                return (
-                                  <button
-                                    key={type.id}
-                                    onClick={() => updateTripType(sc.city.id, type.id)}
-                                    className={`flex flex-col items-center gap-1 p-2 sm:p-2.5 rounded-lg border-2 transition-all touch-target ${
-                                      sc.tripType === type.id
-                                        ? 'border-[#d19457] bg-[#d19457]/10'
-                                        : 'border-[#12103d]/10 hover:border-[#d19457]/50 bg-white'
-                                    }`}
-                                  >
-                                    <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${sc.tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
-                                    <span className={`font-sans text-[10px] sm:text-xs ${sc.tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
-                                      {type.name}
-                                    </span>
-                                  </button>
-                                )
-                              })}
-                            </div>
-                          </div>
+                          <button
+                            onClick={() => removeCity(sc.city.id)}
+                            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-200 transition-colors touch-target flex-shrink-0"
+                          >
+                            <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -689,6 +666,62 @@ function EuropeContent() {
 
               {/* Sidebar */}
               <div className="space-y-4 sm:space-y-6">
+                {/* Trip Style - Collapsible */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
+                  <div 
+                    className={`flex items-center gap-3 ${tripType && !isTripStyleExpanded ? 'cursor-pointer' : ''} ${tripType ? 'mb-4 sm:mb-6' : 'mb-4 sm:mb-6'}`}
+                    onClick={() => tripType && !isTripStyleExpanded && setIsTripStyleExpanded(true)}
+                  >
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#43124a] flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Trip Style</h3>
+                      <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">What&apos;s your vibe?</p>
+                    </div>
+                    {tripType && !isTripStyleExpanded && (
+                      <ChevronDown className="w-5 h-5 text-[#44618b]" />
+                    )}
+                  </div>
+
+                  {tripType && !isTripStyleExpanded && selectedTripTypeDetails && (
+                    <button
+                      onClick={() => setIsTripStyleExpanded(true)}
+                      className="w-full flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 border-[#d19457] bg-[#d19457]/10 transition-all duration-300 touch-target"
+                    >
+                      <selectedTripTypeDetails.icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#d19457]" />
+                      <span className="font-sans text-sm sm:text-base text-[#12103d] font-semibold flex-1 text-left">
+                        {selectedTripTypeDetails.name}
+                      </span>
+                      <span className="font-sans text-[10px] sm:text-xs text-[#44618b]">Tap to change</span>
+                    </button>
+                  )}
+
+                  {(isTripStyleExpanded || !tripType) && (
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                      {travelTypes.map((type) => {
+                        const Icon = type.icon
+                        return (
+                          <button
+                            key={type.id}
+                            onClick={() => handleTripTypeSelect(type.id)}
+                            className={`flex items-center gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border-2 transition-all duration-300 touch-target ${
+                              tripType === type.id
+                                ? 'border-[#d19457] bg-[#d19457]/10'
+                                : 'border-[#12103d]/10 hover:border-[#d19457]/50'
+                            }`}
+                          >
+                            <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${tripType === type.id ? 'text-[#d19457]' : 'text-[#44618b]'}`} />
+                            <span className={`font-sans text-xs sm:text-sm ${tripType === type.id ? 'text-[#12103d] font-semibold' : 'text-[#44618b]'}`}>
+                              {type.name}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+
                 {/* View Itinerary Button */}
                 <button
                   onClick={() => setShowItinerary(true)}
@@ -728,9 +761,7 @@ function EuropeContent() {
 
                 {!isFormComplete && (
                   <p className="font-sans text-[10px] sm:text-xs text-center text-[#44618b]">
-                    {selectedCities.length === 0 
-                      ? 'Add cities to continue'
-                      : 'Select trip style for each city'}
+                    Add cities and select trip style to continue
                   </p>
                 )}
               </div>
@@ -795,6 +826,7 @@ function EuropeContent() {
       {showItinerary && (
         <ItineraryModal
           selectedCities={selectedCities}
+          tripType={tripType}
           onClose={() => setShowItinerary(false)}
         />
       )}
@@ -1150,7 +1182,7 @@ function EuropeContent() {
                   <Settings2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Customise
                 </button>
-                
+                <a
                   href="#contact"
                   onClick={() => setSelectedTour(null)}
                   className="flex-1 sm:flex-none bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-[10px] sm:text-xs font-semibold tracking-wider uppercase px-4 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-center touch-target"
