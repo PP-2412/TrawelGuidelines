@@ -39,7 +39,35 @@ export interface EuropeTour {
   tag?: string
   tagColor?: string
 }
+export function getTripTypeLabel(type: TripType): string {
+  const labels: Record<TripType, string> = {
+    adventure: 'Adventure',
+    romantic: 'Romantic',
+    family: 'Family',
+    friends: 'Friends',
+    cultural: 'Cultural',
+    luxury: 'Luxury',
+  }
+  return labels[type] || type
+}
 
+// Calculate distance between two cities using Haversine formula
+export function calculateDistance(city1Id: string, city2Id: string): number {
+  const city1 = getCityById(city1Id)
+  const city2 = getCityById(city2Id)
+  
+  if (!city1 || !city2) return 0
+
+  const R = 6371 // Earth's radius in kilometers
+  const dLat = (city2.lat - city1.lat) * Math.PI / 180
+  const dLon = (city2.lng - city1.lng) * Math.PI / 180
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(city1.lat * Math.PI / 180) * Math.cos(city2.lat * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return Math.round(R * c)
+}
 // European Cities Data with Coordinates
 export const europeCities: EuropeCity[] = [
   { id: 'paris', name: 'Paris', country: 'France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', description: 'The City of Light', suggestedNights: 4, minNights: 2, maxNights: 7, highlights: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame'], coordinates: { lat: 48.8566, lng: 2.3522 } },
