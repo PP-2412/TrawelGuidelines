@@ -1925,5 +1925,3 @@ export const generateFullItinerary = (
 
   return fullItinerary
 }
-  return fullItinerary
-}
