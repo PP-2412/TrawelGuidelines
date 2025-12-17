@@ -13,11 +13,12 @@ interface SelectedCity {
     image: string
   }
   nights: number
+  tripType: TripType | null
 }
 
 interface ItineraryModalProps {
   selectedCities: SelectedCity[]
-  tripType: TripType | null
+  tripType: TripType | null // Keep for backwards compatibility, but per-city takes precedence
   onClose: () => void
 }
 
@@ -45,10 +46,14 @@ const timeColors: Record<string, string> = {
 export default function ItineraryModal({ selectedCities, tripType, onClose }: ItineraryModalProps) {
   const [currentDayIndex, setCurrentDayIndex] = useState(0)
   
-  // Generate the full itinerary
+  // Generate the full itinerary with per-city trip types
   const itinerary = generateFullItinerary(
-    selectedCities.map(sc => ({ cityId: sc.city.id, nights: sc.nights })),
-    tripType
+    selectedCities.map(sc => ({ 
+      cityId: sc.city.id, 
+      nights: sc.nights,
+      tripType: sc.tripType ?? tripType // Use per-city tripType, fallback to global
+    })),
+    tripType // Still pass global as fallback
   )
 
   const totalDays = itinerary.length
@@ -77,7 +82,9 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
 
   if (!currentDayData) return null
 
-  const TripIcon = tripType ? tripTypeLabels[tripType].icon : null
+  // Get the trip type for the current day's city
+  const currentCityTripType = currentDayData.tripType
+  const TripIcon = currentCityTripType ? tripTypeLabels[currentCityTripType].icon : null
 
   // Group activities by time
   const groupedActivities = currentDayData.activities.reduce((acc, activity) => {
@@ -126,11 +133,11 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
               <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
             </button>
 
-            {/* Trip type badge */}
-            {tripType && TripIcon && (
+            {/* Trip type badge - now shows per-city trip type */}
+            {currentCityTripType && TripIcon && (
               <div className="absolute top-3 sm:top-4 left-3 sm:left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#d19457] text-white text-xs sm:text-sm font-medium">
                 <TripIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {tripTypeLabels[tripType].name} Trip
+                {tripTypeLabels[currentCityTripType].name} Trip
               </div>
             )}
 
@@ -309,6 +316,10 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
                   const isLongDistance = distance > 1000
                   const TransportIcon = isLongDistance ? Plane : Train
                   
+                  // Get the trip type icon for this city
+                  const cityTripType = sc.tripType
+                  const CityTripIcon = cityTripType ? tripTypeLabels[cityTripType].icon : null
+                  
                   return (
                     <div key={sc.city.id} className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
                       <div 
@@ -320,6 +331,11 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
                       >
                         <span>{index + 1}.</span>
                         <span>{sc.city.name}</span>
+                        {CityTripIcon && (
+                          <CityTripIcon className={`w-3 h-3 ${
+                            sc.city.name === currentDayData.cityName ? 'text-[#d19457]' : 'text-[#d19457]'
+                          }`} />
+                        )}
                         <span className="opacity-70">({sc.nights}N)</span>
                       </div>
                       
