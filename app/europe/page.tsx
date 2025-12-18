@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock } from 'lucide-react'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical } from 'lucide-react'
 import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType } from '@/components/Europe/europeData'
 import ItineraryModal from '@/components/Europe/ItineraryModal'
 import { generateFullItinerary, Activity } from '@/components/Europe/europeItineraryData'
@@ -81,6 +81,8 @@ function EuropeContent() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [tourViewMode, setTourViewMode] = useState<TourViewMode>('overview')
   const [tourDayIndex, setTourDayIndex] = useState(0)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   // Ref for the tour modal content scroll area
   const tourModalContentRef = useRef<HTMLDivElement>(null)
@@ -237,6 +239,56 @@ function EuropeContent() {
       }
       return sc
     }))
+  }
+
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', index.toString())
+    // Add a slight delay to allow the drag image to be captured
+    setTimeout(() => {
+      const element = e.target as HTMLElement
+      element.style.opacity = '0.5'
+    }, 0)
+  }
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    const element = e.target as HTMLElement
+    element.style.opacity = '1'
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (draggedIndex !== null && index !== draggedIndex) {
+      setDragOverIndex(index)
+    }
+  }
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null)
+  }
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null)
+      setDragOverIndex(null)
+      return
+    }
+
+    setSelectedCities(prev => {
+      const newCities = [...prev]
+      const [draggedCity] = newCities.splice(draggedIndex, 1)
+      newCities.splice(dropIndex, 0, draggedCity)
+      return newCities
+    })
+
+    setDraggedIndex(null)
+    setDragOverIndex(null)
   }
 
   const customiseFromTour = (tour: EuropeTour) => {
@@ -604,7 +656,7 @@ function EuropeContent() {
                         </div>
                         <div>
                           <h3 className="font-display text-lg sm:text-xl text-[#12103d]">Your Itinerary</h3>
-                          <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Set trip style and nights per city</p>
+                          <p className="font-sans text-[10px] sm:text-xs text-[#44618b]">Drag to reorder • Set trip style and nights per city</p>
                         </div>
                       </div>
                       <div className="bg-[#12103d] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
@@ -614,9 +666,28 @@ function EuropeContent() {
 
                     <div className="space-y-3 sm:space-y-4">
                       {selectedCities.map((sc, index) => (
-                        <div key={sc.city.id} className="p-3 sm:p-4 bg-[#f5f5f5] rounded-lg sm:rounded-xl">
-                          {/* Top row: Index, Image, City name, Nights, Remove */}
+                        <div 
+                          key={sc.city.id} 
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, index)}
+                          onDragEnd={handleDragEnd}
+                          onDragOver={(e) => handleDragOver(e, index)}
+                          onDragLeave={handleDragLeave}
+                          onDrop={(e) => handleDrop(e, index)}
+                          className={`p-3 sm:p-4 bg-[#f5f5f5] rounded-lg sm:rounded-xl transition-all duration-200 cursor-grab active:cursor-grabbing ${
+                            draggedIndex === index ? 'opacity-50 scale-[0.98]' : ''
+                          } ${
+                            dragOverIndex === index && draggedIndex !== index
+                              ? 'ring-2 ring-[#d19457] ring-offset-2 bg-[#d19457]/5'
+                              : ''
+                          }`}
+                        >
+                          {/* Top row: Drag handle, Index, Image, City name, Nights, Remove */}
                           <div className="flex items-center gap-2 sm:gap-4">
+                            {/* Drag handle */}
+                            <div className="flex-shrink-0 cursor-grab active:cursor-grabbing p-1 hover:bg-[#12103d]/5 rounded transition-colors">
+                              <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-[#44618b]/50" />
+                            </div>
                             <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#d19457] text-white font-sans text-xs sm:text-sm font-bold flex-shrink-0">
                               {index + 1}
                             </div>
