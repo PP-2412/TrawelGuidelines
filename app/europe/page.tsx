@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical } from 'lucide-react'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical, Plane } from 'lucide-react'
 import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType } from '@/components/Europe/europeData'
 import ItineraryModal from '@/components/Europe/ItineraryModal'
 import { generateFullItinerary, Activity } from '@/components/Europe/europeItineraryData'
@@ -921,10 +921,17 @@ function EuropeContent() {
 
       {/* Tour Modal */}
       {selectedTour && (
-        <div 
-          className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
-          onClick={() => setSelectedTour(null)}
-        >
+        <>
+          <style>{`
+            @keyframes fly {
+              0%, 100% { transform: translateX(-8px) translateY(0); }
+              50% { transform: translateX(8px) translateY(-2px); }
+            }
+          `}</style>
+          <div 
+            className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setSelectedTour(null)}
+          >
           <div 
             className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
@@ -1069,22 +1076,36 @@ function EuropeContent() {
                     <span className="hidden sm:inline">Previous Day</span>
                   </button>
 
-                  {/* Day dots */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-hide">
-                    {tourItinerary.map((day, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setTourDayIndex(index)}
-                        className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full text-[10px] sm:text-xs font-medium transition-all ${
-                          index === tourDayIndex
-                            ? 'bg-[#d19457] text-white'
-                            : 'bg-white text-[#44618b] hover:bg-[#12103d]/10'
-                        }`}
-                        title={`Day ${day.day}: ${day.cityName}`}
-                      >
-                        {day.day}
-                      </button>
-                    ))}
+                  {/* Day dots with transport icons between cities */}
+                  <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto max-w-[250px] sm:max-w-none scrollbar-hide">
+                    {tourItinerary.map((day, index) => {
+                      const prevDay = index > 0 ? tourItinerary[index - 1] : null
+                      const showTransport = prevDay && prevDay.cityName !== day.cityName
+                      
+                      return (
+                        <div key={index} className="flex items-center gap-1 sm:gap-1.5">
+                          {/* Transport icon between cities */}
+                          {showTransport && (
+                            <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 text-[#d19457]">
+                              <Plane className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ animation: 'fly 2s ease-in-out infinite' }} />
+                            </div>
+                          )}
+                          
+                          {/* Day button */}
+                          <button
+                            onClick={() => setTourDayIndex(index)}
+                            className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full text-[10px] sm:text-xs font-medium transition-all ${
+                              index === tourDayIndex
+                                ? 'bg-[#d19457] text-white'
+                                : 'bg-white text-[#44618b] hover:bg-[#12103d]/10'
+                            }`}
+                            title={`Day ${day.day}: ${day.cityName}`}
+                          >
+                            {day.day}
+                          </button>
+                        </div>
+                      )
+                    })}
                   </div>
 
                   <button
@@ -1175,7 +1196,7 @@ function EuropeContent() {
                   </div>
                 </>
               ) : (
-                /* Itinerary Content */
+                /* Itinerary Content - Matching ItineraryModal style */
                 <div className="space-y-6">
                   {['Morning', 'Afternoon', 'Evening'].map((timeOfDay) => {
                     const activities = groupedTourActivities[timeOfDay]
@@ -1281,6 +1302,7 @@ function EuropeContent() {
             </div>
           </div>
         </div>
+        </>
       )}
     </>
   )
