@@ -204,8 +204,9 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
                       
                       {/* Transport mode indicator between cities */}
                       {isDifferentCity && (
-                        <div className="flex items-center justify-center px-1">
-                          <TransportIcon className={`w-3 h-3 text-[#44618b] ${
+                        <div className="flex items-center justify-center px-1 relative">
+                          <div className="w-4 h-[1px] bg-[#44618b]/30" />
+                          <TransportIcon className={`absolute w-3 h-3 text-[#44618b] ${
                             isLongDistance 
                               ? 'animate-[fly_2s_ease-in-out_infinite]' 
                               : 'animate-[slide_2s_ease-in-out_infinite]'
