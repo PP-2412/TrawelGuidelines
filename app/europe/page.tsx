@@ -1119,8 +1119,7 @@ function EuropeContent() {
                           
                           {/* Transport mode indicator between cities */}
                           {isDifferentCity && (
-                            <div className="flex items-center justify-center px-1 relative">
-                              <div className="w-4 h-[1px] bg-[#44618b]/30" />
+                            <div className="flex items-center justify-center px-1">
                               <TransportIcon 
                                 className="absolute w-3 h-3 text-[#44618b]"
                                 style={{ 
