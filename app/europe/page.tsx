@@ -5,8 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical, Plane } from 'lucide-react'
-import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType } from '@/components/Europe/europeData'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical, Plane, Train } from 'lucide-react'
+import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType, calculateDistance } from '@/components/Europe/europeData'
 import ItineraryModal from '@/components/Europe/ItineraryModal'
 import { generateFullItinerary, Activity } from '@/components/Europe/europeItineraryData'
 
@@ -927,6 +927,10 @@ function EuropeContent() {
               0%, 100% { transform: translateX(-8px) translateY(0); }
               50% { transform: translateX(8px) translateY(-2px); }
             }
+            @keyframes slide {
+              0%, 100% { transform: translateX(-6px); }
+              50% { transform: translateX(6px); }
+            }
           `}</style>
           <div 
             className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
@@ -1077,21 +1081,30 @@ function EuropeContent() {
                   </button>
 
                   {/* Day dots with transport icons between cities */}
-                  <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto max-w-[250px] sm:max-w-none scrollbar-hide">
+                  <div className="flex items-center gap-1 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-hide">
                     {tourItinerary.map((day, index) => {
-                      const prevDay = index > 0 ? tourItinerary[index - 1] : null
-                      const showTransport = prevDay && prevDay.cityName !== day.cityName
+                      // Determine if next day is in a different city
+                      const nextDay = tourItinerary[index + 1]
+                      const isDifferentCity = nextDay && day.cityName !== nextDay.cityName
+                      
+                      // Find the city IDs to calculate distance
+                      const currentTourCity = selectedTour.cities.find(tc => {
+                        const city = getCityById(tc.cityId)
+                        return city?.name === day.cityName
+                      })
+                      const nextTourCity = selectedTour.cities.find(tc => {
+                        const city = getCityById(tc.cityId)
+                        return city?.name === nextDay?.cityName
+                      })
+                      
+                      const distance = (isDifferentCity && currentTourCity && nextTourCity) 
+                        ? calculateDistance(currentTourCity.cityId, nextTourCity.cityId) 
+                        : 0
+                      const isLongDistance = distance > 1000
+                      const TransportIcon = isLongDistance ? Plane : Train
                       
                       return (
-                        <div key={index} className="flex items-center gap-1 sm:gap-1.5">
-                          {/* Transport icon between cities */}
-                          {showTransport && (
-                            <div className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 text-[#d19457]">
-                              <Plane className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ animation: 'fly 2s ease-in-out infinite' }} />
-                            </div>
-                          )}
-                          
-                          {/* Day button */}
+                        <div key={index} className="flex items-center gap-1">
                           <button
                             onClick={() => setTourDayIndex(index)}
                             className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full text-[10px] sm:text-xs font-medium transition-all ${
@@ -1103,6 +1116,21 @@ function EuropeContent() {
                           >
                             {day.day}
                           </button>
+                          
+                          {/* Transport mode indicator between cities */}
+                          {isDifferentCity && (
+                            <div className="flex items-center justify-center px-1 relative">
+                              <div className="w-4 h-[1px] bg-[#44618b]/30" />
+                              <TransportIcon 
+                                className="absolute w-3 h-3 text-[#44618b]"
+                                style={{ 
+                                  animation: isLongDistance 
+                                    ? 'fly 2s ease-in-out infinite' 
+                                    : 'slide 1.5s ease-in-out infinite' 
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       )
                     })}
