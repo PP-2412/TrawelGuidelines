@@ -1,5 +1,205 @@
 // Types
 export type TripType = 'adventure' | 'romantic' | 'family' | 'friends' | 'cultural' | 'luxury'
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter'
+
+export interface SeasonInfo {
+  id: Season
+  name: string
+  months: string
+  monthNumbers: number[] // 1-12
+  icon: string
+}
+
+export const seasons: SeasonInfo[] = [
+  { id: 'spring', name: 'Spring', months: 'Mar - May', monthNumbers: [3, 4, 5], icon: '🌸' },
+  { id: 'summer', name: 'Summer', months: 'Jun - Aug', monthNumbers: [6, 7, 8], icon: '☀️' },
+  { id: 'autumn', name: 'Autumn', months: 'Sep - Nov', monthNumbers: [9, 10, 11], icon: '🍂' },
+  { id: 'winter', name: 'Winter', months: 'Dec - Feb', monthNumbers: [12, 1, 2], icon: '❄️' },
+]
+
+export const getSeasonFromMonth = (month: number): Season => {
+  if (month >= 3 && month <= 5) return 'spring'
+  if (month >= 6 && month <= 8) return 'summer'
+  if (month >= 9 && month <= 11) return 'autumn'
+  return 'winter'
+}
+
+export const getSeasonInfo = (season: Season): SeasonInfo => {
+  return seasons.find(s => s.id === season)!
+}
+
+// City seasonal compatibility - which seasons are recommended for each city
+export type SeasonCompatibility = 'ideal' | 'good' | 'limited' | 'not-recommended'
+
+export interface CitySeasonalInfo {
+  [season: string]: {
+    compatibility: SeasonCompatibility
+    warning?: string
+    highlight?: string
+  }
+}
+
+export const citySeasonalData: Record<string, CitySeasonalInfo> = {
+  paris: {
+    spring: { compatibility: 'ideal', highlight: 'Cherry blossoms & perfect weather' },
+    summer: { compatibility: 'ideal', highlight: 'Long days & outdoor cafés' },
+    autumn: { compatibility: 'good', highlight: 'Fewer crowds & golden colors' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & cozy bistros' },
+  },
+  rome: {
+    spring: { compatibility: 'ideal', highlight: 'Perfect temperatures for sightseeing' },
+    summer: { compatibility: 'good', warning: 'Very hot (35°C+) - visit early morning', highlight: 'Vibrant nightlife' },
+    autumn: { compatibility: 'ideal', highlight: 'Mild weather & harvest festivals' },
+    winter: { compatibility: 'good', highlight: 'Fewer tourists & mild temperatures' },
+  },
+  barcelona: {
+    spring: { compatibility: 'ideal', highlight: 'Beach season begins' },
+    summer: { compatibility: 'ideal', highlight: 'Beach life & festivals' },
+    autumn: { compatibility: 'good', highlight: 'Wine harvest & pleasant weather' },
+    winter: { compatibility: 'good', highlight: 'Mild winters & fewer crowds' },
+  },
+  amsterdam: {
+    spring: { compatibility: 'ideal', highlight: 'Tulip season & King\'s Day' },
+    summer: { compatibility: 'ideal', highlight: 'Canal-side dining & festivals' },
+    autumn: { compatibility: 'good', highlight: 'Museum season & cozy cafés' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & ice skating' },
+  },
+  london: {
+    spring: { compatibility: 'ideal', highlight: 'Parks in bloom & mild weather' },
+    summer: { compatibility: 'ideal', highlight: 'Long days & outdoor events' },
+    autumn: { compatibility: 'good', highlight: 'Theatre season & fall colors' },
+    winter: { compatibility: 'good', highlight: 'Christmas lights & pantomimes' },
+  },
+  prague: {
+    spring: { compatibility: 'ideal', highlight: 'Easter markets & blooming gardens' },
+    summer: { compatibility: 'ideal', highlight: 'Outdoor concerts & beer gardens' },
+    autumn: { compatibility: 'good', highlight: 'Wine festivals & fall foliage' },
+    winter: { compatibility: 'good', highlight: 'Magical Christmas markets' },
+  },
+  vienna: {
+    spring: { compatibility: 'ideal', highlight: 'Vienna Festival & gardens' },
+    summer: { compatibility: 'good', highlight: 'Outdoor concerts & Danube beaches' },
+    autumn: { compatibility: 'ideal', highlight: 'Wine taverns & opera season' },
+    winter: { compatibility: 'ideal', highlight: 'Christmas markets & ball season' },
+  },
+  florence: {
+    spring: { compatibility: 'ideal', highlight: 'Tuscany in bloom' },
+    summer: { compatibility: 'good', warning: 'Very crowded & hot', highlight: 'Long museum hours' },
+    autumn: { compatibility: 'ideal', highlight: 'Harvest season & truffle hunting' },
+    winter: { compatibility: 'good', highlight: 'Fewer crowds & mild weather' },
+  },
+  venice: {
+    spring: { compatibility: 'ideal', highlight: 'Biennale season begins' },
+    summer: { compatibility: 'good', warning: 'Very crowded & humid', highlight: 'Redentore festival' },
+    autumn: { compatibility: 'good', warning: 'Acqua alta (flooding) possible', highlight: 'Film festival & fewer tourists' },
+    winter: { compatibility: 'good', highlight: 'Carnival season (Feb) & magical mists' },
+  },
+  santorini: {
+    spring: { compatibility: 'ideal', highlight: 'Perfect weather & fewer crowds' },
+    summer: { compatibility: 'ideal', highlight: 'Beach season & nightlife' },
+    autumn: { compatibility: 'good', highlight: 'Wine harvest & warm seas' },
+    winter: { compatibility: 'limited', warning: 'Many hotels & restaurants closed. Limited ferry services.', highlight: 'Peaceful & authentic local life' },
+  },
+  athens: {
+    spring: { compatibility: 'ideal', highlight: 'Perfect for sightseeing' },
+    summer: { compatibility: 'good', warning: 'Very hot (40°C+) - early starts essential', highlight: 'Island hopping season' },
+    autumn: { compatibility: 'ideal', highlight: 'Pleasant temperatures' },
+    winter: { compatibility: 'good', highlight: 'Mild & uncrowded' },
+  },
+  munich: {
+    spring: { compatibility: 'good', highlight: 'Beer garden season opens' },
+    summer: { compatibility: 'ideal', highlight: 'Beer gardens & Alpine trips' },
+    autumn: { compatibility: 'ideal', highlight: 'Oktoberfest (Sep-Oct)' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & skiing nearby' },
+  },
+  berlin: {
+    spring: { compatibility: 'good', highlight: 'Parks come alive' },
+    summer: { compatibility: 'ideal', highlight: 'Outdoor events & lake swimming' },
+    autumn: { compatibility: 'good', highlight: 'Festival of Lights & culture' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & indoor culture' },
+  },
+  zurich: {
+    spring: { compatibility: 'good', highlight: 'Lake cruises resume' },
+    summer: { compatibility: 'ideal', highlight: 'Lake swimming & hiking' },
+    autumn: { compatibility: 'good', highlight: 'Wine festivals & fall colors' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & skiing nearby' },
+  },
+  interlaken: {
+    spring: { compatibility: 'good', warning: 'Some mountain activities limited until late spring', highlight: 'Waterfalls at peak flow' },
+    summer: { compatibility: 'ideal', highlight: 'Hiking, paragliding & all adventures' },
+    autumn: { compatibility: 'good', highlight: 'Golden larches & fewer crowds' },
+    winter: { compatibility: 'ideal', highlight: 'World-class skiing & winter sports' },
+  },
+  lisbon: {
+    spring: { compatibility: 'ideal', highlight: 'Santos Populares festivals' },
+    summer: { compatibility: 'ideal', highlight: 'Beach trips & rooftop bars' },
+    autumn: { compatibility: 'good', highlight: 'Pleasant weather & wine harvest' },
+    winter: { compatibility: 'good', highlight: 'Mild winters & fewer tourists' },
+  },
+  dublin: {
+    spring: { compatibility: 'good', highlight: 'St. Patrick\'s Day (Mar 17)' },
+    summer: { compatibility: 'ideal', highlight: 'Long days & festivals' },
+    autumn: { compatibility: 'good', highlight: 'Literary festivals & cozy pubs' },
+    winter: { compatibility: 'good', highlight: 'Christmas atmosphere & traditional music' },
+  },
+  edinburgh: {
+    spring: { compatibility: 'good', highlight: 'Gardens blooming' },
+    summer: { compatibility: 'ideal', highlight: 'Edinburgh Festival (Aug)' },
+    autumn: { compatibility: 'good', highlight: 'Fall colors & fewer crowds' },
+    winter: { compatibility: 'good', highlight: 'Hogmanay celebrations' },
+  },
+  budapest: {
+    spring: { compatibility: 'ideal', highlight: 'Thermal baths & spring festivals' },
+    summer: { compatibility: 'ideal', highlight: 'Sziget Festival & ruin bars' },
+    autumn: { compatibility: 'good', highlight: 'Wine festivals & fall colors' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & thermal baths' },
+  },
+  copenhagen: {
+    spring: { compatibility: 'good', highlight: 'Tivoli opens & cycling season' },
+    summer: { compatibility: 'ideal', highlight: 'White nights & outdoor dining' },
+    autumn: { compatibility: 'good', highlight: 'Hygge season begins' },
+    winter: { compatibility: 'good', highlight: 'Tivoli Christmas & cozy hygge' },
+  },
+  stockholm: {
+    spring: { compatibility: 'good', highlight: 'City coming alive' },
+    summer: { compatibility: 'ideal', highlight: 'Midsummer & archipelago' },
+    autumn: { compatibility: 'good', highlight: 'Cultural season & fall colors' },
+    winter: { compatibility: 'good', highlight: 'Christmas markets & Nobel Week' },
+  },
+  nice: {
+    spring: { compatibility: 'ideal', highlight: 'Carnival & perfect weather' },
+    summer: { compatibility: 'ideal', highlight: 'Beach season & festivals' },
+    autumn: { compatibility: 'good', highlight: 'Warm seas & harvest' },
+    winter: { compatibility: 'good', highlight: 'Mild Riviera winter' },
+  },
+  seville: {
+    spring: { compatibility: 'ideal', highlight: 'Feria de Abril & Semana Santa' },
+    summer: { compatibility: 'limited', warning: 'Extremely hot (45°C+). Many locals leave the city. Consider visiting in spring or autumn instead.', highlight: 'Late night culture' },
+    autumn: { compatibility: 'ideal', highlight: 'Pleasant temperatures return' },
+    winter: { compatibility: 'good', highlight: 'Mild & festive' },
+  },
+  dubrovnik: {
+    spring: { compatibility: 'ideal', highlight: 'Perfect weather & fewer crowds' },
+    summer: { compatibility: 'good', warning: 'Very crowded from cruise ships. Book everything in advance.', highlight: 'Beach season & festivals' },
+    autumn: { compatibility: 'ideal', highlight: 'Warm seas & peaceful' },
+    winter: { compatibility: 'limited', warning: 'Many attractions have reduced hours. Some restaurants closed.', highlight: 'Authentic local life' },
+  },
+  amalfi: {
+    spring: { compatibility: 'ideal', highlight: 'Lemon blossoms & hiking' },
+    summer: { compatibility: 'ideal', highlight: 'Beach season & boat trips' },
+    autumn: { compatibility: 'good', highlight: 'Wine harvest & fewer crowds' },
+    winter: { compatibility: 'limited', warning: 'Many hotels & restaurants closed. Limited boat services. Some hiking trails closed.', highlight: 'Christmas cribs in Amalfi' },
+  },
+}
+
+// Helper function to get seasonal compatibility for a city
+export const getCitySeasonalCompatibility = (cityId: string, season: Season): { compatibility: SeasonCompatibility; warning?: string; highlight?: string } => {
+  const cityData = citySeasonalData[cityId]
+  if (!cityData || !cityData[season]) {
+    return { compatibility: 'good' } // Default if no data
+  }
+  return cityData[season]
+}
 
 export interface EuropeCity {
   id: string
@@ -37,6 +237,7 @@ export interface EuropeTour {
   included: string[]
   tag?: string
   tagColor?: string
+  bestSeasons?: Season[] // Optional: recommended seasons for this tour
 }
 
 // Helper Functions
@@ -130,7 +331,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Eiffel Tower dinner', 'Canal cruise', 'Tower of London tour', 'Eurostar experience'],
     included: ['4-star hotels', 'Daily breakfast', 'Train transfers', 'City tours', 'Skip-the-line passes'],
     tag: 'Best Seller',
-    tagColor: 'bg-[#d19457] text-white'
+    tagColor: 'bg-[#d19457] text-white',
+    bestSeasons: ['spring', 'summer', 'autumn'],
   },
   {
     id: 'eu-t2',
@@ -156,7 +358,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Vatican tour', 'Tuscan wine tasting', 'Gondola ride', 'Colosseum skip-the-line'],
     included: ['4-star hotels', 'Daily breakfast', 'Train transfers', 'Expert guides', 'Wine tasting'],
     tag: 'Most Popular',
-    tagColor: 'bg-[#8550a2] text-white'
+    tagColor: 'bg-[#8550a2] text-white',
+    bestSeasons: ['spring', 'autumn'],
   },
   {
     id: 'eu-t3',
@@ -181,7 +384,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Acropolis tour', 'Oia sunset', 'Catamaran cruise', 'Wine tasting'],
     included: ['Boutique hotels', 'Daily breakfast', 'Ferry transfers', 'Sunset cruise', 'Airport transfers'],
     tag: 'Honeymoon Favorite',
-    tagColor: 'bg-[#d19457] text-white'
+    tagColor: 'bg-[#d19457] text-white',
+    bestSeasons: ['spring', 'summer', 'autumn'],
   },
   {
     id: 'eu-t4',
@@ -206,6 +410,7 @@ export const europeTours: EuropeTour[] = [
     ],
     highlights: ['Prague Castle tour', 'Vienna Opera', 'Thermal bath experience', 'Danube river cruise'],
     included: ['4-star hotels', 'Daily breakfast', 'Train transfers', 'City tours', 'Opera tickets'],
+    bestSeasons: ['spring', 'autumn', 'winter'],
   },
   {
     id: 'eu-t5',
@@ -230,7 +435,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Jungfrau railway', 'Paragliding option', 'Lake cruise', 'Swiss chocolate tour'],
     included: ['Mountain hotels', 'Swiss Travel Pass', 'Breakfast daily', 'Jungfrau ticket', 'Guide services'],
     tag: 'Adventure Pick',
-    tagColor: 'bg-[#44618b] text-white'
+    tagColor: 'bg-[#44618b] text-white',
+    bestSeasons: ['summer', 'winter'],
   },
   {
     id: 'eu-t6',
@@ -254,6 +460,7 @@ export const europeTours: EuropeTour[] = [
     ],
     highlights: ['Sagrada Familia tour', 'Flamenco show', 'Tapas cooking class', 'Alcázar visit'],
     included: ['4-star hotels', 'Daily breakfast', 'High-speed train', 'City tours', 'Flamenco tickets'],
+    bestSeasons: ['spring', 'autumn'],
   },
   {
     id: 'eu-t7',
@@ -277,6 +484,7 @@ export const europeTours: EuropeTour[] = [
     ],
     highlights: ['Tivoli Gardens', 'Vasa Museum', 'Nyhavn dinner', 'Gamla Stan walking tour'],
     included: ['Design hotels', 'Daily breakfast', 'Ferry/flight transfer', 'City cards', 'Museum passes'],
+    bestSeasons: ['summer'],
   },
   {
     id: 'eu-t8',
@@ -300,7 +508,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Tram 28 ride', 'Sintra day trip', 'Fado evening', 'Belém Tower visit'],
     included: ['Boutique hotel', 'Daily breakfast', 'Sintra tour', 'Fado dinner', 'Airport transfers'],
     tag: 'Great Value',
-    tagColor: 'bg-[#12103d] text-white'
+    tagColor: 'bg-[#12103d] text-white',
+    bestSeasons: ['spring', 'autumn'],
   },
   {
     id: 'eu-t9',
@@ -325,6 +534,7 @@ export const europeTours: EuropeTour[] = [
     ],
     highlights: ['Tower of London', 'Edinburgh Castle', 'Guinness Storehouse', 'Highlands day trip'],
     included: ['4-star hotels', 'Daily breakfast', 'Flights between cities', 'City tours', 'Castle tickets'],
+    bestSeasons: ['spring', 'summer', 'autumn'],
   },
   {
     id: 'eu-t10',
@@ -350,7 +560,8 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Monaco day trip', 'Positano visit', 'City walls walk', 'Private boat tours'],
     included: ['5-star hotels', 'Daily breakfast', 'Flights', 'Private transfers', 'Boat excursions'],
     tag: 'Luxury Pick',
-    tagColor: 'bg-[#c77e36] text-white'
+    tagColor: 'bg-[#c77e36] text-white',
+    bestSeasons: ['spring', 'summer', 'autumn'],
   },
   {
     id: 'eu-t11',
@@ -374,6 +585,7 @@ export const europeTours: EuropeTour[] = [
     ],
     highlights: ['Neuschwanstein Castle', 'Berlin Wall tour', 'Beer hall experience', 'Museum Island'],
     included: ['4-star hotels', 'Daily breakfast', 'Train transfer', 'Castle tour', 'City guides'],
+    bestSeasons: ['spring', 'summer', 'autumn'],
   },
   {
     id: 'eu-t12',
@@ -399,6 +611,7 @@ export const europeTours: EuropeTour[] = [
     highlights: ['Disneyland Paris', 'NEMO Science Museum', 'Harry Potter Studio Tour', 'Canal bike ride'],
     included: ['Family rooms', 'Daily breakfast', 'Train transfers', 'Theme park tickets', 'Kid-friendly tours'],
     tag: 'Family Favorite',
-    tagColor: 'bg-[#d19457] text-white'
+    tagColor: 'bg-[#d19457] text-white',
+    bestSeasons: ['spring', 'summer'],
   },
 ]
