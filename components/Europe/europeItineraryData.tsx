@@ -515,7 +515,7 @@ export const cityItineraries: CityItinerary[] = [
           { time: 'Morning', title: 'Kunsthistorisches Museum', description: 'World-class art collection.', duration: '3 hours' },
           { time: 'Afternoon', title: 'Belvedere Palace', description: 'See Klimt\'s "The Kiss".', duration: '2.5 hours' },
           romanticActivity('Afternoon', 'Klimt & Schiele Tour', 'Explore Vienna\'s modernist artists.', '3 hours'),
-          { time: 'Evening', title: 'Vienna State Opera', description: 'World-class opera or standing room tickets.', '3.5 hours' },
+          { time: 'Evening', title: 'Vienna State Opera', description: 'World-class opera or standing room tickets.', duration: '3.5 hours' },
           seasonalActivity('Evening', 'Ball Season', 'Winter brings Vienna\'s famous balls.', ['winter'], '5 hours'),
         ]
       },
@@ -1098,7 +1098,7 @@ export const cityItineraries: CityItinerary[] = [
           { time: 'Morning', title: 'Tram 28 Route', description: 'Ride the iconic yellow tram.', duration: '1 hour' },
           { time: 'Morning', title: 'Chiado & Bairro Alto', description: 'Explore elegant squares and street art.', duration: '2 hours' },
           { time: 'Afternoon', title: 'Santa Justa Elevator', description: 'Historic iron elevator for city views.', duration: '45 mins' },
-          adventureActivity('Afternoon', 'Street Art Tour', description: 'Discover Lisbon\'s incredible urban art.', '2.5 hours'),
+          adventureActivity('Afternoon', 'Street Art Tour', 'Discover Lisbon\'s incredible urban art.', '2.5 hours'),
           { time: 'Evening', title: 'Bairro Alto', description: 'Bar hopping in the nightlife district.', duration: '3 hours' },
           seasonalActivity('Evening', 'Santos Populares', 'June festivals with sardines and dancing.', ['summer'], '4 hours'),
         ]
