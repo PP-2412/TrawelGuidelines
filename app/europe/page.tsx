@@ -5,8 +5,22 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
-import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical, Plane, Train } from 'lucide-react'
-import { europeCities, europeTours, EuropeCity, EuropeTour, getCityById, getTripTypeLabel, TripType, calculateDistance } from '@/components/Europe/europeData'
+import { Mountain, Search, Plus, Minus, X, Sparkles, MapPin, Calendar, Star, Heart, Users, UserPlus, Compass, Gem, Send, Settings2, Map, Check, ChevronLeft, ChevronRight, ChevronDown, MapPinned, Maximize2, Minimize2, Eye, Sun, Sunset, Moon, Clock, GripVertical, Plane, Train, Snowflake, Flower2, TreeDeciduous, AlertTriangle } from 'lucide-react'
+import { 
+  europeCities, 
+  europeTours, 
+  EuropeCity, 
+  EuropeTour, 
+  getCityById, 
+  getTripTypeLabel, 
+  TripType, 
+  calculateDistance,
+  Season,
+  seasons,
+  getSeasonInfo,
+  getCitySeasonalCompatibility,
+  SeasonCompatibility
+} from '@/components/Europe/europeData'
 import ItineraryModal from '@/components/Europe/ItineraryModal'
 import { generateFullItinerary, Activity } from '@/components/Europe/europeItineraryData'
 
@@ -76,6 +90,7 @@ function EuropeContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
   const [showItinerary, setShowItinerary] = useState(false)
+  const [selectedSeason, setSelectedSeason] = useState<Season | null>(null)
   
   const [selectedTour, setSelectedTour] = useState<EuropeTour | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -312,7 +327,8 @@ function EuropeContent() {
     setTimeout(() => {
       setIsSubmitting(false)
       const cityNames = selectedCities.map(sc => sc.city.name).join(', ')
-      alert(`Thank you! Your custom ${totalNights}-night Europe trip to ${cityNames} has been submitted. Our travel experts will contact you within 24 hours!`)
+      const seasonText = selectedSeason ? ` during ${getSeasonInfo(selectedSeason).name}` : ''
+      alert(`Thank you! Your custom ${totalNights}-night Europe trip to ${cityNames}${seasonText} has been submitted. Our travel experts will contact you within 24 hours!`)
     }, 1500)
   }
 
@@ -647,6 +663,102 @@ function EuropeContent() {
                   </div>
                 </div>
 
+                {/* Season Selector */}
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#43124a] flex items-center justify-center">
+                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                      </div>
+                      <h3 className="font-display text-base sm:text-lg text-[#12103d]">Travel Season</h3>
+                    </div>
+                    {selectedSeason && (
+                      <button
+                        onClick={() => setSelectedSeason(null)}
+                        className="text-xs text-[#44618b] hover:text-[#d19457] transition-colors"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  
+                  <p className="font-sans text-xs text-[#44618b] mb-3">
+                    Select when you plan to travel for season-specific activities and recommendations
+                  </p>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {seasons.map((season) => {
+                      const isSelected = selectedSeason === season.id
+                      return (
+                        <button
+                          key={season.id}
+                          onClick={() => setSelectedSeason(isSelected ? null : season.id)}
+                          className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${
+                            isSelected
+                              ? 'border-[#d19457] bg-[#d19457]/10'
+                              : 'border-[#12103d]/10 hover:border-[#d19457]/50 hover:bg-[#f5f5f5]'
+                          }`}
+                        >
+                          <span className="text-2xl">{season.icon}</span>
+                          <span className={`font-sans text-sm font-medium ${
+                            isSelected ? 'text-[#d19457]' : 'text-[#12103d]'
+                          }`}>
+                            {season.name}
+                          </span>
+                          <span className="font-sans text-[10px] text-[#44618b]">
+                            {season.months}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Seasonal Warnings */}
+                {selectedSeason && selectedCities.length > 0 && (
+                  <div className="space-y-2">
+                    {selectedCities.map((sc) => {
+                      const seasonalInfo = getCitySeasonalCompatibility(sc.city.id, selectedSeason)
+                      if (!seasonalInfo.warning && seasonalInfo.compatibility !== 'limited' && seasonalInfo.compatibility !== 'not-recommended') {
+                        return null
+                      }
+                      
+                      return (
+                        <div 
+                          key={sc.city.id}
+                          className={`flex items-start gap-2 p-3 rounded-lg border ${
+                            seasonalInfo.compatibility === 'not-recommended' 
+                              ? 'bg-red-50 border-red-200' 
+                              : 'bg-amber-50 border-amber-200'
+                          }`}
+                        >
+                          <AlertTriangle className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+                            seasonalInfo.compatibility === 'not-recommended' 
+                              ? 'text-red-500' 
+                              : 'text-amber-500'
+                          }`} />
+                          <div>
+                            <p className={`font-sans text-sm font-medium ${
+                              seasonalInfo.compatibility === 'not-recommended' 
+                                ? 'text-red-700' 
+                                : 'text-amber-700'
+                            }`}>
+                              {sc.city.name} in {getSeasonInfo(selectedSeason).name}
+                            </p>
+                            <p className={`font-sans text-xs ${
+                              seasonalInfo.compatibility === 'not-recommended' 
+                                ? 'text-red-600' 
+                                : 'text-amber-600'
+                            }`}>
+                              {seasonalInfo.warning}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
                 {selectedCities.length > 0 && (
                   <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#12103d]/10 p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4 sm:mb-6">
@@ -759,6 +871,19 @@ function EuropeContent() {
                               })}
                             </div>
                           </div>
+
+                          {/* Seasonal Highlight */}
+                          {selectedSeason && (
+                            <div className="mt-2 pt-2 border-t border-[#12103d]/5">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-sm">{getSeasonInfo(selectedSeason).icon}</span>
+                                <span className="font-sans text-[10px] text-[#44618b]">
+                                  {getCitySeasonalCompatibility(sc.city.id, selectedSeason).highlight || 
+                                   `${getSeasonInfo(selectedSeason).name} visit`}
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -801,6 +926,19 @@ function EuropeContent() {
                         </div>
                       ))}
                     </div>
+
+                    {/* Season in Trip Summary */}
+                    {selectedSeason && (
+                      <div className="flex items-center gap-2 py-2 border-t border-[#12103d]/5 mt-2">
+                        <span className="text-lg">{getSeasonInfo(selectedSeason).icon}</span>
+                        <div>
+                          <p className="font-sans text-xs text-[#44618b]">Season</p>
+                          <p className="font-sans text-sm font-medium text-[#12103d]">
+                            {getSeasonInfo(selectedSeason).name} ({getSeasonInfo(selectedSeason).months})
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
                     {!allCitiesHaveTripType && (
                       <p className="mt-3 font-sans text-[10px] sm:text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg">
@@ -915,6 +1053,7 @@ function EuropeContent() {
         <ItineraryModal
           selectedCities={selectedCities}
           tripType={null}
+          season={selectedSeason}
           onClose={() => setShowItinerary(false)}
         />
       )}
