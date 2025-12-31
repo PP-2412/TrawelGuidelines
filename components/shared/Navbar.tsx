@@ -16,6 +16,7 @@ const destinations = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -50,7 +51,7 @@ export default function Navbar() {
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen || isMenuOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
@@ -58,7 +59,7 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [isOpen])
+  }, [isOpen, isMenuOpen])
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -139,6 +140,19 @@ export default function Navbar() {
               Contact
             </a>
 
+            {/* Menu Button - Desktop */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="hidden lg:flex items-center justify-center w-10 h-10 xl:w-11 xl:h-11 rounded-full border-2 border-[#12103d] text-[#12103d] hover:bg-[#12103d] hover:text-white transition-all duration-300 flex-shrink-0"
+              aria-label="Open menu"
+            >
+              <div className="flex flex-col gap-1">
+                <span className="w-4 h-0.5 bg-current"></span>
+                <span className="w-4 h-0.5 bg-current"></span>
+                <span className="w-4 h-0.5 bg-current"></span>
+              </div>
+            </button>
+
             {/* Tablet Navigation */}
             <div className="hidden md:flex lg:hidden items-center gap-1 overflow-x-auto flex-1 mx-2">
               {destinations.slice(0, 5).map((dest) => (
@@ -215,6 +229,86 @@ export default function Navbar() {
             >
               Contact Us
             </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Menu Overlay */}
+      {isMenuOpen && (
+        <div 
+          className="hidden lg:block fixed inset-0 z-40 bg-black/50"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+
+      {/* Desktop Right Side Menu */}
+      <div 
+        className={`hidden lg:block fixed top-0 right-0 bottom-0 z-50 w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out overflow-y-auto ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="p-6">
+          {/* Close Button */}
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-6 right-6 p-2 rounded-full hover:bg-[#f5f5f5] transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6 text-[#12103d]" />
+          </button>
+
+          {/* Menu Header */}
+          <div className="mb-8 pt-4">
+            <h2 className="font-display text-2xl text-[#12103d] mb-2">Navigation</h2>
+            <p className="text-sm text-[#12103d]/60">Explore our destinations</p>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="space-y-2">
+            {/* Home */}
+            <a
+              href="/"
+              className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors ${
+                pathname === '/'
+                  ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                  : 'hover:bg-[#f5f5f5]'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className={`font-sans text-base font-medium ${pathname === '/' ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                Home
+              </span>
+            </a>
+
+            {/* Destinations */}
+            {destinations.map((dest) => (
+              <a
+                key={dest.name}
+                href={dest.href}
+                className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors ${
+                  isActive(dest.href)
+                    ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                    : 'hover:bg-[#f5f5f5]'
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <dest.icon className={`w-5 h-5 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                <span className={`font-sans text-base font-medium ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                  {dest.name}
+                </span>
+              </a>
+            ))}
+
+            {/* Contact */}
+            <div className="pt-4 mt-4 border-t border-[#12103d]/10">
+              <a
+                href="#contact"
+                className="flex items-center justify-center font-sans text-sm font-medium tracking-[2px] uppercase px-6 py-4 rounded-full bg-[#12103d] text-white hover:bg-[#43124a] transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact Us
+              </a>
+            </div>
           </div>
         </div>
       </div>
