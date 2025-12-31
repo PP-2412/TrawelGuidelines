@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, ChevronLeft, ChevronRight, Sun, Sunset, Moon, MapPin, Clock, Calendar, Compass, Heart, Users, UserPlus, Mountain, Gem, Plane, Train } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Sun, Sunset, Moon, MapPin, Clock, Calendar, Compass, Heart, Users, UserPlus, Mountain, Gem, Plane, Train, Download } from 'lucide-react'
 import { TripType, calculateDistance } from './europeData'
 import { Activity, generateFullItinerary } from './europeItineraryData'
 
@@ -45,6 +45,7 @@ const timeColors: Record<string, string> = {
 
 export default function ItineraryModal({ selectedCities, tripType, onClose }: ItineraryModalProps) {
   const [currentDayIndex, setCurrentDayIndex] = useState(0)
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   
   // Generate the full itinerary with per-city trip types
   const itinerary = generateFullItinerary(
@@ -79,6 +80,608 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
       document.body.style.overflow = 'unset'
     }
   }, [])
+
+  // Download itinerary as HTML/PDF
+  const handleDownloadItinerary = async () => {
+    setIsGeneratingPDF(true)
+    
+    try {
+      const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+
+      const totalNights = selectedCities.reduce((sum, sc) => sum + sc.nights, 0)
+      const totalActivities = itinerary.reduce((sum, d) => sum + d.activities.length, 0)
+
+      // Build city list
+      const cityList = selectedCities
+        .map((sc, i) => {
+          const tripLabel = sc.tripType ? ` (${tripTypeLabels[sc.tripType].name})` : ''
+          return `${i + 1}. ${sc.city.name}, ${sc.city.country} - ${sc.nights} night${sc.nights > 1 ? 's' : ''}${tripLabel}`
+        })
+        .join(' → ')
+
+      // Generate days HTML
+      const daysHTML = itinerary
+        .map((day) => {
+          const tripBadge = day.tripType
+            ? `<span class="trip-badge">${tripTypeLabels[day.tripType].name} Trip</span>`
+            : ''
+
+          const activitiesByTime = ['Morning', 'Afternoon', 'Evening']
+            .map((time) => {
+              const timeActivities = day.activities.filter((a) => a.time === time)
+              if (timeActivities.length === 0) return ''
+
+              const timeClass = time.toLowerCase()
+              const timeIcon = time === 'Morning' ? '☀️' : time === 'Afternoon' ? '🌅' : '🌙'
+              
+              const activitiesHTML = timeActivities
+                .map((activity) => {
+                  const durationHTML = activity.duration
+                    ? `<span class="duration">${activity.duration}</span>`
+                    : ''
+                  const specialBadge = activity.tripTypes
+                    ? `<span class="special-badge">${activity.tripTypes.map((t) => tripTypeLabels[t].name).join(', ')}</span>`
+                    : ''
+                  return `
+                    <div class="activity ${activity.tripTypes ? 'special-activity' : ''}">
+                      <div class="activity-header">
+                        <h4 class="activity-title">${activity.title}</h4>
+                        ${specialBadge}
+                        ${durationHTML}
+                      </div>
+                      <p class="activity-description">${activity.description}</p>
+                    </div>
+                  `
+                })
+                .join('')
+
+              return `
+                <div class="time-section">
+                  <div class="time-header ${timeClass}">
+                    <span class="time-icon">${timeIcon}</span>
+                    <span class="time-label">${time}</span>
+                  </div>
+                  <div class="activities-list">
+                    ${activitiesHTML}
+                  </div>
+                </div>
+              `
+            })
+            .join('')
+
+          return `
+            <div class="day-card">
+              <div class="day-header">
+                <div class="day-info">
+                  <span class="day-number">Day ${day.day}</span>
+                  <span class="day-city">${day.cityName}</span>
+                  ${tripBadge}
+                </div>
+                <h3 class="day-title">${day.title}</h3>
+              </div>
+              <div class="day-content">
+                ${activitiesByTime}
+              </div>
+            </div>
+          `
+        })
+        .join('')
+
+      const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your European Adventure - ${totalNights} Nights Itinerary</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+    
+    :root {
+      --primary: #12103d;
+      --secondary: #43124a;
+      --accent: #d19457;
+      --accent-dark: #c77e36;
+      --text: #44618b;
+      --text-dark: #12103d;
+      --bg: #f5f5f5;
+      --white: #ffffff;
+      --morning: #fef3c7;
+      --morning-text: #92400e;
+      --afternoon: #ffedd5;
+      --afternoon-text: #c2410c;
+      --evening: #e0e7ff;
+      --evening-text: #3730a3;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 11pt;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+    
+    /* Cover Page */
+    .cover {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      margin: -40px -30px 40px -30px;
+      page-break-after: always;
+    }
+    
+    .cover-logo {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    
+    .cover h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 36pt;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    
+    .cover h1 span {
+      color: var(--accent);
+      font-style: italic;
+    }
+    
+    .cover-subtitle {
+      font-size: 14pt;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+    
+    .cover-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28pt;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .stat-label {
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+    
+    .cover-date {
+      margin-top: 40px;
+      font-size: 10pt;
+      opacity: 0.7;
+    }
+    
+    /* Overview Section */
+    .overview {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .overview h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18pt;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+    
+    .route {
+      font-size: 11pt;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    
+    /* Day Cards */
+    .day-card {
+      background: var(--white);
+      border: 1px solid rgba(18, 16, 61, 0.1);
+      border-radius: 12px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    
+    .day-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      padding: 20px 24px;
+    }
+    
+    .day-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .day-number {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10pt;
+      font-weight: 600;
+    }
+    
+    .day-city {
+      font-size: 10pt;
+      opacity: 0.9;
+    }
+    
+    .trip-badge {
+      background: var(--accent);
+      color: var(--white);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 9pt;
+      font-weight: 600;
+    }
+    
+    .day-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16pt;
+      font-weight: 600;
+    }
+    
+    .day-content {
+      padding: 20px 24px;
+    }
+    
+    /* Time Sections */
+    .time-section {
+      margin-bottom: 20px;
+    }
+    
+    .time-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .time-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 10pt;
+      font-weight: 500;
+      margin-bottom: 12px;
+      border: 1px solid;
+    }
+    
+    .time-header.morning {
+      background: var(--morning);
+      color: var(--morning-text);
+      border-color: #fcd34d;
+    }
+    
+    .time-header.afternoon {
+      background: var(--afternoon);
+      color: var(--afternoon-text);
+      border-color: #fdba74;
+    }
+    
+    .time-header.evening {
+      background: var(--evening);
+      color: var(--evening-text);
+      border-color: #a5b4fc;
+    }
+    
+    .time-icon {
+      font-size: 14px;
+    }
+    
+    /* Activities */
+    .activities-list {
+      border-left: 2px solid rgba(18, 16, 61, 0.1);
+      margin-left: 16px;
+      padding-left: 16px;
+    }
+    
+    .activity {
+      position: relative;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(18, 16, 61, 0.05);
+    }
+    
+    .activity:last-child {
+      border-bottom: none;
+    }
+    
+    .activity::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 18px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid rgba(18, 16, 61, 0.3);
+    }
+    
+    .special-activity {
+      background: linear-gradient(90deg, rgba(209, 148, 87, 0.05) 0%, transparent 100%);
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+    }
+    
+    .special-activity::before {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    
+    .activity-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    
+    .activity-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 12pt;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .special-badge {
+      background: var(--accent);
+      color: var(--white);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 8pt;
+      font-weight: 600;
+    }
+    
+    .duration {
+      color: var(--text);
+      font-size: 9pt;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .duration::before {
+      content: '⏱';
+    }
+    
+    .activity-description {
+      font-size: 10pt;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px 20px;
+      margin-top: 40px;
+      border-top: 1px solid rgba(18, 16, 61, 0.1);
+    }
+    
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 14pt;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    
+    .footer-logo span {
+      color: var(--accent);
+      font-style: italic;
+    }
+    
+    .footer-text {
+      font-size: 9pt;
+      color: var(--text);
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+      
+      .cover {
+        margin: -20px -20px 30px -20px;
+      }
+      
+      .day-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      
+      .no-print {
+        display: none !important;
+      }
+    }
+    
+    /* Download Button */
+    .download-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--primary);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      z-index: 100;
+    }
+    
+    .download-btn {
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12pt;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .download-btn:hover {
+      background: var(--accent-dark);
+      transform: scale(1.02);
+    }
+    
+    .download-btn.secondary {
+      background: transparent;
+      border: 2px solid var(--white);
+    }
+    
+    .download-btn.secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    @media print {
+      .download-bar {
+        display: none !important;
+      }
+      
+      .container {
+        padding-top: 20px;
+      }
+    }
+    
+    @media screen {
+      .container {
+        padding-top: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="download-bar no-print">
+    <button class="download-btn" onclick="window.print()">📥 Save as PDF</button>
+    <button class="download-btn secondary" onclick="window.close()">✕ Close</button>
+  </div>
+  
+  <div class="container">
+    <!-- Cover Page -->
+    <div class="cover">
+      <div class="cover-logo">🏔️</div>
+      <h1>Your European <span>Adventure</span></h1>
+      <p class="cover-subtitle">A Personalized Travel Itinerary</p>
+      
+      <div class="cover-stats">
+        <div class="stat">
+          <div class="stat-value">${selectedCities.length}</div>
+          <div class="stat-label">Cities</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">${totalNights}</div>
+          <div class="stat-label">Nights</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">${totalActivities}</div>
+          <div class="stat-label">Activities</div>
+        </div>
+      </div>
+      
+      <p class="cover-date">Created on ${currentDate}</p>
+    </div>
+    
+    <!-- Route Overview -->
+    <div class="overview">
+      <h2>Your Journey</h2>
+      <p class="route">${cityList}</p>
+    </div>
+    
+    <!-- Day by Day Itinerary -->
+    ${daysHTML}
+    
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-logo">Trawel <span>Guidelines</span></div>
+      <p class="footer-text">Thank you for planning your European adventure with us!</p>
+      <p class="footer-text">Safe travels and unforgettable memories await.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Auto-trigger print dialog hint
+    if (window.matchMedia) {
+      const mediaQueryList = window.matchMedia('print');
+      mediaQueryList.addListener(function(mql) {
+        if (!mql.matches) {
+          // After print dialog closes
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+      `
+
+      // Create a blob and download
+      const blob = new Blob([html], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      
+      // Open in new window for printing
+      const printWindow = window.open(url, '_blank')
+      
+      if (printWindow) {
+        printWindow.focus()
+      } else {
+        // Fallback: download the file
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `europe-itinerary-${totalNights}-nights.html`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      }
+      
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error generating itinerary:', error)
+      alert('Failed to generate itinerary. Please try again.')
+    } finally {
+      setIsGeneratingPDF(false)
+    }
+  }
 
   if (!currentDayData) return null
 
@@ -131,6 +734,20 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
               className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10 touch-target"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#12103d]" />
+            </button>
+
+            {/* Download button */}
+            <button
+              onClick={handleDownloadItinerary}
+              disabled={isGeneratingPDF}
+              className="absolute top-3 sm:top-4 right-14 sm:right-16 w-8 h-8 sm:w-10 sm:h-10 bg-[#d19457] backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-[#c77e36] transition-colors shadow-lg z-10 touch-target disabled:opacity-50"
+              title="Download Itinerary"
+            >
+              {isGeneratingPDF ? (
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Download className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              )}
             </button>
 
             {/* Trip type badge - now shows per-city trip type */}
@@ -305,10 +922,10 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
             </div>
           </div>
 
-          {/* Footer with city summary - Fixed height, never shrinks */}
+          {/* Footer with city summary and download button - Fixed height, never shrinks */}
           <div className="bg-[#f5f5f5] border-t border-[#12103d]/10 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide">
+              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-hide flex-1">
                 {selectedCities.map((sc, index) => {
                   // Calculate distance to next city for transport mode
                   const nextCity = selectedCities[index + 1]
@@ -350,8 +967,22 @@ export default function ItineraryModal({ selectedCities, tripType, onClose }: It
                   )
                 })}
               </div>
-              <div className="text-xs sm:text-sm text-[#44618b] flex-shrink-0 whitespace-nowrap">
-                Total: <span className="font-medium text-[#12103d]">{totalDays} nights</span>
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="text-xs sm:text-sm text-[#44618b] whitespace-nowrap">
+                  Total: <span className="font-medium text-[#12103d]">{totalDays} nights</span>
+                </div>
+                <button
+                  onClick={handleDownloadItinerary}
+                  disabled={isGeneratingPDF}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#d19457] text-white rounded-full text-xs sm:text-sm font-medium hover:bg-[#c77e36] transition-colors disabled:opacity-50"
+                >
+                  {isGeneratingPDF ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5" />
+                  )}
+                  <span className="hidden sm:inline">Download</span>
+                </button>
               </div>
             </div>
           </div>
