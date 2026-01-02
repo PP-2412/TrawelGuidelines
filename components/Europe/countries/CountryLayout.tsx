@@ -87,13 +87,13 @@ export default function CountryLayout({ country }: CountryLayoutProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="/europe"
+                href="/europe?tab=tours"
                 className="inline-flex items-center justify-center px-8 py-3 bg-[#d19457] text-white rounded-full font-medium hover:bg-[#c77e36] transition-colors"
               >
                 View All Tours
               </a>
               <a 
-                href="/europe#customize"
+                href="/europe?tab=customise"
                 className="inline-flex items-center justify-center px-8 py-3 bg-white/10 text-white border border-white/30 rounded-full font-medium hover:bg-white/20 transition-colors"
               >
                 Customize Your Trip
