@@ -2,11 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight, ChevronDown, Globe } from 'lucide-react'
 
-const destinations = [
+const mainDestinations = [
   { name: 'Europe', href: '/europe', icon: Mountain },
   { name: 'Cruises', href: '/cruises', icon: Anchor },
+]
+
+const asianDestinations = [
   { name: 'Thailand', href: '/thailand', icon: Palmtree },
   { name: 'Maldives', href: '/maldives', icon: Waves },
   { name: 'Indonesia', href: '/indonesia', icon: TreePalm },
@@ -14,13 +17,22 @@ const destinations = [
   { name: 'Japan', href: '/japan', icon: Cherry },
 ]
 
+// Combined for mobile menu
+const allDestinations = [...mainDestinations, ...asianDestinations]
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAsiaDropdownOpen, setIsAsiaDropdownOpen] = useState(false)
+  const [isMobileAsiaOpen, setIsMobileAsiaOpen] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const asiaDropdownRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  // Check if any Asian destination is active
+  const isAsiaActive = asianDestinations.some(dest => pathname.startsWith(dest.href))
 
   // Check scroll position for nav arrows
   const checkScroll = () => {
@@ -44,10 +56,22 @@ export default function Navbar() {
     }
   }, [])
 
-  // Close mobile menu on route change
+  // Close dropdowns on route change
   useEffect(() => {
     setIsOpen(false)
+    setIsAsiaDropdownOpen(false)
   }, [pathname])
+
+  // Close Asia dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (asiaDropdownRef.current && !asiaDropdownRef.current.contains(event.target as Node)) {
+        setIsAsiaDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -102,7 +126,8 @@ export default function Navbar() {
                 className="flex items-center gap-4 xl:gap-6 overflow-x-auto scrollbar-hide scroll-smooth"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {destinations.map((dest) => (
+                {/* Main Destinations */}
+                {mainDestinations.map((dest) => (
                   <a
                     key={dest.name}
                     href={dest.href}
@@ -119,6 +144,46 @@ export default function Navbar() {
                     )}
                   </a>
                 ))}
+
+                {/* Asia Dropdown */}
+                <div ref={asiaDropdownRef} className="relative flex-shrink-0">
+                  <button
+                    onClick={() => setIsAsiaDropdownOpen(!isAsiaDropdownOpen)}
+                    className={`nav-link font-sans text-[10px] xl:text-xs font-medium tracking-[1.5px] xl:tracking-[2px] uppercase transition-all flex items-center gap-1.5 xl:gap-2 whitespace-nowrap relative py-2 ${
+                      isAsiaActive
+                        ? 'text-[#d19457]'
+                        : 'text-[#12103d] hover:text-[#d19457]'
+                    }`}
+                  >
+                    <Globe className={`w-3.5 h-3.5 xl:w-4 xl:h-4 ${isAsiaActive ? 'text-[#d19457]' : ''}`} />
+                    Asia
+                    <ChevronDown className={`w-3 h-3 transition-transform ${isAsiaDropdownOpen ? 'rotate-180' : ''}`} />
+                    {isAsiaActive && (
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#d19457] rounded-full" />
+                    )}
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isAsiaDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#12103d]/10 py-2 z-50">
+                      {asianDestinations.map((dest) => (
+                        <a
+                          key={dest.name}
+                          href={dest.href}
+                          className={`flex items-center gap-3 px-4 py-3 transition-colors ${
+                            isActive(dest.href)
+                              ? 'bg-[#d19457]/10 text-[#d19457]'
+                              : 'text-[#12103d] hover:bg-[#f5f5f5]'
+                          }`}
+                          onClick={() => setIsAsiaDropdownOpen(false)}
+                        >
+                          <dest.icon className={`w-4 h-4 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                          <span className="font-sans text-sm font-medium">{dest.name}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button 
@@ -155,7 +220,7 @@ export default function Navbar() {
 
             {/* Tablet Navigation */}
             <div className="hidden md:flex lg:hidden items-center gap-1 overflow-x-auto flex-1 mx-2">
-              {destinations.slice(0, 5).map((dest) => (
+              {mainDestinations.map((dest) => (
                 <a
                   key={dest.name}
                   href={dest.href}
@@ -168,6 +233,17 @@ export default function Navbar() {
                   {dest.name}
                 </a>
               ))}
+              <button
+                onClick={() => setIsAsiaDropdownOpen(!isAsiaDropdownOpen)}
+                className={`font-sans text-[10px] font-medium tracking-wider uppercase px-2 py-1.5 rounded-full transition-all flex-shrink-0 flex items-center gap-1 ${
+                  isAsiaActive
+                    ? 'bg-[#d19457] text-white'
+                    : 'text-[#12103d] hover:bg-[#f5f5f5]'
+                }`}
+              >
+                Asia
+                <ChevronDown className={`w-3 h-3 transition-transform ${isAsiaDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
               <a
                 href="#contact"
                 className="font-sans text-[10px] font-medium tracking-wider uppercase px-2 py-1.5 rounded-full border border-[#12103d] text-[#12103d] flex-shrink-0"
@@ -204,7 +280,8 @@ export default function Navbar() {
         }`}
       >
         <div className="py-4 px-4 space-y-1 safe-bottom">
-          {destinations.map((dest) => (
+          {/* Main Destinations */}
+          {mainDestinations.map((dest) => (
             <a
               key={dest.name}
               href={dest.href}
@@ -221,6 +298,48 @@ export default function Navbar() {
               </span>
             </a>
           ))}
+
+          {/* Asia Accordion */}
+          <div>
+            <button
+              onClick={() => setIsMobileAsiaOpen(!isMobileAsiaOpen)}
+              className={`w-full flex items-center justify-between gap-3 py-4 px-4 rounded-xl transition-colors touch-target ${
+                isAsiaActive
+                  ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                  : 'hover:bg-[#f5f5f5] active:bg-[#f5f5f5]'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Globe className={`w-5 h-5 ${isAsiaActive ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                <span className={`font-sans text-base font-medium ${isAsiaActive ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                  Asia
+                </span>
+              </div>
+              <ChevronDown className={`w-5 h-5 text-[#12103d] transition-transform ${isMobileAsiaOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Asian Countries Submenu */}
+            <div className={`overflow-hidden transition-all duration-300 ${isMobileAsiaOpen ? 'max-h-96' : 'max-h-0'}`}>
+              <div className="pl-6 space-y-1 mt-1">
+                {asianDestinations.map((dest) => (
+                  <a
+                    key={dest.name}
+                    href={dest.href}
+                    className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors touch-target ${
+                      isActive(dest.href)
+                        ? 'bg-[#d19457]/10 text-[#d19457]'
+                        : 'hover:bg-[#f5f5f5] active:bg-[#f5f5f5] text-[#12103d]'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <dest.icon className={`w-4 h-4 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                    <span className="font-sans text-sm font-medium">{dest.name}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="pt-4 mt-4 border-t border-[#12103d]/10">
             <a
               href="#contact"
@@ -280,8 +399,8 @@ export default function Navbar() {
               </span>
             </a>
 
-            {/* Destinations */}
-            {destinations.map((dest) => (
+            {/* Main Destinations */}
+            {mainDestinations.map((dest) => (
               <a
                 key={dest.name}
                 href={dest.href}
@@ -298,6 +417,30 @@ export default function Navbar() {
                 </span>
               </a>
             ))}
+
+            {/* Asia Section */}
+            <div className="pt-2">
+              <div className="px-4 py-2">
+                <span className="font-sans text-xs font-medium tracking-wider uppercase text-[#12103d]/50">Asia</span>
+              </div>
+              {asianDestinations.map((dest) => (
+                <a
+                  key={dest.name}
+                  href={dest.href}
+                  className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors ${
+                    isActive(dest.href)
+                      ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                      : 'hover:bg-[#f5f5f5]'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <dest.icon className={`w-5 h-5 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                  <span className={`font-sans text-base font-medium ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                    {dest.name}
+                  </span>
+                </a>
+              ))}
+            </div>
 
             {/* Contact */}
             <div className="pt-4 mt-4 border-t border-[#12103d]/10">
