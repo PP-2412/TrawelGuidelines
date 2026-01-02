@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import CountryLayout from '@/components/Europe/countries/CountryLayout'
 import { getCountryData } from '@/components/Europe/countries/countryData'
 import Navbar from '@/components/shared/Navbar'
+import Footer from '@/components/shared/Footer'
 export const metadata: Metadata = {
   title: 'Italy Travel Guide | Trawel',
   description: 'Explore Italy - from Rome\'s ancient ruins to Venice\'s romantic canals. Discover the best cities, attractions, and travel tips.',
