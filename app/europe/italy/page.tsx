@@ -14,5 +14,12 @@ export default function ItalyPage() {
     return <div>Country not found</div>
   }
 
-  return <CountryLayout country={countryData} />
+  return (
+    <>
+      <Navbar />
+      <div className="pt-16 sm:pt-20">
+        <CountryLayout country={countryData} />
+      </div>
+    </>
+  )
 }
