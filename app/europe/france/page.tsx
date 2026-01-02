@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import CountryLayout from '@/components/Europe/countries/CountryLayout'
 import { getCountryData } from '@/components/Europe/countries/countryData'
-
+import Navbar from '@/components/shared/Navbar'
 export const metadata: Metadata = {
   title: 'France Travel Guide | Trawel',
   description: 'Explore France - from Paris\'s iconic Eiffel Tower to the sun-kissed French Riviera. Discover the best cities, attractions, and travel tips.',
