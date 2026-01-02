@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import CountryLayout from '@/components/Europe/countries/CountryLayout'
 import { getCountryData } from '@/components/Europe/countries/countryData'
-
+import Navbar from '@/components/shared/Navbar'
 export const metadata: Metadata = {
   title: 'Germany Travel Guide | Trawel',
   description: 'Explore Germany - from Bavaria\'s fairy-tale castles to Berlin\'s vibrant culture. Discover the best cities, attractions, and travel tips.',
