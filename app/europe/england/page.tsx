@@ -20,6 +20,7 @@ export default function EnglandPage() {
       <div className="pt-16 sm:pt-20">
         <CountryLayout country={countryData} />
       </div>
+      <Footer />
     </>
   )
 }
