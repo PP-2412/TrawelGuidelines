@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight, ChevronDown, Globe } from 'lucide-react'
+import { Mountain, Anchor, Palmtree, Waves, TreePalm, Flower2, Cherry, Menu, X, ChevronLeft, ChevronRight, ChevronDown, Globe, Castle, Beer, UtensilsCrossed, Landmark } from 'lucide-react'
 
 const destinations = [
   { name: 'Europe', href: '/europe', icon: Mountain },
@@ -15,9 +15,11 @@ const destinations = [
 ]
 
 // For the side panel menu - grouped
-const mainDestinations = [
-  { name: 'Europe', href: '/europe', icon: Mountain },
-  { name: 'Cruises', href: '/cruises', icon: Anchor },
+const europeanDestinations = [
+  { name: 'France', href: '/europe/france', icon: Landmark },
+  { name: 'Germany', href: '/europe/germany', icon: Beer },
+  { name: 'Italy', href: '/europe/italy', icon: UtensilsCrossed },
+  { name: 'England', href: '/europe/england', icon: Castle },
 ]
 
 const asianDestinations = [
@@ -31,12 +33,16 @@ const asianDestinations = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isEuropeExpanded, setIsEuropeExpanded] = useState(false)
   const [isAsiaExpanded, setIsAsiaExpanded] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
+  // Check if any European destination is active
+  const isEuropeActive = pathname.startsWith('/europe')
+  
   // Check if any Asian destination is active
   const isAsiaActive = asianDestinations.some(dest => pathname.startsWith(dest.href))
 
@@ -259,7 +265,7 @@ export default function Navbar() {
         />
       )}
 
-      {/* Desktop Right Side Menu - With Asia Dropdown */}
+      {/* Desktop Right Side Menu - With Europe and Asia Dropdowns */}
       <div 
         className={`hidden lg:block fixed top-0 right-0 bottom-0 z-50 w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out overflow-y-auto ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
@@ -298,24 +304,62 @@ export default function Navbar() {
               </span>
             </a>
 
-            {/* Main Destinations (Europe, Cruises) */}
-            {mainDestinations.map((dest) => (
-              <a
-                key={dest.name}
-                href={dest.href}
-                className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors ${
-                  isActive(dest.href)
+            {/* Europe Dropdown */}
+            <div>
+              <button
+                onClick={() => setIsEuropeExpanded(!isEuropeExpanded)}
+                className={`w-full flex items-center justify-between py-3 px-4 rounded-xl transition-colors ${
+                  isEuropeActive
                     ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
                     : 'hover:bg-[#f5f5f5]'
                 }`}
-                onClick={() => setIsMenuOpen(false)}
               >
-                <dest.icon className={`w-5 h-5 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
-                <span className={`font-sans text-base font-medium ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
-                  {dest.name}
-                </span>
-              </a>
-            ))}
+                <div className="flex items-center gap-3">
+                  <Mountain className={`w-5 h-5 ${isEuropeActive ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                  <span className={`font-sans text-base font-medium ${isEuropeActive ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                    Europe
+                  </span>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-[#12103d]/60 transition-transform duration-200 ${isEuropeExpanded ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* European Countries Submenu */}
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isEuropeExpanded ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="pl-4 mt-1 space-y-1">
+                  {europeanDestinations.map((dest) => (
+                    <a
+                      key={dest.name}
+                      href={dest.href}
+                      className={`flex items-center gap-3 py-2.5 px-4 rounded-xl transition-colors ${
+                        isActive(dest.href)
+                          ? 'bg-[#d19457]/10 text-[#d19457]'
+                          : 'hover:bg-[#f5f5f5] text-[#12103d]'
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <dest.icon className={`w-4 h-4 ${isActive(dest.href) ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+                      <span className="font-sans text-sm font-medium">{dest.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Cruises */}
+            <a
+              href="/cruises"
+              className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-colors ${
+                isActive('/cruises')
+                  ? 'bg-[#d19457]/10 border-l-4 border-[#d19457]'
+                  : 'hover:bg-[#f5f5f5]'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Anchor className={`w-5 h-5 ${isActive('/cruises') ? 'text-[#d19457]' : 'text-[#43124a]'}`} />
+              <span className={`font-sans text-base font-medium ${isActive('/cruises') ? 'text-[#d19457]' : 'text-[#12103d]'}`}>
+                Cruises
+              </span>
+            </a>
 
             {/* Asia Dropdown */}
             <div>
