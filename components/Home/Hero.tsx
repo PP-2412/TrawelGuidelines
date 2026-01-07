@@ -1,113 +1,220 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Search, MapPin, X, Plane, Ship, Mountain, Palmtree, Cherry, Waves, TreePalm, Flower2 } from 'lucide-react'
 
-const heroSlides = [
-  {
-    title: 'Discover Your Next',
-    highlight: 'Adventure',
-    subtitle: 'From European escapes to Asian wonders and luxury cruises worldwide',
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1920&q=80',
-  },
-  {
-    title: 'Explore the Beauty of',
-    highlight: 'Europe',
-    subtitle: 'Historic cities, breathtaking landscapes, and timeless culture',
-    image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80',
-  },
-  {
-    title: 'Paradise Awaits in',
-    highlight: 'Asia',
-    subtitle: 'Pristine beaches, ancient temples, and vibrant cultures',
-    image: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1920&q=80',
-  },
-  {
-    title: 'Set Sail on',
-    highlight: 'Luxury Cruises',
-    subtitle: 'World-class amenities across the seven seas',
-    image: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1920&q=80',
-  },
+const destinations = [
+  { name: 'Europe', type: 'continent', href: '/europe', icon: Mountain, description: 'Historic cities & stunning landscapes' },
+  { name: 'Thailand', type: 'country', href: '/thailand', icon: Palmtree, description: 'Temples, beaches & warm hospitality' },
+  { name: 'Maldives', type: 'country', href: '/maldives', icon: Waves, description: 'Crystal waters & overwater villas' },
+  { name: 'Indonesia', type: 'country', href: '/indonesia', icon: TreePalm, description: 'Bali, Komodo & island paradise' },
+  { name: 'Vietnam', type: 'country', href: '/vietnam', icon: Flower2, description: 'Ha Long Bay & ancient towns' },
+  { name: 'Japan', type: 'country', href: '/japan', icon: Cherry, description: 'Tradition meets technology' },
+  { name: 'Cruises', type: 'experience', href: '/cruises', icon: Ship, description: 'Luxury on the high seas' },
+]
+
+const textSlides = [
+  { title: 'Discover Your Next', highlight: 'Adventure', subtitle: 'From European escapes to Asian wonders and luxury cruises worldwide' },
+  { title: 'Explore the Beauty of', highlight: 'Europe', subtitle: 'Historic cities, breathtaking landscapes, and timeless culture' },
+  { title: 'Paradise Awaits in', highlight: 'Asia', subtitle: 'Pristine beaches, ancient temples, and vibrant cultures' },
+  { title: 'Set Sail on', highlight: 'Luxury Cruises', subtitle: 'World-class amenities across the seven seas' },
 ]
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [filteredDestinations, setFilteredDestinations] = useState(destinations)
+  const searchRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+      setCurrentSlide((prev) => (prev + 1) % textSlides.length)
     }, 5000)
     return () => clearInterval(timer)
   }, [])
 
-  const slide = heroSlides[currentSlide]
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = destinations.filter(
+        (d) =>
+          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.type.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      setFilteredDestinations(filtered)
+    } else {
+      setFilteredDestinations(destinations)
+    }
+  }, [searchQuery])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchFocused(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const slide = textSlides[currentSlide]
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Images */}
-      {heroSlides.map((s, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
+      {/* Video Background */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1920&q=80"
         >
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${s.image})` }}
+          {/* High-quality travel video - replace with your own video URL */}
+          <source
+            src="https://cdn.coverr.co/videos/coverr-flying-over-maldives-1573/1080p.mp4"
+            type="video/mp4"
           />
-        </div>
-      ))}
+        </video>
+      </div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#12103d]/70 via-[#12103d]/50 to-[#12103d]/80" />
+      {/* Overlay with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#12103d]/80 via-[#12103d]/60 to-[#12103d]/90" />
 
-      {/* Decorative */}
+      {/* Animated gradient overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#d19457]/20 via-transparent to-[#8550a2]/20 animate-pulse" style={{ animationDuration: '8s' }} />
+      </div>
+
+      {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-[#d19457] opacity-10 rounded-full blur-[100px]" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#8550a2] opacity-15 rounded-full blur-[120px]" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center pt-20">
-        <span className="inline-block font-sans text-xs font-medium tracking-[4px] uppercase text-[#d19457] mb-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center pt-24 sm:pt-28">
+        {/* Search Bar */}
+        <div ref={searchRef} className="relative max-w-2xl mx-auto mb-10 sm:mb-14">
+          <div className={`relative bg-white/10 backdrop-blur-xl rounded-full border transition-all duration-300 ${isSearchFocused ? 'border-[#d19457] bg-white/15 shadow-2xl shadow-[#d19457]/20' : 'border-white/20'}`}>
+            <div className="flex items-center px-5 sm:px-6 py-3 sm:py-4">
+              <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white/60 flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Search destinations, countries, or experiences..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/50 font-sans text-sm sm:text-base px-3 sm:px-4"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="p-1 hover:bg-white/10 rounded-full transition-colors">
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white/60" />
+                </button>
+              )}
+              <div className="hidden sm:block h-8 w-px bg-white/20 mx-3" />
+              <button className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs font-bold tracking-wider uppercase px-6 py-2.5 rounded-full hover:shadow-lg transition-all">
+                <Plane className="w-4 h-4" />
+                Search
+              </button>
+            </div>
+          </div>
+
+          {/* Search Dropdown */}
+          {isSearchFocused && (
+            <div className="absolute top-full left-0 right-0 mt-3 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden z-50">
+              <div className="p-3 sm:p-4">
+                <p className="font-sans text-[10px] sm:text-xs font-medium tracking-wider uppercase text-[#44618b] mb-3 px-2">
+                  {searchQuery ? 'Search Results' : 'Popular Destinations'}
+                </p>
+                {filteredDestinations.length > 0 ? (
+                  <div className="space-y-1">
+                    {filteredDestinations.map((dest) => (
+                      <a
+                        key={dest.name}
+                        href={dest.href}
+                        className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl hover:bg-[#12103d]/5 transition-colors group"
+                      >
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#12103d] to-[#43124a] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                          <dest.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                        </div>
+                        <div className="flex-1 text-left min-w-0">
+                          <h4 className="font-display text-base sm:text-lg text-[#12103d] group-hover:text-[#d19457] transition-colors truncate">
+                            {dest.name}
+                          </h4>
+                          <p className="font-sans text-xs sm:text-sm text-[#44618b] truncate">{dest.description}</p>
+                        </div>
+                        <span className="px-2 sm:px-3 py-1 bg-[#12103d]/5 rounded-full font-sans text-[10px] sm:text-xs text-[#44618b] capitalize flex-shrink-0">
+                          {dest.type}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 sm:py-8">
+                    <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-[#44618b]/30 mx-auto mb-3" />
+                    <p className="font-sans text-sm text-[#44618b]">No destinations found</p>
+                    <p className="font-sans text-xs text-[#44618b]/60 mt-1">Try searching for a country or continent</p>
+                  </div>
+                )}
+              </div>
+              <div className="border-t border-[#12103d]/10 p-3 sm:p-4 bg-[#f5f5f5]/50">
+                <p className="font-sans text-[10px] sm:text-xs text-[#44618b] text-center">
+                  Press <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#12103d]/10 font-mono text-[10px]">↵</kbd> to search or click a destination
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <span className="inline-block font-sans text-[10px] sm:text-xs font-medium tracking-[3px] sm:tracking-[4px] uppercase text-[#d19457] mb-3 sm:mb-4">
           Your Trusted Travel Partner
         </span>
 
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight">
-          <span className="block">{slide.title}</span>
-          <span className="block font-accent text-[#d19457] mt-2 text-6xl md:text-8xl lg:text-9xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-white mb-4 sm:mb-6 leading-tight">
+          <span className="block transition-opacity duration-500">{slide.title}</span>
+          <span className="block font-accent text-[#d19457] mt-1 sm:mt-2 text-5xl sm:text-6xl md:text-8xl lg:text-9xl transition-opacity duration-500">
             {slide.highlight}
           </span>
         </h1>
 
-        <p className="font-sans text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-12">
+        <p className="font-sans text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 sm:mb-12 px-4 transition-opacity duration-500">
           {slide.subtitle}
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
           <a
             href="#favourite-trips"
-            className="inline-block bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs font-bold tracking-[2px] uppercase px-10 py-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+            className="w-full sm:w-auto inline-block bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-[10px] sm:text-xs font-bold tracking-[2px] uppercase px-8 sm:px-10 py-3.5 sm:py-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
           >
             Explore Destinations
           </a>
           <a
             href="#contact"
-            className="inline-block bg-white/10 backdrop-blur-sm text-white font-sans text-xs font-bold tracking-[2px] uppercase px-10 py-4 rounded-full border border-white/30 hover:bg-white/20 transition-all duration-300"
+            className="w-full sm:w-auto inline-block bg-white/10 backdrop-blur-sm text-white font-sans text-[10px] sm:text-xs font-bold tracking-[2px] uppercase px-8 sm:px-10 py-3.5 sm:py-4 rounded-full border border-white/30 hover:bg-white/20 transition-all duration-300"
           >
             Plan Your Trip
           </a>
         </div>
 
         {/* Slide Indicators */}
-        <div className="flex justify-center gap-3 mt-16">
-          {heroSlides.map((_, index) => (
+        <div className="flex justify-center gap-2 sm:gap-3 mt-12 sm:mt-16">
+          {textSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide ? 'w-10 bg-[#d19457]' : 'w-2 bg-white/40 hover:bg-white/60'
+              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide ? 'w-8 sm:w-10 bg-[#d19457]' : 'w-1.5 sm:w-2 bg-white/40 hover:bg-white/60'
               }`}
             />
           ))}
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 sm:w-7 sm:h-12 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 sm:p-2">
+            <div className="w-1 h-2 sm:w-1.5 sm:h-3 bg-white/60 rounded-full animate-pulse" />
+          </div>
         </div>
       </div>
     </section>
