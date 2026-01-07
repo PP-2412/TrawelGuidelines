@@ -37,10 +37,7 @@ export default function Hero() {
   useEffect(() => {
     if (searchQuery) {
       const filtered = destinations.filter(
-        (d) =>
-          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.type.toLowerCase().includes(searchQuery.toLowerCase())
+        (d) => d.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
       setFilteredDestinations(filtered)
     } else {
@@ -116,7 +113,7 @@ export default function Hero() {
               </button>
               <input
                 type="text"
-                placeholder="Search destinations, countries, or experiences..."
+                placeholder="Search by country or continent name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
