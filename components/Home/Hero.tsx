@@ -123,42 +123,51 @@ export default function Hero() {
           {/* Search Dropdown */}
           {isSearchFocused && (
             <div className="absolute top-full left-0 right-0 mt-3 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden z-50">
-              <div className="p-3 sm:p-4">
-                <p className="font-sans text-[10px] sm:text-xs font-medium tracking-wider uppercase text-[#44618b] mb-3 px-2">
+              {/* Header */}
+              <div className="px-4 pt-4 pb-2 border-b border-[#12103d]/10">
+                <p className="font-sans text-[10px] sm:text-xs font-medium tracking-wider uppercase text-[#44618b]">
                   {searchQuery ? 'Search Results' : 'Popular Destinations'}
                 </p>
-                {filteredDestinations.length > 0 ? (
-                  <div className="space-y-1">
-                    {filteredDestinations.map((dest) => (
-                      <a
-                        key={dest.name}
-                        href={dest.href}
-                        className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl hover:bg-[#12103d]/5 transition-colors group"
-                      >
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#12103d] to-[#43124a] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                          <dest.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                        </div>
-                        <div className="flex-1 text-left min-w-0">
-                          <h4 className="font-display text-base sm:text-lg text-[#12103d] group-hover:text-[#d19457] transition-colors truncate">
-                            {dest.name}
-                          </h4>
-                          <p className="font-sans text-xs sm:text-sm text-[#44618b] truncate">{dest.description}</p>
-                        </div>
-                        <span className="px-2 sm:px-3 py-1 bg-[#12103d]/5 rounded-full font-sans text-[10px] sm:text-xs text-[#44618b] capitalize flex-shrink-0">
-                          {dest.type}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6 sm:py-8">
-                    <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-[#44618b]/30 mx-auto mb-3" />
-                    <p className="font-sans text-sm text-[#44618b]">No destinations found</p>
-                    <p className="font-sans text-xs text-[#44618b]/60 mt-1">Try searching for a country or continent</p>
-                  </div>
-                )}
               </div>
-              <div className="border-t border-[#12103d]/10 p-3 sm:p-4 bg-[#f5f5f5]/50">
+              
+              {/* Scrollable Results */}
+              <div className="max-h-[240px] overflow-y-auto overscroll-contain custom-scrollbar">
+                <div className="p-2 sm:p-3">
+                  {filteredDestinations.length > 0 ? (
+                    <div className="space-y-1">
+                      {filteredDestinations.map((dest) => (
+                        <a
+                          key={dest.name}
+                          href={dest.href}
+                          className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl hover:bg-[#12103d]/5 transition-colors group"
+                        >
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#12103d] to-[#43124a] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                            <dest.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                          </div>
+                          <div className="flex-1 text-left min-w-0">
+                            <h4 className="font-display text-base sm:text-lg text-[#12103d] group-hover:text-[#d19457] transition-colors truncate">
+                              {dest.name}
+                            </h4>
+                            <p className="font-sans text-xs sm:text-sm text-[#44618b] truncate">{dest.description}</p>
+                          </div>
+                          <span className="px-2 sm:px-3 py-1 bg-[#12103d]/5 rounded-full font-sans text-[10px] sm:text-xs text-[#44618b] capitalize flex-shrink-0">
+                            {dest.type}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <MapPin className="w-10 h-10 text-[#44618b]/30 mx-auto mb-3" />
+                      <p className="font-sans text-sm text-[#44618b]">No destinations found</p>
+                      <p className="font-sans text-xs text-[#44618b]/60 mt-1">Try searching for a country or continent</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Footer */}
+              <div className="border-t border-[#12103d]/10 px-4 py-3 bg-[#f5f5f5]/50">
                 <p className="font-sans text-[10px] sm:text-xs text-[#44618b] text-center">
                   Press <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#12103d]/10 font-mono text-[10px]">↵</kbd> to search or click a destination
                 </p>
