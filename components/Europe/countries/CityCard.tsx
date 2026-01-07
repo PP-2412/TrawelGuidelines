@@ -7,11 +7,34 @@ import { getBestSeasons, getSeasonDisplay } from './countryData'
 interface CityCardProps {
   city: EuropeCity
   index: number
+  countrySlug: string
 }
 
-export default function CityCard({ city, index }: CityCardProps) {
+// Map city IDs to URL slugs
+const getCitySlug = (cityId: string): string => {
+  const slugMap: Record<string, string> = {
+    'amalfi-coast': 'amalfi',
+  }
+  return slugMap[cityId] || cityId
+}
+
+// Map country names to URL slugs
+const getCountrySlugFromName = (countryName: string): string => {
+  const countryMap: Record<string, string> = {
+    'Italy': 'italy',
+    'France': 'france',
+    'Germany': 'germany',
+    'United Kingdom': 'england',
+  }
+  return countryMap[countryName] || countryName.toLowerCase()
+}
+
+export default function CityCard({ city, index, countrySlug }: CityCardProps) {
   const bestSeasons = getBestSeasons(city.id)
   const isEven = index % 2 === 0
+  const citySlug = getCitySlug(city.id)
+  // Use provided countrySlug, or derive from city.country if not provided
+  const finalCountrySlug = countrySlug || getCountrySlugFromName(city.country)
 
   return (
     <div 
@@ -93,7 +116,7 @@ export default function CityCard({ city, index }: CityCardProps) {
         {/* CTA Button */}
         <div className="mt-6">
           <a 
-            href={`/europe?city=${city.id}`}
+            href={`/europe/${finalCountrySlug}/${citySlug}`}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#12103d] text-white rounded-full text-sm font-medium hover:bg-[#43124a] transition-colors"
           >
             Explore {city.name}
