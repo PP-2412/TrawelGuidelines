@@ -61,6 +61,7 @@ export default function CountryLayout({ country }: CountryLayoutProps) {
                   key={city.id}
                   city={city}
                   index={index}
+                  countrySlug={country.id}
                 />
               ))}
             </div>
@@ -87,13 +88,13 @@ export default function CountryLayout({ country }: CountryLayoutProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="/europe?tab=tours"
+                href="/europe"
                 className="inline-flex items-center justify-center px-8 py-3 bg-[#d19457] text-white rounded-full font-medium hover:bg-[#c77e36] transition-colors"
               >
                 View All Tours
               </a>
               <a 
-                href="/europe?tab=customise"
+                href="/europe#customize"
                 className="inline-flex items-center justify-center px-8 py-3 bg-[#d19457] text-white rounded-full font-medium hover:bg-[#c77e36] transition-colors"
               >
                 Customize Your Trip
