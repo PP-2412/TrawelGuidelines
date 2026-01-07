@@ -23,7 +23,7 @@ const textSlides = [
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
   const [filteredDestinations, setFilteredDestinations] = useState(destinations)
   const searchRef = useRef<HTMLDivElement>(null)
 
@@ -51,12 +51,25 @@ export default function Hero() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsSearchFocused(false)
+        setShowDropdown(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  const handleSearch = () => {
+    setShowDropdown(true)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setShowDropdown(true)
+    }
+    if (e.key === 'Escape') {
+      setShowDropdown(false)
+    }
+  }
 
   const slide = textSlides[currentSlide]
 
@@ -96,24 +109,29 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 text-center pt-24 sm:pt-28">
         {/* Search Bar */}
         <div ref={searchRef} className="relative max-w-2xl mx-auto mb-10 sm:mb-14">
-          <div className={`relative bg-white/10 backdrop-blur-xl rounded-full border transition-all duration-300 ${isSearchFocused ? 'border-[#d19457] bg-white/15 shadow-2xl shadow-[#d19457]/20' : 'border-white/20'}`}>
+          <div className={`relative bg-white/10 backdrop-blur-xl rounded-full border transition-all duration-300 ${showDropdown ? 'border-[#d19457] bg-white/15 shadow-2xl shadow-[#d19457]/20' : 'border-white/20'}`}>
             <div className="flex items-center px-5 sm:px-6 py-3 sm:py-4">
-              <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white/60 flex-shrink-0" />
+              <button onClick={handleSearch} className="flex-shrink-0 hover:scale-110 transition-transform">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white/60" />
+              </button>
               <input
                 type="text"
                 placeholder="Search destinations, countries, or experiences..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
+                onKeyDown={handleKeyDown}
                 className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/50 font-sans text-sm sm:text-base px-3 sm:px-4"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="p-1 hover:bg-white/10 rounded-full transition-colors">
+                <button onClick={() => { setSearchQuery(''); setShowDropdown(false); }} className="p-1 hover:bg-white/10 rounded-full transition-colors">
                   <X className="w-4 h-4 sm:w-5 sm:h-5 text-white/60" />
                 </button>
               )}
               <div className="hidden sm:block h-8 w-px bg-white/20 mx-3" />
-              <button className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs font-bold tracking-wider uppercase px-6 py-2.5 rounded-full hover:shadow-lg transition-all">
+              <button 
+                onClick={handleSearch}
+                className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-[#d19457] to-[#c77e36] text-white font-sans text-xs font-bold tracking-wider uppercase px-6 py-2.5 rounded-full hover:shadow-lg transition-all"
+              >
                 <Plane className="w-4 h-4" />
                 Search
               </button>
@@ -121,7 +139,7 @@ export default function Hero() {
           </div>
 
           {/* Search Dropdown */}
-          {isSearchFocused && (
+          {showDropdown && (
             <div className="absolute top-full left-0 right-0 mt-3 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden z-50">
               {/* Header */}
               <div className="px-4 pt-4 pb-2 border-b border-[#12103d]/10">
@@ -169,7 +187,7 @@ export default function Hero() {
               {/* Footer */}
               <div className="border-t border-[#12103d]/10 px-4 py-3 bg-[#f5f5f5]/50">
                 <p className="font-sans text-[10px] sm:text-xs text-[#44618b] text-center">
-                  Press <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#12103d]/10 font-mono text-[10px]">↵</kbd> to search or click a destination
+                  Click a destination to explore • Press <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#12103d]/10 font-mono text-[10px]">Esc</kbd> to close
                 </p>
               </div>
             </div>
